@@ -1,5 +1,6 @@
-import { IgntLink, IgntLogo } from "@ignt/react-library";
+import { IgntLink } from "@ignt/react-library";
 import IgntAcc from "./IgntAcc";
+import Logo from "../assets/mycel.svg";
 
 type MenuItem = {
   label: string;
@@ -14,7 +15,7 @@ export default function IgntHeader(props: IgntHeaderProps) {
 
   return (
     <header className="flex p-5">
-      <IgntLogo className="mx-2.5" />
+      <img src={Logo} width="100" alt="mycel-logo" className="mx-3.5 mt-1" />
       <nav className="flex flex-1 justify-between">
         <ul className="flex items-center">
           {navItems.map((item) => (

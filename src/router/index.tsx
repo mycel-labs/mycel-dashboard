@@ -1,7 +1,6 @@
 import { createBrowserRouter, Outlet } from "react-router-dom";
 
 import IgntHeader from "../components/IgntHeader";
-import DataView from "../views/ResolveView";
 import PortfolioView from "../views/PortfolioView";
 import ResolveView from "../views/ResolveView";
 import SendView from "../views/SendView";
@@ -17,7 +16,7 @@ const items = [
     to: "/resolve",
   },
   {
-    label: "Send Transaction",
+    label: "Send Token",
     to: "/send",
   },
   {

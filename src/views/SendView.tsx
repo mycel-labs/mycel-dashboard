@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  useAccount,
-  useConnect,
-  useNetwork,
-  usePrepareSendTransaction,
-  useSendTransaction,
-  useSwitchNetwork,
-  useWaitForTransaction,
-} from "wagmi";
+import { useNetwork, usePrepareSendTransaction, useSendTransaction, useWaitForTransaction } from "wagmi";
 import { parseEther } from "ethers/lib/utils.js";
 import { useDebounce } from "use-debounce";
 import { Web3Button } from "@web3modal/react";
