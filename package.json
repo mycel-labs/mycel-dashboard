@@ -49,7 +49,9 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.31.10",
     "events": "^3.3.0",
+    "husky": "^8.0.3",
     "jsdom": "^20.0.2",
+    "lint-staged": "^13.2.2",
     "postcss": "^8.4.18",
     "prettier": "2.8.8",
     "tailwindcss": "^3.2.1",
@@ -71,8 +73,12 @@
     "format": "prettier --write --ignore-path .gitignore './**/*.{js,jsx,ts,tsx,json}'",
     "lint-format": "yarn lint:fix && yarn format",
     "postinstall": "node postinstall.cjs",
-    "prepare": "node prepare.cjs"
+    "prepare": "node prepare.cjs && husky install"
   },
   "type": "module",
-  "version": "0.4.3"
+  "version": "0.4.3",
+  "lint-staged": {
+    "*.{js,jsx,cjs,mjs,ts,tsx,cts,mts}": "eslint --cache --fix",
+    "*.--write": "prettier --write"
+  }
 }
