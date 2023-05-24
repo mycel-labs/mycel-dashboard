@@ -51,7 +51,7 @@
     "events": "^3.3.0",
     "jsdom": "^20.0.2",
     "postcss": "^8.4.18",
-    "prettier": "^2.7.1",
+    "prettier": "2.8.8",
     "tailwindcss": "^3.2.1",
     "typescript": "^4.8.4",
     "vite": "^3.2.1"
@@ -60,15 +60,18 @@
     "node": ">=16.0.0",
     "npm": ">=8.0.0"
   },
-  "name": "@ignt/react-template",
+  "name": "mycel-frontend",
   "private": true,
   "scripts": {
-    "build": "tsc && vite build",
+    "build": "vite build",
+    "preview": "vite preview",
     "dev": "vite",
-    "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
+    "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts",
+    "lint:fix": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
+    "format": "prettier --write --ignore-path .gitignore './**/*.{js,jsx,ts,tsx,json}'",
+    "lint-format": "yarn lint:fix && yarn format",
     "postinstall": "node postinstall.cjs",
-    "prepare": "node prepare.cjs",
-    "preview": "vite preview"
+    "prepare": "node prepare.cjs"
   },
   "type": "module",
   "version": "0.4.3"
