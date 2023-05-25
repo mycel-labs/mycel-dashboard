@@ -49,10 +49,6 @@ export default function ExploreView() {
     console.log(result);
   }, [query]);
 
-  useEffect(() => {
-    console.log(result);
-  }, [result]);
-
   return (
     <div className="w-3/4 mx-auto">
       <h2 className=" text-2xl">Explore Domain</h2>
