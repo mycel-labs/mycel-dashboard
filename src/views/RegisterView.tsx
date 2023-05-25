@@ -72,10 +72,11 @@ export default function RegisterView() {
           <div>
             <div className="w-full flex justify-between my-4">
               <h2 className=" text-2xl m-2 font-semibold">{query + ".cel"}</h2>
-              <IgntButton onClick={registerDomain} className="mt-1 h-10 w-48">
+              <IgntButton disabled={!address} onClick={registerDomain} className="mt-1 h-10 w-48">
                 Register
               </IgntButton>
             </div>
+            {!address && <h2 className="text-red-600 m-2 font-semibold">Please connect wallet first</h2>}
           </div>
         ) : domain ? (
           <div>

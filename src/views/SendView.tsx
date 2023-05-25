@@ -9,10 +9,10 @@ import { useRegistryDomain } from "../def-hooks/useRegistryDomain";
 import { mainnet, polygon, goerli, polygonMumbai, gnosisChiado } from "wagmi/chains";
 
 const getWalletAddr = (domain: RegistryDomain, recordType: RegistryWalletRecordType) => {
-  if (!domain || !domain.WalletRecords || !domain.WalletRecords[recordType]) {
+  if (!domain || !domain.walletRecords || !domain.walletRecords[recordType]) {
     return "";
   }
-  return domain.WalletRecords[recordType].value;
+  return domain.walletRecords[recordType].value;
 };
 
 const getConnectedWalletRecordType = (chainId: number) => {
