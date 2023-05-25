@@ -5,6 +5,7 @@ import PortfolioView from "../views/PortfolioView";
 import ResolveView from "../views/ResolveView";
 import SendView from "../views/SendView";
 import ExploreView from "../views/ExploreView";
+import RegisterView from "../views/RegisterView";
 
 const items = [
   {
@@ -12,16 +13,20 @@ const items = [
     to: "/",
   },
   {
+    label: "Register",
+    to: "/register",
+  },
+  {
     label: "Resolve Domain",
     to: "/resolve",
   },
   {
-    label: "Send Token",
-    to: "/send",
-  },
-  {
     label: "Explore",
     to: "/explore",
+  },
+  {
+    label: "Send Token",
+    to: "/send",
   },
 ];
 const Layout = () => {
@@ -41,6 +46,7 @@ const router = createBrowserRouter([
       { path: "/resolve", element: <ResolveView /> },
       { path: "/send", element: <SendView /> },
       { path: "/explore", element: <ExploreView /> },
+      { path: "/register", element: <RegisterView /> },
     ],
   },
 ]);
