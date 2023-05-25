@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useClient } from "../hooks/useClient";
 import { RegistryDomain } from "mycel-client-ts/mycel.registry/rest";
 import { useAddressContext } from "../def-hooks/addressContext";
@@ -12,6 +13,7 @@ export default function RegisterView() {
   const [isRegistable, setIsRegistable] = useState<boolean>(false);
   const [domain, setDomain] = useState<RegistryDomain>();
   const [log, setLog] = useState<DeliverTxResponse>();
+  const navigate = useNavigate();
 
   const getDomain = async () => {
     await client.MycelRegistry.query
@@ -67,7 +69,14 @@ export default function RegisterView() {
           </div>
         </div>
       ) : domain ? (
-        <h2 className=" text-2xl m-2 font-semibold">{domain.name + "." + domain.parent} is already registered</h2>
+        <div>
+          <div className="w-full flex justify-between my-4">
+            <h2 className=" text-2xl m-2 font-semibold">{domain.name + "." + domain.parent}</h2>
+            <IgntButton onClick={() => navigate("/resolve")} className="mt-1 h-10 w-48">
+              Resolve
+            </IgntButton>
+          </div>
+        </div>
       ) : (
         <div></div>
       )}
