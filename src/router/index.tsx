@@ -13,20 +13,20 @@ const items = [
     to: "/",
   },
   {
-    label: "Resolve Domain",
-    to: "/resolve",
+    label: "Register",
+    to: "/register",
   },
   {
-    label: "Send Token",
-    to: "/send",
+    label: "Resolve Domain",
+    to: "/resolve",
   },
   {
     label: "Explore",
     to: "/explore",
   },
   {
-    label: "Register",
-    to: "/register",
+    label: "Send Token",
+    to: "/send",
   },
 ];
 const Layout = () => {
