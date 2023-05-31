@@ -5,5 +5,5 @@ export const useDomainOwnership = () => {
   const { address } = useAddressContext();
   const { QueryDomainOwnership } = useMycelRegistry();
   const query = QueryDomainOwnership(address, {});
-  return { domains: query.data?.domains, isLoading: query.isLoading };
+  return { domains: query.data?.domainOwnership?.domains, isLoading: query.isLoading };
 };
