@@ -7,7 +7,7 @@ import { useRegistryDomain } from "../def-hooks/useRegistryDomain";
 export default function ResolveView() {
   const [query, setQuery] = useSearchParams({});
   const [inputtedDomainName, setInputtedDomainName] = useState("");
-  const { registryDomain, isLoading, updateRegistryDomain } = useRegistryDomain();
+  const { registryDomain, updateRegistryDomain } = useRegistryDomain();
 
   const updateRegistryHandler = async (domainName: string) => {
     try {
@@ -43,34 +43,9 @@ export default function ResolveView() {
 
   return (
     <div className="w-3/4 mx-auto">
-      {/* Uncomment the following component to add a form for a `modelName` -*/}
-      {/* (<IgntCrud storeName="OrgRepoModule" itemName="modelName" />) */}
-      <div className="flex mt-2 p-2 justify-between">
-        <input
-          className="mr-6 mt-1 py-2 px-4 h-14 bg-gray-100 w-full border-xs text-base leading-tight rounded-xl outline-0"
-          placeholder="Mycel Domain"
-          onChange={(event) => {
-            setInputtedDomainName(event.target.value);
-          }}
-          onKeyDown={async (event) => {
-            if (event.nativeEvent.isComposing || event.key !== "Enter") return;
-            updateRegistryHandler(inputtedDomainName);
-          }}
-          value={inputtedDomainName}
-        />
-        <IgntButton
-          className="mt-1 h-14 w-48"
-          onClick={async () => {
-            updateRegistryHandler(inputtedDomainName);
-          }}
-          busy={isLoading}
-        >
-          Resolve
-        </IgntButton>
-      </div>
       <div className="m-2">
         <div className="my-8">
-          <h2 className=" text-2xl m-2 font-semibold">Basic Information</h2>
+          <h2 className="text-3xl text-black font-semibold  mb-2.5">Information</h2>
           <div className="table w-full border-collapse">
             <div className="table-header-group border-b font-medium">
               <div className=" table-cell w-4/12 p-2">Domain Name</div>
@@ -89,7 +64,11 @@ export default function ResolveView() {
           </div>
         </div>
         <div className="my-8">
-          <h2 className="text-2xl m-2 font-semibold">Records</h2>
+          <div className="container mx-auto">
+            <div className="grid grid-cols-2">
+              <h2 className="text-3xl text-black font-semibold  mb-2.5">Records</h2>
+            </div>
+          </div>
           <div className="table w-full border-collapse">
             <div className="table-header-group border-b font-medium">
               <div className=" table-cell p-2">Record Type</div>
@@ -112,6 +91,7 @@ export default function ResolveView() {
               );
             })}
           </div>
+          <IgntButton className="mt-5 h-10 w-48">Edit Record</IgntButton>
         </div>
       </div>
     </div>
