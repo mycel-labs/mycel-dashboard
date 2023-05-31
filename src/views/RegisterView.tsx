@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useClient } from "../hooks/useClient";
 import { RegistryDomain } from "mycel-client-ts/mycel.registry/rest";
 import { useAddressContext } from "../def-hooks/addressContext";
 import { IgntButton } from "@ignt/react-library";
 import { DeliverTxResponse } from "@cosmjs/stargate";
 import TxModal from "../components/TxModal";
+import ResolveButton from "../components/ResolveButton";
 
 export default function RegisterView() {
   const client = useClient();
@@ -16,7 +16,6 @@ export default function RegisterView() {
   const [isShow, setIsShow] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [txResponse, setTxResponse] = useState<DeliverTxResponse>();
-  const navigate = useNavigate();
 
   const getDomain = async () => {
     await client.MycelRegistry.query
@@ -82,12 +81,8 @@ export default function RegisterView() {
           <div>
             <div className="w-full flex justify-between my-4">
               <h2 className=" text-2xl m-2 font-semibold">{domain.name + "." + domain.parent}</h2>
-              <IgntButton
-                onClick={() => navigate(`/resolve?name=${domain.name}&parent=${domain.parent}`)}
-                className="mt-1 h-10 w-48"
-              >
-                Resolve
-              </IgntButton>
+
+              <ResolveButton name={domain.name} parent={domain.parent} />
             </div>
           </div>
         ) : (
