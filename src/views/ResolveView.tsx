@@ -89,35 +89,24 @@ export default function ResolveView() {
           </div>
         </div>
         <div className="my-8">
-          <h2 className=" text-2xl m-2 font-semibold">DNS Records</h2>
+          <h2 className="text-2xl m-2 font-semibold">Records</h2>
           <div className="table w-full border-collapse">
             <div className="table-header-group border-b font-medium">
-              <div className=" table-cell p-2">DNS Record Type</div>
-              <div className=" table-cell p-2">Value</div>
-            </div>
-            {Object.values(registryDomain?.dnsRecords || []).map((v, i) => {
-              return (
-                <div key={i} className="table-row text-justify">
-                  <div className="table-cell p-2">{v.dnsRecordType}</div>
-                  <div className="table-cell p-2">{v.value}</div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-        <div className="my-8">
-          <h2 className="text-2xl m-2 font-semibold">Wallet Records</h2>
-          <div className="table w-full border-collapse">
-            <div className="table-header-group border-b font-medium">
-              <div className=" table-cell p-2">Wallet Record Type</div>
-              <div className=" table-cell p-2">Wallet Address Format</div>
+              <div className=" table-cell p-2">Record Type</div>
               <div className=" table-cell p-2">Value</div>
             </div>
             {Object.values(registryDomain?.walletRecords || []).map((v, i) => {
               return (
                 <div key={i} className=" table-row text-justify">
                   <div className="table-cell p-2">{v.walletRecordType}</div>
-                  <div className="table-cell p-2">{v.walletAddressFormat}</div>
+                  <div className="table-cell p-2">{v.value}</div>
+                </div>
+              );
+            })}
+            {Object.values(registryDomain?.dnsRecords || []).map((v, i) => {
+              return (
+                <div key={i} className="table-row text-justify">
+                  <div className="table-cell p-2">{v.dnsRecordType}</div>
                   <div className="table-cell p-2">{v.value}</div>
                 </div>
               );

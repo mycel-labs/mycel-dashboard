@@ -17,7 +17,7 @@ const items = [
     to: "/register",
   },
   {
-    label: "Resolve Domain",
+    label: "Resolve",
     to: "/resolve",
   },
   {
