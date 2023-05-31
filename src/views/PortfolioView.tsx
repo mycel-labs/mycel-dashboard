@@ -3,6 +3,7 @@
 import IgntAssets from "../components/IgntAssets";
 import IgntTransactions from "../components/IgntTransactions";
 import IgntTransfer from "../components/IgntTransfer";
+import MyDomains from "../components/MyDomains";
 
 export default function PortfolioView() {
   return (
@@ -15,6 +16,7 @@ export default function PortfolioView() {
           </div>
           <IgntTransfer className="px-2.5 w-4/6 mx-auto" />
         </div>
+        <MyDomains className="py-8 px-2.5" />
       </div>
     </div>
   );

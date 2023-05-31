@@ -51,6 +51,9 @@ export default function RegisterView() {
       .then((res) => {
         setIsLoading(false);
         setTxResponse(res as DeliverTxResponse);
+      })
+      .catch(() => {
+        setIsShow(false);
       });
   };
 
