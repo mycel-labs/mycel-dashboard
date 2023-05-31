@@ -62,5 +62,83 @@ export default function useMycelRegistry() {
     );
   };
 
-  return { QueryParams, QueryDomain, QueryDomainAll };
+  const QueryDomainOwnership = (owner: string, options: any) => {
+    const key = { type: "QueryDomainOwnership", owner };
+    return useQuery(
+      [key],
+      () => {
+        const { owner } = key;
+        return client.MycelRegistry.query.queryDomainOwnership(owner).then((res) => res.data);
+      },
+      options,
+    );
+  };
+
+  const QueryDomainOwnershipAll = (query: any, options: any, perPage: number) => {
+    const key = { type: "QueryDomainOwnershipAll", query };
+    return useInfiniteQuery(
+      [key],
+      ({ pageParam = 1 }: { pageParam?: number }) => {
+        const { query } = key;
+
+        query["pagination.limit"] = perPage;
+        query["pagination.offset"] = (pageParam - 1) * perPage;
+        query["pagination.count_total"] = true;
+        return client.MycelRegistry.query
+          .queryDomainOwnershipAll(query ?? undefined)
+          .then((res) => ({ ...res.data, pageParam }));
+      },
+      {
+        ...options,
+        getNextPageParam: (lastPage, allPages) => {
+          if ((lastPage.pagination?.total ?? 0) > (lastPage.pageParam ?? 0) * perPage) {
+            return lastPage.pageParam + 1;
+          } else {
+            return undefined;
+          }
+        },
+        getPreviousPageParam: (firstPage, allPages) => {
+          if (firstPage.pageParam == 1) {
+            return undefined;
+          } else {
+            return firstPage.pageParam - 1;
+          }
+        },
+      },
+    );
+  };
+
+  const QueryDomainRegistrationFee = (name: string, parent: string, options: any) => {
+    const key = { type: "QueryDomainRegistrationFee", name, parent };
+    return useQuery(
+      [key],
+      () => {
+        const { name, parent } = key;
+        return client.MycelRegistry.query.queryDomainRegistrationFee(name, parent).then((res) => res.data);
+      },
+      options,
+    );
+  };
+
+  const QueryIsRegistrableDomain = (name: string, parent: string, options: any) => {
+    const key = { type: "QueryIsRegistrableDomain", name, parent };
+    return useQuery(
+      [key],
+      () => {
+        const { name, parent } = key;
+        return client.MycelRegistry.query.queryIsRegistrableDomain(name, parent).then((res) => res.data);
+      },
+      options,
+    );
+  };
+
+  return {
+    QueryParams,
+    QueryDomain,
+    QueryDomainAll,
+    QueryDomainOwnership,
+    QueryDomainOwnershipAll,
+    QueryDomainRegistrationFee,
+    QueryIsRegistrableDomain,
+  };
 }

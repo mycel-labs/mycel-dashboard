@@ -16,20 +16,20 @@ export default function useMycelIncentives() {
     );
   };
 
-  const QueryIncentive = (epoch: string, options: any) => {
-    const key = { type: "QueryIncentive", epoch };
+  const QueryEpochIncentive = (epoch: string, options: any) => {
+    const key = { type: "QueryEpochIncentive", epoch };
     return useQuery(
       [key],
       () => {
         const { epoch } = key;
-        return client.MycelIncentives.query.queryIncentive(epoch).then((res) => res.data);
+        return client.MycelIncentives.query.queryEpochIncentive(epoch).then((res) => res.data);
       },
       options,
     );
   };
 
-  const QueryIncentiveAll = (query: any, options: any, perPage: number) => {
-    const key = { type: "QueryIncentiveAll", query };
+  const QueryEpochIncentiveAll = (query: any, options: any, perPage: number) => {
+    const key = { type: "QueryEpochIncentiveAll", query };
     return useInfiniteQuery(
       [key],
       ({ pageParam = 1 }: { pageParam?: number }) => {
@@ -39,7 +39,7 @@ export default function useMycelIncentives() {
         query["pagination.offset"] = (pageParam - 1) * perPage;
         query["pagination.count_total"] = true;
         return client.MycelIncentives.query
-          .queryIncentiveAll(query ?? undefined)
+          .queryEpochIncentiveAll(query ?? undefined)
           .then((res) => ({ ...res.data, pageParam }));
       },
       {
@@ -62,5 +62,105 @@ export default function useMycelIncentives() {
     );
   };
 
-  return { QueryParams, QueryIncentive, QueryIncentiveAll };
+  const QueryValidatorIncentive = (address: string, options: any) => {
+    const key = { type: "QueryValidatorIncentive", address };
+    return useQuery(
+      [key],
+      () => {
+        const { address } = key;
+        return client.MycelIncentives.query.queryValidatorIncentive(address).then((res) => res.data);
+      },
+      options,
+    );
+  };
+
+  const QueryValidatorIncentiveAll = (query: any, options: any, perPage: number) => {
+    const key = { type: "QueryValidatorIncentiveAll", query };
+    return useInfiniteQuery(
+      [key],
+      ({ pageParam = 1 }: { pageParam?: number }) => {
+        const { query } = key;
+
+        query["pagination.limit"] = perPage;
+        query["pagination.offset"] = (pageParam - 1) * perPage;
+        query["pagination.count_total"] = true;
+        return client.MycelIncentives.query
+          .queryValidatorIncentiveAll(query ?? undefined)
+          .then((res) => ({ ...res.data, pageParam }));
+      },
+      {
+        ...options,
+        getNextPageParam: (lastPage, allPages) => {
+          if ((lastPage.pagination?.total ?? 0) > (lastPage.pageParam ?? 0) * perPage) {
+            return lastPage.pageParam + 1;
+          } else {
+            return undefined;
+          }
+        },
+        getPreviousPageParam: (firstPage, allPages) => {
+          if (firstPage.pageParam == 1) {
+            return undefined;
+          } else {
+            return firstPage.pageParam - 1;
+          }
+        },
+      },
+    );
+  };
+
+  const QueryDelegetorIncentive = (address: string, options: any) => {
+    const key = { type: "QueryDelegetorIncentive", address };
+    return useQuery(
+      [key],
+      () => {
+        const { address } = key;
+        return client.MycelIncentives.query.queryDelegetorIncentive(address).then((res) => res.data);
+      },
+      options,
+    );
+  };
+
+  const QueryDelegetorIncentiveAll = (query: any, options: any, perPage: number) => {
+    const key = { type: "QueryDelegetorIncentiveAll", query };
+    return useInfiniteQuery(
+      [key],
+      ({ pageParam = 1 }: { pageParam?: number }) => {
+        const { query } = key;
+
+        query["pagination.limit"] = perPage;
+        query["pagination.offset"] = (pageParam - 1) * perPage;
+        query["pagination.count_total"] = true;
+        return client.MycelIncentives.query
+          .queryDelegetorIncentiveAll(query ?? undefined)
+          .then((res) => ({ ...res.data, pageParam }));
+      },
+      {
+        ...options,
+        getNextPageParam: (lastPage, allPages) => {
+          if ((lastPage.pagination?.total ?? 0) > (lastPage.pageParam ?? 0) * perPage) {
+            return lastPage.pageParam + 1;
+          } else {
+            return undefined;
+          }
+        },
+        getPreviousPageParam: (firstPage, allPages) => {
+          if (firstPage.pageParam == 1) {
+            return undefined;
+          } else {
+            return firstPage.pageParam - 1;
+          }
+        },
+      },
+    );
+  };
+
+  return {
+    QueryParams,
+    QueryEpochIncentive,
+    QueryEpochIncentiveAll,
+    QueryValidatorIncentive,
+    QueryValidatorIncentiveAll,
+    QueryDelegetorIncentive,
+    QueryDelegetorIncentiveAll,
+  };
 }
