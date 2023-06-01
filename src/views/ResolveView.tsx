@@ -3,11 +3,13 @@ import { IgntButton } from "@ignt/react-library";
 import { convertToDomainName, convertToNameAndParent } from "../utils/domainName";
 import { useSearchParams } from "react-router-dom";
 import { useRegistryDomain } from "../def-hooks/useRegistryDomain";
+import EditRecordModal from "../components/EditRecordModal";
 
 export default function ResolveView() {
+  const { registryDomain, updateRegistryDomain } = useRegistryDomain();
   const [query, setQuery] = useSearchParams({});
   const [inputtedDomainName, setInputtedDomainName] = useState("");
-  const { registryDomain, updateRegistryDomain } = useRegistryDomain();
+  const [isShow, setIsShow] = useState<boolean>(false);
 
   const updateRegistryHandler = async (domainName: string) => {
     try {
@@ -42,58 +44,70 @@ export default function ResolveView() {
   }, []);
 
   return (
-    <div className="w-3/4 mx-auto">
-      <div className="m-2">
-        <div className="my-8">
-          <h2 className="text-3xl text-black font-semibold  mb-2.5">Information</h2>
-          <div className="table w-full border-collapse">
-            <div className="table-header-group border-b font-medium">
-              <div className=" table-cell w-4/12 p-2">Domain Name</div>
-              <div className=" table-cell w-5/12 p-2">Owner Address</div>
-              <div className=" table-cell w-3/12 p-2">Expiration Date</div>
-            </div>
-            <div className=" table-row">
-              <div className="table-cell p-2">{convertToDomainName(registryDomain?.name, registryDomain?.parent)}</div>
-              <div className="table-cell p-2">{registryDomain?.owner}</div>
-              <div className="table-cell p-2">
-                {registryDomain?.expirationDate
-                  ? new Date(Math.round(parseInt(registryDomain?.expirationDate) / 1000000)).toUTCString()
-                  : ""}
+    <>
+      <div className="w-3/4 mx-auto">
+        <div className="m-2">
+          <div className="my-8">
+            <h2 className="text-3xl text-black font-semibold  mb-2.5">Information</h2>
+            <div className="table w-full border-collapse">
+              <div className="table-header-group border-b font-medium">
+                <div className=" table-cell w-4/12 p-2">Domain Name</div>
+                <div className=" table-cell w-5/12 p-2">Owner Address</div>
+                <div className=" table-cell w-3/12 p-2">Expiration Date</div>
+              </div>
+              <div className=" table-row">
+                <div className="table-cell p-2">
+                  {convertToDomainName(registryDomain?.name, registryDomain?.parent)}
+                </div>
+                <div className="table-cell p-2">{registryDomain?.owner}</div>
+                <div className="table-cell p-2">
+                  {registryDomain?.expirationDate
+                    ? new Date(Math.round(parseInt(registryDomain?.expirationDate) / 1000000)).toUTCString()
+                    : ""}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="my-8">
-          <div className="container mx-auto">
-            <div className="grid grid-cols-2">
-              <h2 className="text-3xl text-black font-semibold  mb-2.5">Records</h2>
+          <div className="my-8">
+            <div className="container mx-auto">
+              <div className="grid grid-cols-2">
+                <h2 className="text-3xl text-black font-semibold  mb-2.5">Records</h2>
+              </div>
             </div>
-          </div>
-          <div className="table w-full border-collapse">
-            <div className="table-header-group border-b font-medium">
-              <div className=" table-cell p-2">Record Type</div>
-              <div className=" table-cell p-2">Value</div>
+            <div className="table w-full border-collapse">
+              <div className="table-header-group border-b font-medium">
+                <div className=" table-cell p-2">Record Type</div>
+                <div className=" table-cell p-2">Value</div>
+              </div>
+              {Object.values(registryDomain?.walletRecords || []).map((v, i) => {
+                return (
+                  <div key={i} className=" table-row text-justify">
+                    <div className="table-cell p-2">{v.walletRecordType}</div>
+                    <div className="table-cell p-2">{v.value}</div>
+                  </div>
+                );
+              })}
+              {Object.values(registryDomain?.dnsRecords || []).map((v, i) => {
+                return (
+                  <div key={i} className="table-row text-justify">
+                    <div className="table-cell p-2">{v.dnsRecordType}</div>
+                    <div className="table-cell p-2">{v.value}</div>
+                  </div>
+                );
+              })}
             </div>
-            {Object.values(registryDomain?.walletRecords || []).map((v, i) => {
-              return (
-                <div key={i} className=" table-row text-justify">
-                  <div className="table-cell p-2">{v.walletRecordType}</div>
-                  <div className="table-cell p-2">{v.value}</div>
-                </div>
-              );
-            })}
-            {Object.values(registryDomain?.dnsRecords || []).map((v, i) => {
-              return (
-                <div key={i} className="table-row text-justify">
-                  <div className="table-cell p-2">{v.dnsRecordType}</div>
-                  <div className="table-cell p-2">{v.value}</div>
-                </div>
-              );
-            })}
+            <IgntButton
+              onClick={() => {
+                setIsShow(true);
+              }}
+              className="mt-5 h-10 w-48"
+            >
+              Edit Record
+            </IgntButton>
           </div>
-          <IgntButton className="mt-5 h-10 w-48">Edit Record</IgntButton>
         </div>
       </div>
-    </div>
+      <EditRecordModal registryDomain={registryDomain} isShow={isShow} setIsShow={setIsShow} />
+    </>
   );
 }
