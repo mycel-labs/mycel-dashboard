@@ -1,8 +1,7 @@
 import { useRef, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useClient } from "../hooks/useClient";
 import { RegistryDomain } from "mycel-client-ts/mycel.registry/rest";
-import { IgntButton } from "@ignt/react-library";
+import ResolveButton from "../components/ResolveButton";
 
 import Fuse from "fuse.js";
 
@@ -17,7 +16,6 @@ export default function ExploreView() {
   const [domains, setDomains] = useState<FuseDomainEntry[]>([]);
   const [result, setResult] = useState<RegistryDomain[]>([]);
   const fuse = useRef<Fuse<FuseDomainEntry> | null>(null);
-  const navigate = useNavigate();
 
   const getDomainList = async () => {
     const response = await client.MycelRegistry.query.queryDomainAll();
@@ -53,7 +51,7 @@ export default function ExploreView() {
 
   return (
     <div className="w-3/4 mx-auto">
-      <h2 className=" text-2xl">Explore Domain</h2>
+      <h2 className="text-3xl text-black font-semibold  mb-2.5">Explore</h2>
       <div className="flex mt-2 p-2 justify-between">
         <input
           className="mr-6 mt-1 py-2 px-4 h-14 bg-gray-100 w-full border-xs text-base leading-tight rounded-xl outline-0"
@@ -67,12 +65,7 @@ export default function ExploreView() {
         {result.map((e) => (
           <div className="w-full flex justify-between my-4" key={e.name + "." + e.parent}>
             <h2 className=" text-2xl m-2 font-semibold">{e.name + "." + e.parent}</h2>
-            <IgntButton
-              onClick={() => navigate("/resolve?name=" + e.name + "&parent=" + e.parent)}
-              className="mt-1 h-10 w-48"
-            >
-              Resolve
-            </IgntButton>
+            <ResolveButton name={e.name} parent={e.parent} />
           </div>
         ))}
       </div>
