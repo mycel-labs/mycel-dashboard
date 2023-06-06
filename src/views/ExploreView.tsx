@@ -55,7 +55,7 @@ export default function ExploreView() {
       <div className="flex mt-2 p-2 justify-between">
         <input
           className="mr-6 mt-1 py-2 px-4 h-14 bg-gray-100 w-full border-xs text-base leading-tight rounded-xl outline-0"
-          placeholder="Mycel Domain"
+          placeholder="Search"
           onChange={(event) => {
             setQuery(event.target.value);
           }}

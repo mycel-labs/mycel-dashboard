@@ -98,7 +98,7 @@ export default function SendView() {
           onChange={async (e) => {
             setDomainName(e.target.value);
           }}
-          placeholder="Recipient Mycel Domain Name(e.g. your-name.foo.cel)"
+          placeholder="Recipient Domain Name (e.g. your-name.cel)"
           value={domainName}
         />
         {to ? (
@@ -115,7 +115,7 @@ export default function SendView() {
           className="mr-6 my-2 py-2 px-4 h-14 bg-gray-100 w-full border-xs text-base leading-tight rounded-xl outline-0"
           aria-label="Amount (ether)"
           onChange={(e) => setAmount(e.target.value)}
-          placeholder="Token Amount(e.g. 0.05)"
+          placeholder="Token Amount (e.g. 0.05)"
           value={amount}
         />
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useClient } from "../hooks/useClient";
+import { useNavigate } from "react-router-dom";
 import { RegistryDomain } from "mycel-client-ts/mycel.registry/rest";
 import { useAddressContext } from "../def-hooks/addressContext";
 import { IgntButton } from "@ignt/react-library";
@@ -9,6 +10,7 @@ import ResolveButton from "../components/ResolveButton";
 
 export default function RegisterView() {
   const client = useClient();
+  const navigate = useNavigate();
   const { address } = useAddressContext();
   const [query, setQuery] = useState<string>("");
   const [isRegistable, setIsRegistable] = useState<boolean>(false);
@@ -92,7 +94,15 @@ export default function RegisterView() {
           <div></div>
         )}
       </div>
-      <TxModal isShow={isShow} setIsShow={setIsShow} txResponse={txResponse} isLoading={isLoading} />
+      <TxModal
+        isShow={isShow}
+        setIsShow={setIsShow}
+        txResponse={txResponse}
+        isLoading={isLoading}
+        onClosed={() => {
+          navigate(`/resolve?name=${query}&parent=${"cel"}`);
+        }}
+      />
     </>
   );
 }
