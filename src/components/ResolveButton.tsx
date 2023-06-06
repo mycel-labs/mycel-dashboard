@@ -10,7 +10,7 @@ export default function ResolveButton(props: ResolveButtonProps) {
   return (
     <>
       <IgntButton
-        onClick={() => navigate("/resolve?name=" + props.name + "&parent=" + props.parent)}
+        onClick={() => navigate(`/resolve?name=${props.name}&parent=${props.parent}`)}
         className="mt-1 h-10 w-48"
       >
         Resolve

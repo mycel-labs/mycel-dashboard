@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { IgntButton } from "@ignt/react-library";
 import { convertToDomainName, convertToNameAndParent } from "../utils/domainName";
 import { useSearchParams } from "react-router-dom";
+import { useAddressContext } from "../def-hooks/addressContext";
 import { useRegistryDomain } from "../def-hooks/useRegistryDomain";
 import EditRecordModal from "../components/EditRecordModal";
 
 export default function ResolveView() {
+  const { address } = useAddressContext();
   const { registryDomain, updateRegistryDomain } = useRegistryDomain();
   const [query, setQuery] = useSearchParams({});
   const [inputtedDomainName, setInputtedDomainName] = useState("");
@@ -96,14 +98,17 @@ export default function ResolveView() {
                 );
               })}
             </div>
-            <IgntButton
-              onClick={() => {
-                setIsShow(true);
-              }}
-              className="mt-5 h-10 w-48"
-            >
-              Edit Record
-            </IgntButton>
+            {address === registryDomain?.owner && (
+              <IgntButton
+                disabled={!address}
+                onClick={() => {
+                  setIsShow(true);
+                }}
+                className="mt-5 h-10 w-48"
+              >
+                Edit Record
+              </IgntButton>
+            )}
           </div>
         </div>
       </div>
