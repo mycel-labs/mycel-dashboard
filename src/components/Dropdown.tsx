@@ -34,14 +34,14 @@ export default function Dropdown(props: DropdownProps) {
         </svg>
       </button>
       {isOpen && (
-        <div className="absolute z-10 w-full mt-2 bg-white border border-gray-300 rounded-md shadow-md">
+        <div className=" w-full mt-2 bg-white border border-gray-300 rounded-md shadow-md">
           {props.options.map((option) => (
             <button
               key={option.value}
               onClick={() => {
                 handleOptionSelect(option);
               }}
-              className="block w-full px-4 py-2 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+              className="block w-full px-4 py-2 text-gray-700 hover:bg-gray-100 focus:outline-none"
             >
               {option.label}
             </button>
