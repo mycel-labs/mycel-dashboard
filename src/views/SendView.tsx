@@ -103,12 +103,12 @@ export default function SendView() {
         />
         {to ? (
           <p className="m-2 text-sm text-gray-700">
-            <span className="italic">{domainName}</span> in <span className="italic">{targetWalletRecordType}</span> is{" "}
+            <span className="italic">{domainName}</span> on {targetWalletRecordType} is{" "}
             <span className="italic">{to}</span>.
           </p>
         ) : (
           <p className="m-2 text-sm text-red-500">
-            <span className="italic">{domainName}</span> doesn&apos;t exists in registry.
+            <span className="italic">{domainName}</span> doesn&apos;t exists in registry on {targetWalletRecordType}.
           </p>
         )}
         <input
@@ -135,11 +135,7 @@ export default function SendView() {
             <p>
               Successfully sent {amount} ether to {to}
             </p>
-            <div>
-              <a className=" underline" href={`https://goerli.etherscan.io/tx/${data?.hash}`}>
-                Etherscan Result Link
-              </a>
-            </div>
+            <p>TxHash: {data?.hash}</p>
           </div>
         )}
       </div>
