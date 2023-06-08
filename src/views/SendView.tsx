@@ -39,9 +39,9 @@ export default function SendView() {
   const [targetWalletRecordType, setTargetWalletRecordType] = useState(RegistryWalletRecordType.ETHEREUM_MAINNET);
   const [debouncedDomainName] = useDebounce(domainName, 500);
   const [to, setTo] = useState("");
-
   const [amount, setAmount] = useState("");
-  const [debouncedAmount] = useDebounce(amount, 500);
+  const [isValidAmount, setIsValidAmount] = useState(false);
+  const [debouncedAmount] = useDebounce(isValidAmount ? amount : "", 500);
 
   const { config } = usePrepareSendTransaction({
     request: {
@@ -77,6 +77,15 @@ export default function SendView() {
       setTo("");
     }
   }, [registryDomain]);
+
+  useEffect(() => {
+    const pattern = /^[0-9]+(\.[0-9]+)?$/;
+    if (pattern.test(amount) === false) {
+      setIsValidAmount(false);
+    } else {
+      setIsValidAmount(true);
+    }
+  }, [amount]);
 
   useEffect(() => {
     updateRegistryDomain(domainName)
@@ -118,6 +127,11 @@ export default function SendView() {
           placeholder="Token Amount (e.g. 0.05)"
           value={amount}
         />
+        {!isValidAmount && (
+          <p className="m-2 text-sm text-red-500">
+            <span className="italic">{domainName}</span> Invalid Amount.
+          </p>
+        )}
 
         <IgntButton
           className="mt-1 h-14 w-full"
