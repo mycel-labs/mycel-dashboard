@@ -1,4 +1,4 @@
-# mycel Frontend
+# Mycel Frontend
 
 ## Getting Started
 Install Dependencies
