@@ -13,12 +13,46 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { EthereumClient, w3mConnectors, w3mProvider } from "@web3modal/ethereum";
 import { Web3Modal } from "@web3modal/react";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
-import { mainnet, polygon, goerli, polygonMumbai, gnosisChiado } from "wagmi/chains";
+import {
+  mainnet,
+  sepolia,
+  goerli,
+  polygon,
+  polygonMumbai,
+  bsc,
+  bscTestnet,
+  avalanche,
+  avalancheFuji,
+  gnosis,
+  gnosisChiado,
+  optimism,
+  optimismGoerli,
+  arbitrum,
+  arbitrumGoerli,
+  shardeumSphinx,
+} from "wagmi/chains";
 
 const queryClient = new QueryClient();
 
-const chains = [mainnet, polygon, goerli, polygonMumbai, gnosisChiado];
-const projectId = "16f0505118c2c30cff533282efbde193";
+const chains = [
+  mainnet,
+  sepolia,
+  goerli,
+  polygon,
+  polygonMumbai,
+  bsc,
+  bscTestnet,
+  avalanche,
+  avalancheFuji,
+  gnosis,
+  gnosisChiado,
+  optimism,
+  optimismGoerli,
+  arbitrum,
+  arbitrumGoerli,
+  shardeumSphinx,
+];
+const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID ?? "";
 
 const { provider } = configureChains(chains, [w3mProvider({ projectId })]);
 const wagmiClient = createClient({
