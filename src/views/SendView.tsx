@@ -2,11 +2,28 @@ import React, { useEffect, useState } from "react";
 import { useNetwork, usePrepareSendTransaction, useSendTransaction, useWaitForTransaction } from "wagmi";
 import { parseEther } from "ethers/lib/utils.js";
 import { useDebounce } from "use-debounce";
-import { Web3Button } from "@web3modal/react";
+import { Web3Button, Web3NetworkSwitch } from "@web3modal/react";
 import { IgntButton } from "@ignt/react-library";
 import { RegistryDomain, RegistryWalletRecordType } from "mycel-client-ts/mycel.registry/rest";
 import { useRegistryDomain } from "../def-hooks/useRegistryDomain";
-import { mainnet, polygon, goerli, polygonMumbai, gnosisChiado } from "wagmi/chains";
+import {
+  mainnet,
+  sepolia,
+  goerli,
+  polygon,
+  polygonMumbai,
+  bsc,
+  bscTestnet,
+  avalanche,
+  avalancheFuji,
+  gnosis,
+  gnosisChiado,
+  optimism,
+  optimismGoerli,
+  arbitrum,
+  arbitrumGoerli,
+  shardeumSphinx,
+} from "wagmi/chains";
 
 const getWalletAddr = (domain: RegistryDomain, recordType: RegistryWalletRecordType) => {
   if (!domain || !domain.walletRecords || !domain.walletRecords[recordType]) {
@@ -19,14 +36,36 @@ const getConnectedWalletRecordType = (chainId: number) => {
   switch (chainId) {
     case mainnet.id:
       return RegistryWalletRecordType.ETHEREUM_MAINNET;
-    case polygon.id:
-      return RegistryWalletRecordType.POLYGON_MAINNET;
     case goerli.id:
       return RegistryWalletRecordType.ETHEREUM_GOERLI;
+    case sepolia.id:
+      return RegistryWalletRecordType.ETHEREUM_SEPOLIA;
+    case polygon.id:
+      return RegistryWalletRecordType.POLYGON_MAINNET;
     case polygonMumbai.id:
       return RegistryWalletRecordType.POLYGON_MUMBAI;
+    case bsc.id:
+      return RegistryWalletRecordType.BNB_MAINNET;
+    case bscTestnet.id:
+      return RegistryWalletRecordType.BNB_TESTNET;
+    case avalanche.id:
+      return RegistryWalletRecordType.AVALANCHE_CCHAIN;
+    case avalancheFuji.id:
+      return RegistryWalletRecordType.AVALANCHE_FUJI;
+    case gnosis.id:
+      return RegistryWalletRecordType.GNOSIS_MAINNET;
     case gnosisChiado.id:
-      throw new Error("Not implemented yet");
+      return RegistryWalletRecordType.GNOSIS_CHIADO;
+    case optimism.id:
+      return RegistryWalletRecordType.OPTIMISM_MAINNET;
+    case optimismGoerli.id:
+      return RegistryWalletRecordType.OPTIMISM_GOERLI;
+    case arbitrum.id:
+      return RegistryWalletRecordType.ARBITRUM_MAINNET;
+    case arbitrumGoerli.id:
+      return RegistryWalletRecordType.ARBITRUM_GOERLI;
+    case shardeumSphinx.id:
+      return RegistryWalletRecordType.SHARDEUM_BETANET;
     default:
       throw new Error(`Unknown chainId: ${chainId}`);
   }
@@ -93,11 +132,14 @@ export default function SendView() {
       .catch((e) => {
         console.error(e);
       });
-  }, [debouncedDomainName]);
+  }, [debouncedDomainName, chain]);
 
   return (
     <div className="w-3/4 mx-auto">
-      <div className="m-4">
+      <div className="relative flex flex-row">
+        <div className="px-3">
+          <Web3NetworkSwitch />
+        </div>
         <Web3Button />
       </div>
       <div className="flex-row m-4">

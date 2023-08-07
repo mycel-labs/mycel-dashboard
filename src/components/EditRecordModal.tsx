@@ -36,7 +36,7 @@ export default function EditRecordModal(props: EditRecordModalProps) {
   const client = useClient();
   const navigate = useNavigate();
   const { address } = useAddressContext();
-  const [recordOption, setRecordOption] = useState("dns");
+  const [recordOption, setRecordOption] = useState("wallet");
   const [typeOption, setTypeOption] = useState("");
   const [typeOptions, setTypeOptions] = useState<Option[]>([]);
   const [currentRecordValue, setCurrentRecordValue] = useState("");
