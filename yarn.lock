@@ -4963,10 +4963,10 @@ multiformats@^9.4.2:
   resolved "https://registry.yarnpkg.com/multiformats/-/multiformats-9.9.0.tgz#c68354e7d21037a8f1f8833c8ccd68618e8f1d37"
   integrity sha512-HoMUjhH9T8DDBNT+6xzkrd9ga/XiBI4xLr58LJACwK6G3HTOPeMz4nB4KJs33L2BelrIJa7P0VuNaVF3hMYfjg==
 
-mycel-client-ts@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/mycel-client-ts/-/mycel-client-ts-0.0.8.tgz#0b7c1ba9f9b3d054559ea8a69c439a6284e6659a"
-  integrity sha512-dLteztavtwDpMz4XYfpqXavtRX99hI/omcXl5t5ONgTN0TBKenouOLKt/Ky8LZ2kFZmd7esKUxZ9QCD/ioW9AA==
+mycel-client-ts@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/mycel-client-ts/-/mycel-client-ts-0.0.9.tgz#0224f49c0f4d8f1dfbeebaf549b0a78529a36d92"
+  integrity sha512-H4OcIxQuvUV03MuPgJUngDTDmb2D9uZzHqSY0rqulMRRKM5Du4x4rqHGn2hXiJlvm8yuy97wCMEPtg9hMZMbnw==
   dependencies:
     "@cosmjs/launchpad" "0.27.0"
     "@cosmjs/proto-signing" "0.27.0"

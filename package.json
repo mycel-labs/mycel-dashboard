@@ -17,7 +17,7 @@
     "fuse.js": "^6.6.2",
     "gradient-avatar": "^1.0.2",
     "long": "^5.2.0",
-    "mycel-client-ts": "^0.0.8",
+    "mycel-client-ts": "^0.0.9",
     "qrcode": "^1.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
