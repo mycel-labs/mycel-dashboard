@@ -1,5 +1,5 @@
 import { Chain } from "@wagmi/chains";
-import { RegistryWalletRecordType } from "mycel-client-ts/mycel.registry/rest";
+import { RegistryNetworkName } from "mycel-client-ts/mycel.registry/rest";
 
 import {
   mainnet,
@@ -58,42 +58,42 @@ export const chains: Chain[] = [
   zetaAthens,
 ];
 
-export const getConnectedWalletRecordType = (chainId: number) => {
+export const getConnectedNetworkName = (chainId: number) => {
   switch (chainId) {
     case mainnet.id:
-      return RegistryWalletRecordType.ETHEREUM_MAINNET;
+      return RegistryNetworkName.ETHEREUM_MAINNET_MAINNET;
     case goerli.id:
-      return RegistryWalletRecordType.ETHEREUM_GOERLI;
+      return RegistryNetworkName.ETHEREUM_TESTNET_GOERLI;
     case sepolia.id:
-      return RegistryWalletRecordType.ETHEREUM_SEPOLIA;
+      return RegistryNetworkName.ETHEREUM_TESTNET_SEPOLIA;
     case polygon.id:
-      return RegistryWalletRecordType.POLYGON_MAINNET;
+      return RegistryNetworkName.POLYGON_MAINNET_MAINNET;
     case polygonMumbai.id:
-      return RegistryWalletRecordType.POLYGON_MUMBAI;
+      return RegistryNetworkName.POLYGON_TESTNET_MUMBAI;
     case bsc.id:
-      return RegistryWalletRecordType.BNB_MAINNET;
+      return RegistryNetworkName.BNB_MAINNET_MAINNET;
     case bscTestnet.id:
-      return RegistryWalletRecordType.BNB_TESTNET;
+      return RegistryNetworkName.BNB_TESTNET_TESTNET;
     case avalanche.id:
-      return RegistryWalletRecordType.AVALANCHE_CCHAIN;
+      return RegistryNetworkName.AVALANCHE_MAINNET_CCHAIN;
     case avalancheFuji.id:
-      return RegistryWalletRecordType.AVALANCHE_FUJI;
+      return RegistryNetworkName.AVALANCHE_TESTNET_FUJI;
     case gnosis.id:
-      return RegistryWalletRecordType.GNOSIS_MAINNET;
+      return RegistryNetworkName.GNOSIS_MAINNET_MAINNET;
     case gnosisChiado.id:
-      return RegistryWalletRecordType.GNOSIS_CHIADO;
+      return RegistryNetworkName.GNOSIS_TESTNET_CHIADO;
     case optimism.id:
-      return RegistryWalletRecordType.OPTIMISM_MAINNET;
+      return RegistryNetworkName.OPTIMISM_MAINNET_MAINNET;
     case optimismGoerli.id:
-      return RegistryWalletRecordType.OPTIMISM_GOERLI;
+      return RegistryNetworkName.OPTIMISM_TESTNET_GOERLI;
     case arbitrum.id:
-      return RegistryWalletRecordType.ARBITRUM_MAINNET;
+      return RegistryNetworkName.ARBITRUM_MAINNET_MAINNET;
     case arbitrumGoerli.id:
-      return RegistryWalletRecordType.ARBITRUM_GOERLI;
+      return RegistryNetworkName.ARBITRUM_TESTNET_GOERLI;
     case shardeumSphinx.id:
-      return RegistryWalletRecordType.SHARDEUM_BETANET;
+      return RegistryNetworkName.SHARDEUM_BETANET_SPHINX;
     case zetaAthens.id:
-      return RegistryWalletRecordType.ZETA_TESTNET;
+      return RegistryNetworkName.ZETA_TESTNET_ATHENS;
     default:
       throw new Error(`Unknown chainId: ${chainId}`);
   }

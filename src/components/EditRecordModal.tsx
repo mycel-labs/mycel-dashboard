@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useClient } from "../hooks/useClient";
 import { IgntModal, IgntButton } from "@ignt/react-library";
 import { DnsRecordType } from "mycel-client-ts/mycel.registry/types/mycel/registry/dns_record";
-import { WalletRecordType } from "mycel-client-ts/mycel.registry/types/mycel/registry/wallet_record";
+import { NetworkName } from "mycel-client-ts/mycel.registry/types/mycel/registry/network_name";
 import { RegistryDomain } from "mycel-client-ts/mycel.registry/rest";
 import { DeliverTxResponse } from "@cosmjs/stargate";
 import { useAddressContext } from "../def-hooks/addressContext";
@@ -51,7 +51,7 @@ export default function EditRecordModal(props: EditRecordModalProps) {
       setTypeOptions(RecordTypeToOptions(DnsRecordType));
       setTypeOption("A");
     } else if (recordOption === "wallet") {
-      setTypeOptions(RecordTypeToOptions(WalletRecordType));
+      setTypeOptions(RecordTypeToOptions(NetworkName));
       setTypeOption("ETHEREUM_MAINNET");
     }
   }, [recordOption]);
