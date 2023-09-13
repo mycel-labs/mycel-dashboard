@@ -1,6 +1,7 @@
 import { useAddressContext } from "../def-hooks/addressContext";
 import ResolveButton from "../components/ResolveButton";
 import { useDomainOwnership } from "../def-hooks/useDomainOwnership";
+import { Network } from "lucide-react";
 
 interface MyDomainsProps {
   className?: string;
@@ -12,9 +13,10 @@ export default function MyDomains(props: MyDomainsProps) {
 
   return (
     <section className={className ?? ""}>
-      <header className="flex items-center justify-between">
-        <h2 className="text-3xl text-black font-semibold p-0 m-0 mb-2.5 flex-1">Domains</h2>
-      </header>
+      <h3 className="text-xl text-black font-semibold px-1 py-2 flex flex-1 items-center border-b-2 border-black">
+        <Network className="opacity-70 mr-2" size={24} />
+        My Domains
+      </h3>
       <table className="table-auto w-full">
         <tbody>
           {domains?.map((domain) => (

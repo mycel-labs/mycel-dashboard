@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { SigningStargateClient, DeliverTxResponse } from "@cosmjs/stargate";
 import { OfflineDirectSigner } from "@keplr-wallet/types";
-import { IgntButton } from "@ignt/react-library";
 import { useClient } from "../hooks/useClient";
 import { useAddressContext } from "../def-hooks/addressContext";
 import TxModal from "../components/TxModal";
+import Button from "../components/Button";
 
 export default function Faucet() {
   const { address } = useAddressContext();
@@ -70,11 +70,11 @@ export default function Faucet() {
   };
 
   return (
-    <>
-      <IgntButton className="w-full" disabled={!isClaimable} onClick={claimFaucet}>
+    <div>
+      <Button className="btn-primary w-full py-2" disabled={!isClaimable} onClick={claimFaucet}>
         Claim
-      </IgntButton>
+      </Button>
       <TxModal isShow={isShow} setIsShow={setIsShow} txResponse={txResponse} isLoading={isLoading} />
-    </>
+    </div>
   );
 }

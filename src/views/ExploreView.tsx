@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react";
+import { Search } from "lucide-react";
 import { useClient } from "../hooks/useClient";
 import { RegistryDomain } from "mycel-client-ts/mycel.registry/rest";
 import ResolveButton from "../components/ResolveButton";
@@ -68,26 +69,27 @@ export default function ExploreView() {
   }, [query]);
 
   return (
-    <div className="w-3/4 mx-auto">
-      <h2 className="text-3xl text-black font-semibold  mb-2.5">Explore </h2>
-      <div className="flex mt-2 p-2 justify-between">
-        <input
-          className="mr-6 mt-1 py-2 px-4 h-14 bg-gray-100 w-full border-xs text-base leading-tight rounded-xl outline-0"
-          placeholder="Search"
-          onChange={(event) => {
-            setQuery(event.target.value);
-          }}
-        />
-      </div>
-      <div>
+    <div className="container my-12">
+      <h2 className="font-cursive text-3xl text-black font-semibold mb-6 flex items-center">
+        <Search className="opacity-70 mr-2" size={28} />
+        Explore
+      </h2>
+      <input
+        className="mr-6 mt-1 py-2 px-4 h-14 bg-white w-full text-base leading-tight outline-0 border border-black"
+        placeholder="Search"
+        onChange={(event) => {
+          setQuery(event.target.value);
+        }}
+      />
+      <div className="mt-10">
         {result.map((e) => (
-          <div className="w-full flex justify-between my-4" key={e.name + "." + e.parent}>
+          <div className="w-full flex justify-between my-6" key={e.name + "." + e.parent}>
             <h2 className=" text-2xl m-2 font-semibold">{e.name + "." + e.parent}</h2>
             <ResolveButton name={e.name} parent={e.parent} />
           </div>
         ))}
       </div>
-      <div>
+      <div className="mt-12">
         <Pagenation totalPages={totalPages} currentPage={currentPage} paginationLimit={2} onPageChange={onPageChange} />
       </div>
     </div>

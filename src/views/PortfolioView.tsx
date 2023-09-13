@@ -8,13 +8,15 @@ import MyDomains from "../components/MyDomains";
 export default function PortfolioView() {
   return (
     <div>
-      <div className="container mx-auto">
-        <div className="flex grid-cols-2 justify-between">
-          <div className="w-1/2">
-            <IgntAssets className="px-2.5 mb-10" displayLimit={3} />
-            <IgntTransactions className="px-2.5" />
+      <div className="container my-12">
+        <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
+          <div>
+            <IgntAssets className="mb-12" displayLimit={3} />
+            <IgntTransactions className="mb-12" />
           </div>
-          <IgntTransfer className="px-2.5 pl-10 w-1/2 mx-auto" />
+          <div>
+            <IgntTransfer />
+          </div>
         </div>
         <MyDomains className="py-8 px-2.5" />
       </div>

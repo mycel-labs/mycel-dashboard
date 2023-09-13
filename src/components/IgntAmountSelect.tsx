@@ -72,7 +72,7 @@ export default function IgntAmountSelect(props: IgntAmountSelectProps) {
           onChange={(val) => {
             handleInputChange({ amount: val, denom: x.denom });
           }}
-          className="flex justify-between items-center my-1 py-3 rounded-xl relative px-4"
+          className="flex justify-between items-center py-3 relative px-4"
         />
       ))}
 
@@ -103,7 +103,7 @@ export default function IgntAmountSelect(props: IgntAmountSelectProps) {
               </div>
               <input
                 ref={searchInput}
-                className="-ml-8 pl-10 pr-10 leading-12 h-12 appearance-none w-full outline-none border-none rounded-xl focus:shadow-outline"
+                className="-ml-8 pl-10 pr-10 leading-12 h-12 appearance-none w-full outline-none border-black border focus:shadow-outline"
                 placeholder="Search assets"
                 value={state.tokenSearch}
                 onChange={(evt) => {

@@ -7,9 +7,10 @@ import { useMemo, useState } from "react";
 import { useAddressContext } from "../def-hooks/addressContext";
 import { useClient } from "../hooks/useClient";
 import { Amount } from "../utils/interfaces";
-import { IgntChevronDownIcon, IgntButton } from "@ignt/react-library";
+import { IgntChevronDownIcon } from "@ignt/react-library";
 import IgntAmountSelect from "./IgntAmountSelect";
 import { useAssets } from "../def-hooks/useAssets";
+import Button from "./Button";
 import Long from "long";
 
 interface IgntSendProps {
@@ -220,7 +221,7 @@ export default function IgntSend(props: IgntSendProps) {
           <input
             value={state.tx.receiver}
             className={cx({
-              "mt-1 py-2 px-4 h-12 bg-gray-100 border-xs text-base leading-tight w-full rounded-xl outline-0": true,
+              "mt-1 py-2 px-4 h-12 bg-white text-base leading-tight w-full outline-0 border border-black": true,
               "border border-red-400": state.tx.receiver.length > 0 && !validReceiver,
             })}
             placeholder="Recipient address"
@@ -234,19 +235,17 @@ export default function IgntSend(props: IgntSendProps) {
             }}
           />
           {state.tx.receiver.length > 0 && !validReceiver && (
-            <div className="text-xs text-red-400 mt-1">Invalid address</div>
+            <div className="text-xs text-error mt-1">Invalid address</div>
           )}
         </div>
       </div>
       {hasAnyBalance && (
-        <div>
-          <IgntAmountSelect
-            className="token-selector--main"
-            selected={state.tx.amounts}
-            balances={balances.assets as Amount[]}
-            update={handleTxAmountUpdate}
-          />
-        </div>
+        <IgntAmountSelect
+          className="w-full border border-black mt-4 bg-white"
+          selected={state.tx.amounts}
+          balances={balances.assets as Amount[]}
+          update={handleTxAmountUpdate}
+        />
       )}
 
       <div
@@ -277,11 +276,10 @@ export default function IgntSend(props: IgntSendProps) {
               update={handleTxFeesUpdate}
             />
 
-            <div className="text-xs mt-8 text-gray-600">Reference (memo)</div>
-
+            <div className="text-xs mt-8 text-black">Reference (memo)</div>
             <div className="mb-4">
               <input
-                className="mt-1 py-2 px-4 h-12 bg-gray-100 border-xs text-base leading-tight w-full rounded-xl outline-0"
+                className="mt-1 py-2 px-4 h-12 bg-white border border-black text-base leading-tight w-full outline-0"
                 placeholder="Enter a reference"
                 onChange={(evt) => {
                   setState((oldState) => {
@@ -293,11 +291,11 @@ export default function IgntSend(props: IgntSendProps) {
               />
             </div>
 
-            <div className="text-xs text-gray-600">Channel</div>
+            <div className="text-xs text-black">Channel</div>
 
             <div className="input-wrapper">
               <input
-                className="mt-1 py-2 px-4 h-12 bg-gray-100 border-xs text-base leading-tight w-full rounded-xl outline-0"
+                className="mt-1 py-2 px-4 h-12 bg-white border border-black text-base leading-tight w-full outline-0"
                 placeholder="Enter a channel"
                 onChange={(evt) => {
                   setState((oldState) => {
@@ -315,9 +313,9 @@ export default function IgntSend(props: IgntSendProps) {
       <div style={{ width: "100%", height: "24px" }} />
 
       <div>
-        <IgntButton className="w-full" disabled={!ableToTx} onClick={sendTx} busy={isTxOngoing}>
+        <Button className="w-full btn-primary py-2" disabled={!ableToTx} onClick={sendTx} busy={isTxOngoing}>
           Send
-        </IgntButton>
+        </Button>
         {isTxError && (
           <div className="flex items-center justify-center text-xs text-red-500 italic mt-2"> Error submitting Tx</div>
         )}
