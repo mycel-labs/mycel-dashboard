@@ -98,7 +98,7 @@ export default function IgntAmountSelect(props: IgntAmountSelectProps) {
         body={
           <>
             <div className="relative mb-4 flex items-center">
-              <div className="z-50">
+              <div className="z-40">
                 <IgntSearchIcon className="ml-4" />
               </div>
               <input

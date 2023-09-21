@@ -70,7 +70,7 @@ export default function IgntAssets(props: IgntAssetsProps) {
         </h3>
         {balances.assets.length > 0 && (
           <div className="flex items-center justify-end">
-            <div className="z-50">
+            <div className="z-40">
               <IgntSearchIcon />
             </div>
             <input
