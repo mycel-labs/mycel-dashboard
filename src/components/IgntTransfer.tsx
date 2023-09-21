@@ -40,8 +40,12 @@ export default function IgntTransfer(props: IgntTransferProps) {
               </div>
             )}
           </div>
-          <div className="px-2 py-12" title="Faucet">
-            {address && <Faucet />}
+          <div className="px-2" title="Faucet">
+            {address && (
+              <div className="px-2 py-10">
+                <Faucet />
+              </div>
+            )}
           </div>
         </IgntTabs>
       </div>

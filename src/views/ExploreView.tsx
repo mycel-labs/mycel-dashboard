@@ -81,10 +81,10 @@ export default function ExploreView() {
           setQuery(event.target.value);
         }}
       />
-      <div className="mt-10">
+      <div className="mt-10 overflow-auto">
         {result.map((e) => (
-          <div className="w-full flex justify-between my-6" key={e.name + "." + e.parent}>
-            <h2 className=" text-2xl m-2 font-semibold">{e.name + "." + e.parent}</h2>
+          <div className="w-full flex justify-between my-6 flex-nowrap" key={e.name + "." + e.parent}>
+            <div className="flex-1 text-2xl m-2 font-semibold whitespace-normal">{e.name + "." + e.parent}</div>
             <ResolveButton name={e.name} parent={e.parent} />
           </div>
         ))}

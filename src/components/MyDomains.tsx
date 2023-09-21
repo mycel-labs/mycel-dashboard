@@ -38,7 +38,7 @@ export default function MyDomains(props: MyDomainsProps) {
           <span className="sr-only">Loading...</span>
         </div>
       )}
-      {!domains && <div className="text-left text-black opacity-75 text-md font-normal py-8">You have no domains</div>}
+      {!domains && <div className="text-black/70 text-center font-normal py-8">You have no domains</div>}
     </section>
   );
 }

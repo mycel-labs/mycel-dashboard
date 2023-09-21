@@ -10,7 +10,7 @@ export default function ResolveButton(props: ResolveButtonProps) {
     <>
       <button
         onClick={() => navigate(`/resolve?name=${props.name}&parent=${props.parent}`)}
-        className="btn-primary w-40 py-1"
+        className="btn-primary w-28 h-10 shrink-0"
       >
         Resolve
       </button>

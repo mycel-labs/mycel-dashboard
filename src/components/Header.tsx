@@ -25,7 +25,7 @@ export default function IgntHeader(props: IgntHeaderProps) {
   };
 
   return (
-    <header className="flex px-3 border-b-2 border-black fixed w-full h-20 justify-between z-50 bg-cream mb-20">
+    <header className="flex px-3 border-b-2 border-black fixed w-full h-20 justify-between z-50 bg-cream mb-20 flex-nowrap">
       <div className="w-full flex flex-wrap items-center justify-between mx-auto p-4">
         <img src={Logo} width="125" alt="mycel" className="mt-0.5" />
         <div className="flex lg:order-2">
