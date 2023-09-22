@@ -1,6 +1,7 @@
 import { createBrowserRouter, Outlet } from "react-router-dom";
 
-import IgntHeader from "../components/IgntHeader";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 import PortfolioView from "../views/PortfolioView";
 import ResolveView from "../views/ResolveView";
 import SendView from "../views/SendView";
@@ -27,10 +28,13 @@ const items = [
 ];
 const Layout = () => {
   return (
-    <>
-      <IgntHeader navItems={items} />
-      <Outlet />
-    </>
+    <div className="flex flex-col h-screen justify-between">
+      <Header navItems={items} />
+      <main className="mb-auto pt-20">
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
   );
 };
 const router = createBrowserRouter([

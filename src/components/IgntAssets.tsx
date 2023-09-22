@@ -7,6 +7,7 @@ import IgntDenom from "./IgntDenom";
 import { useAddressContext } from "../def-hooks/addressContext";
 import { IgntSearchIcon, IgntClearIcon, IgntArrowIcon } from "@ignt/react-library";
 import { ChangeEvent, useRef, useState } from "react";
+import { Coins } from "lucide-react";
 
 interface IgntAssetsProps {
   className?: string;
@@ -62,11 +63,14 @@ export default function IgntAssets(props: IgntAssetsProps) {
   };
   return (
     <section className={className ?? ""}>
-      <header className="flex items-center justify-between">
-        <h2 className="text-3xl text-black font-semibold p-0 m-0 mb-2.5 flex-1">Assets</h2>
+      <header className="flex items-center justify-between px-1 py-2 border-b-2 border-black">
+        <h3 className="text-xl text-black font-semibold flex items-center">
+          <Coins className="opacity-70 mr-2" size={24} />
+          Assets
+        </h3>
         {balances.assets.length > 0 && (
-          <div className="flex items-center justify-end mb-2.5">
-            <div className="z-50">
+          <div className="flex items-center justify-end">
+            <div className="z-40">
               <IgntSearchIcon />
             </div>
             <input
@@ -75,7 +79,7 @@ export default function IgntAssets(props: IgntAssetsProps) {
               autoComplete="off"
               placeholder="Search assets"
               value={state.searchQuery}
-              className="w-48 -ml-8 pl-10 pr-10 leading-12 h-12 appearance-none outline-none border-none rounded-xl focus:shadow-outline"
+              className="w-48 -ml-8 pl-10 pr-10 leading-12 h-10 appearance-none outline-none bg-white hover:border-black"
               onChange={(evt) => {
                 resetDisplayLimit(evt);
                 return evt;
@@ -83,7 +87,7 @@ export default function IgntAssets(props: IgntAssetsProps) {
             />
             {state.searchQuery && (
               <div
-                className="z-50 absolute mr-4"
+                className="z-40 absolute mr-4"
                 onClick={() => {
                   resetSearch();
                 }}
@@ -94,41 +98,43 @@ export default function IgntAssets(props: IgntAssetsProps) {
           </div>
         )}
       </header>
-      <table className="table-auto w-full">
-        {balances.assets.length ? (
-          <thead>
-            <tr>
-              <td className="text-left text-xs text-black opacity-70">Asset</td>
-              <td></td>
-              <td className="text-right text-xs text-black opacity-70">Available balance</td>
-            </tr>
-          </thead>
-        ) : null}
-        <tbody>
-          {filteredBalanceList.slice(0, state.displayLimit).map((balance) => (
-            <tr className="py-2" key={balance?.denom}>
-              <td className="flex items-center py-5 font-semibold">
-                <IgntDenom denom={balance?.denom ?? ""} modifier="avatar" className="mr-6" />
-                <IgntDenom denom={balance?.denom ?? ""} />
-              </td>
-              <td>
-                <IgntDenom denom={balance?.denom ?? ""} modifier="path" className="text-normal opacity-50" />
-              </td>
-              <td className="text-right font-bold py-5 text-black text-lg">
-                {new Intl.NumberFormat("en-GB").format(Number(balance?.amount))}
-              </td>
-            </tr>
-          ))}
-          {noSearchResults ? (
-            <tr>
-              <td className="text-center text-black text-md font-bold py-10" colSpan={3}>
-                <h4>No results for &lsquo;{state.searchQuery}&rsquo;</h4>
-                <p className="text-sm font-normal">Try again with another search</p>
-              </td>
-            </tr>
+      <div className="px-2">
+        <table className="table-auto w-full mt-4">
+          {balances.assets.length ? (
+            <thead>
+              <tr>
+                <td className="text-left text-xs text-black/70">Asset</td>
+                <td></td>
+                <td className="text-right text-xs text-black/70">Available balance</td>
+              </tr>
+            </thead>
           ) : null}
-        </tbody>
-      </table>
+          <tbody>
+            {filteredBalanceList.slice(0, state.displayLimit).map((balance) => (
+              <tr className="py-2" key={balance?.denom}>
+                <td className="flex items-center py-5 font-semibold">
+                  <IgntDenom denom={balance?.denom ?? ""} modifier="avatar" className="mr-6" />
+                  <IgntDenom denom={balance?.denom ?? ""} />
+                </td>
+                <td>
+                  <IgntDenom denom={balance?.denom ?? ""} modifier="path" className="text-normal opacity-50" />
+                </td>
+                <td className="text-right font-bold py-5 text-black text-lg">
+                  {new Intl.NumberFormat("en-GB").format(Number(balance?.amount))}
+                </td>
+              </tr>
+            ))}
+            {noSearchResults ? (
+              <tr>
+                <td className="text-center text-black text-md font-bold py-10" colSpan={3}>
+                  <h4>No results for &lsquo;{state.searchQuery}&rsquo;</h4>
+                  <p className="text-sm font-normal">Try again with another search</p>
+                </td>
+              </tr>
+            ) : null}
+          </tbody>
+        </table>
+      </div>
       {address && balances.isLoading && (
         <div role="status" className="w-100 animate-pulse flex flex-col">
           {[...Array(3)].map((_, index) => (
@@ -144,7 +150,7 @@ export default function IgntAssets(props: IgntAssetsProps) {
         </div>
       )}
       {(!address || (!balances.isLoading && !balances.assets.length)) && (
-        <div className="text-left text-black opacity-75 text-md font-normal py-8">You have no assets</div>
+        <div className="text-black/70 py-8 text-center">You have no assets</div>
       )}
       {((!balances.isLoading && hasMore) || isShowMore) && (
         <div

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useClient } from "../hooks/useClient";
-import { IgntModal, IgntButton } from "@ignt/react-library";
+import { IgntModal } from "@ignt/react-library";
+import Button from "./Button";
 import { DnsRecordType } from "mycel-client-ts/mycel.registry/types/mycel/registry/dns_record";
 import { NetworkName } from "mycel-client-ts/mycel.registry/types/mycel/registry/network_name";
 import { RegistryDomain } from "mycel-client-ts/mycel.registry/rest";
@@ -138,39 +139,37 @@ export default function EditRecordModal(props: EditRecordModalProps) {
         cancelButton={false}
         submitButton={false}
         close={() => props.setIsShow(false)}
-        className="text-center"
+        className="rounded-none"
         header={
           <div className="flex items-center flex-col my-3">
             <h3 className="text-3xl font-semibold">Edit Record</h3>
           </div>
         }
         body={
-          <>
-            <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-              <div className="relative flex-auto">
-                <Radio options={recordOptions} selectedOption={recordOption} onChange={handleRecordOptionChange} />
-                <div className="text-xs text-gray-600 pt-2">Record Type</div>
-                <Dropdown options={typeOptions} selectedOption={typeOption} onSelect={handleRecordTypeChange} />
-                <div className="text-xs text-gray-600 pt-2">CurrentRecord Record</div>
-                <h2 className="text-l font-semibold py-2">{currentRecordValue ? currentRecordValue : "---"}</h2>
-                <div className="text-xs text-gray-600 pt-2">New Record</div>
-                <input
-                  className="mt-1 py-2 px-4 h-12 bg-gray-100 border-xs text-base leading-tight w-full rounded-xl outline-0"
-                  value={newRecordValue}
-                  onChange={(e) => setNewRecordValue(e.target.value)}
-                />
-                <IgntButton
-                  disabled={!address || newRecordValue === ""}
-                  onClick={updateRecord}
-                  className="mt-10 h-10 w-48"
-                >
-                  Update
-                </IgntButton>
-              </div>
+          <div className="bg-white">
+            <div className="relative flex-auto">
+              <Radio options={recordOptions} selectedOption={recordOption} onChange={handleRecordOptionChange} />
+              <div className="text-xs text-gray-600 pt-2">Record Type</div>
+              <Dropdown options={typeOptions} selectedOption={typeOption} onSelect={handleRecordTypeChange} />
+              <div className="text-xs text-gray-600 pt-2">CurrentRecord Record</div>
+              <h2 className="text-l font-semibold py-2">{currentRecordValue ? currentRecordValue : "---"}</h2>
+              <div className="text-xs text-gray-600 pt-2">New Record</div>
+              <input
+                className="mt-1 py-2 px-4 h-12 bg-white border border-black text-base leading-tight w-full outline-0"
+                value={newRecordValue}
+                onChange={(e) => setNewRecordValue(e.target.value)}
+              />
+              <Button
+                disabled={!address || newRecordValue === ""}
+                onClick={updateRecord}
+                className="btn-primary mt-10 h-10 w-48"
+              >
+                Update
+              </Button>
             </div>
-          </>
+          </div>
         }
-      ></IgntModal>
+      />
       <TxModal
         isShow={isShow}
         setIsShow={setIsShow}

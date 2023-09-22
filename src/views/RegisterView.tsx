@@ -5,6 +5,7 @@ import { RegistryDomain } from "mycel-client-ts/mycel.registry/rest";
 import { useAddressContext } from "../def-hooks/addressContext";
 import { IgntButton } from "@ignt/react-library";
 import { DeliverTxResponse } from "@cosmjs/stargate";
+import { PencilRuler } from "lucide-react";
 import TxModal from "../components/TxModal";
 import ResolveButton from "../components/ResolveButton";
 
@@ -61,11 +62,14 @@ export default function RegisterView() {
 
   return (
     <>
-      <div className="w-3/4 mx-auto">
-        <h2 className="text-3xl text-black font-semibold  mb-2.5">Register</h2>
-        <div className="flex mt-2 p-2 justify-between">
+      <div className="container my-12">
+        <h2 className="font-cursive text-3xl text-black font-semibold mb-6 flex items-center">
+          <PencilRuler className="opacity-70 mr-2" size={28} />
+          Register
+        </h2>
+        <div className="flex mt-2 mb-10">
           <input
-            className="mr-6 mt-1 py-2 px-4 h-14 bg-gray-100 w-full border-xs text-base leading-tight rounded-xl outline-0"
+            className="mt-1 py-2 px-4 h-14 bg-white w-full border border-black text-base leading-tight outline-0"
             placeholder=".cel"
             onChange={(event) => {
               setQuery(event.target.value);
@@ -73,18 +77,18 @@ export default function RegisterView() {
           />
         </div>
         {isRegistable ? (
-          <div>
-            <div className="w-full flex justify-between my-4">
+          <div className="border-t border-b border-dashed border-black py-8 px-4">
+            <div className="w-full flex justify-between">
               <h2 className=" text-2xl m-2 font-semibold">{query + ".cel"}</h2>
-              <IgntButton disabled={!address} onClick={registerDomain} className="mt-1 h-10 w-48">
+              <button disabled={!address} onClick={registerDomain} className="btn-primary w-40 py-1">
                 Register
-              </IgntButton>
+              </button>
             </div>
-            {!address && <h2 className="text-red-600 m-2 font-semibold">Please connect wallet first</h2>}
+            {!address && <p className="text-error m-2 font-semibold">Please connect wallet first</p>}
           </div>
         ) : domain ? (
-          <div>
-            <div className="w-full flex justify-between my-4">
+          <div className="border-t border-b border-dashed border-black py-8 px-4">
+            <div className="w-full flex justify-between">
               <h2 className=" text-2xl m-2 font-semibold">{domain.name + "." + domain.parent}</h2>
 
               <ResolveButton name={domain.name} parent={domain.parent} />
