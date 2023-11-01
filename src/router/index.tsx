@@ -1,12 +1,12 @@
 import { createBrowserRouter, Outlet } from "react-router-dom";
 
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import PortfolioView from "../views/PortfolioView";
-import ResolveView from "../views/ResolveView";
-import SendView from "../views/SendView";
-import ExploreView from "../views/ExploreView";
-import RegisterView from "../views/RegisterView";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import PortfolioView from "@/views/PortfolioView";
+import ResolveView from "@/views/ResolveView";
+import SendView from "@/views/SendView";
+import ExploreView from "@/views/ExploreView";
+import RegisterView from "@/views/RegisterView";
 
 const items = [
   {
@@ -37,6 +37,7 @@ const Layout = () => {
     </div>
   );
 };
+
 const router = createBrowserRouter([
   {
     path: "/",
