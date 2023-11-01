@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import router from "./router";
+import { GrazProvider } from "graz";
 import "./index.css";
 import "@ignt/react-library/dist/style.css";
 import AddressProvider from "./def-hooks/addressContext";
@@ -30,17 +31,19 @@ const ethereumClient = new EthereumClient(wagmiClient, chains);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <WagmiConfig client={wagmiClient}>
-      <QueryClientProvider client={queryClient}>
-        <AddressProvider>
-          <WalletProvider>
-            <DenomProvider>
-              <RouterProvider router={router} />
-            </DenomProvider>
-          </WalletProvider>
-        </AddressProvider>
-      </QueryClientProvider>
-    </WagmiConfig>
+    <GrazProvider>
+      <WagmiConfig client={wagmiClient}>
+        <QueryClientProvider client={queryClient}>
+          <AddressProvider>
+            <WalletProvider>
+              <DenomProvider>
+                <RouterProvider router={router} />
+              </DenomProvider>
+            </WalletProvider>
+          </AddressProvider>
+        </QueryClientProvider>
+      </WagmiConfig>
+    </GrazProvider>
     <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
   </React.StrictMode>,
 );
