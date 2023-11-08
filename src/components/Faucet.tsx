@@ -18,6 +18,7 @@ export default function Faucet() {
   const [txResponse, setTxResponse] = useState<DeliverTxResponse>();
 
   const faucetMnemonic = import.meta.env.VITE_FAUCET_MNEMONIC ?? "";
+  const faucetClamableThreshold = import.meta.env.VITE_FAUCET_CLAIMABLE_THRESHOLD ?? "1000";
 
   const queryBalance = async () => {
     const balance = await client.CosmosBankV1Beta1.query.queryBalance(address, { denom: "mycel" }).then((res) => {
@@ -26,6 +27,7 @@ export default function Faucet() {
       }
     });
     setBalance(balance ?? "0");
+    return balance;
   };
 
   useEffect(() => {
@@ -33,7 +35,7 @@ export default function Faucet() {
   }, [address]);
 
   useEffect(() => {
-    if (parseInt(balance) < 1000) {
+    if (parseInt(balance) < faucetClamableThreshold) {
       setIsClaimable(true);
     } else {
       setIsClaimable(false);
@@ -44,7 +46,9 @@ export default function Faucet() {
     setIsLoading(true);
     setIsShow(true);
 
-    if (isClaimable) {
+    const balance = await queryBalance();
+
+    if (balance && parseInt(balance) < parseInt(faucetClamableThreshold)) {
       const faucetSigner = (await DirectSecp256k1HdWallet.fromMnemonic(faucetMnemonic, {
         prefix: "mycel",
       })) as OfflineDirectSigner;
@@ -66,6 +70,9 @@ export default function Faucet() {
           setIsShow(false);
           console.log(err);
         });
+    } else {
+      setTxResponse({ code: -1, rawLog: "You have enough balance" } as DeliverTxResponse);
+      setIsLoading(false);
     }
   };
 
