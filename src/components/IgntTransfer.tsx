@@ -1,5 +1,5 @@
 import { useAddressContext } from "../def-hooks/addressContext";
-import { IgntCard, IgntClipboard, IgntQRCode, IgntTabs } from "@ignt/react-library";
+import { IgntClipboard, IgntQRCode, IgntTabs } from "@ignt/react-library";
 import IgntSend from "./IgntSend";
 import Faucet from "./Faucet";
 import { HandMetal } from "lucide-react";

@@ -1,4 +1,4 @@
-import LoadingIcon from "./LoadingIcon";
+import LoadingIcon from "@/components/LoadingIcon";
 
 interface ButtonProps {
   children: React.ReactNode;

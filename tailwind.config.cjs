@@ -31,12 +31,12 @@ module.exports = {
       colors: {
         transparent: "transparent",
         current: "currentColor",
-        white: {
-          500: "rgba(255,255,255,0.5)",
-          800: "rgba(255,255,255,0.82)",
-          1000: "#fff",
-        },
-        black: "#111111",
+        // white: {
+        //   500: "rgba(255,255,255,0.5)",
+        //   800: "rgba(255,255,255,0.82)",
+        //   1000: "#fff",
+        // },
+        // black: "#111111",
         gray: {
           0: "#000",
           50: "#f0f0f0",
@@ -72,7 +72,7 @@ module.exports = {
       boxShadow: {
         border: "0px 0.5px 0px #CBCBCB",
         border_double: "0px -0.5px 0px #CBCBCB, 0px 0.5px 0px #CBCBCB",
-        solid: "4px 4px #111111",
+        solid: "3px 3px #111111",
         transparent: "0px 0px transparent",
         max: "16px 32px 128px 8px rgba(0, 0, 0, 0.07)",
         dropdown: "-112px 73px 191px 59px rgba(0, 0, 0, 0.09)",

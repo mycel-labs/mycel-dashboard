@@ -1,7 +1,7 @@
 import { createBrowserRouter, Outlet } from "react-router-dom";
 
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import PortfolioView from "@/views/PortfolioView";
 import ResolveView from "@/views/ResolveView";
 import SendView from "@/views/SendView";
