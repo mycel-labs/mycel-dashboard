@@ -6,6 +6,7 @@
     "@headlessui/tailwindcss": "^0.1.1",
     "@ignt/react-library": "^0.4.3",
     "@tanstack/react-query": "^4.13.5",
+    "@vercel/node": "^3.0.9",
     "@web3modal/ethereum": "^2.3.0",
     "@web3modal/react": "^2.3.0",
     "axios": "^1.1.3",
