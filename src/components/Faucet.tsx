@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
-import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
-import { SigningStargateClient, DeliverTxResponse } from "@cosmjs/stargate";
-import { OfflineDirectSigner } from "@keplr-wallet/types";
+import { DeliverTxResponse } from "@cosmjs/stargate";
 import { IgntButton } from "@ignt/react-library";
 import { useClient } from "../hooks/useClient";
 import { useAddressContext } from "../def-hooks/addressContext";
@@ -10,14 +8,13 @@ import TxModal from "../components/TxModal";
 export default function Faucet() {
   const { address } = useAddressContext();
   const client = useClient();
+  const threshold = import.meta.env.VITE_FAUCET_CLAIMABLE_THRESHOLD;
 
   const [isShow, setIsShow] = useState<boolean>(false);
   const [isClaimable, setIsClaimable] = useState<boolean>(false);
   const [balance, setBalance] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [txResponse, setTxResponse] = useState<DeliverTxResponse>();
-
-  const faucetMnemonic = import.meta.env.VITE_FAUCET_MNEMONIC ?? "";
 
   const queryBalance = async () => {
     const balance = await client.CosmosBankV1Beta1.query.queryBalance(address, { denom: "mycel" }).then((res) => {
@@ -33,7 +30,7 @@ export default function Faucet() {
   }, [address]);
 
   useEffect(() => {
-    if (parseInt(balance) < 1000) {
+    if (parseInt(balance) < parseInt(threshold)) {
       setIsClaimable(true);
     } else {
       setIsClaimable(false);
@@ -45,22 +42,12 @@ export default function Faucet() {
     setIsShow(true);
 
     if (isClaimable) {
-      const faucetSigner = (await DirectSecp256k1HdWallet.fromMnemonic(faucetMnemonic, {
-        prefix: "mycel",
-      })) as OfflineDirectSigner;
-      const faucetAddress = (await faucetSigner.getAccounts())[0].address;
-      const rpc = import.meta.env.VITE_WS_TENDERMINT ?? "";
-      const amount = import.meta.env.VITE_FAUCET_AMOUNT ?? "1000";
-      const faucetClient = await SigningStargateClient.connectWithSigner(rpc, faucetSigner);
-
-      await faucetClient
-        .sendTokens(faucetAddress, address, [{ denom: "mycel", amount: amount }], {
-          amount: [{ denom: "mycel", amount: "500" }],
-          gas: "200000",
-        })
-        .then((res) => {
+      await fetch(`api/faucet?address=${address}`)
+        .then((res) => res.json())
+        .then((data) => {
           setIsLoading(false);
-          setTxResponse(res as DeliverTxResponse);
+          setTxResponse(data.response as DeliverTxResponse);
+          queryBalance();
         })
         .catch((err) => {
           setIsShow(false);

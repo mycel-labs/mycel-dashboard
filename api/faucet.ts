@@ -5,11 +5,18 @@ import { OfflineDirectSigner } from "@keplr-wallet/types";
 import * as dotenv from "dotenv";
 import { object, string } from "yup";
 
+function getErrorMessage(err: any) {
+  return {
+    code: -1,
+    rawLog: err,
+  };
+}
+
 async function claimFaucet(address: string) {
   // Load environment variables
   dotenv.config();
   const amount = process.env.FAUCET_AMOUNT ?? "10000";
-  const threashold = process.env.FAUCET_THRESHOLD ?? "1000";
+  const threashold = process.env.VITE_FAUCET_CLAIMABLE_THRESHOLD ?? "1000";
   const faucetMnemonic = process.env.FAUCET_MNEMONIC ?? "";
   const rpc = process.env.VITE_WS_TENDERMINT ?? "";
 
@@ -23,7 +30,7 @@ async function claimFaucet(address: string) {
   // Check if faucet has enough balance
   const balance = await faucetClient.getBalance(address, "mycel");
   if (balance.amount > threashold) {
-    return { error: "You have enough balance" };
+    return getErrorMessage("Faucet has insufficient balance");
   }
 
   // Send tokens
@@ -54,7 +61,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
         const response = await claimFaucet(validatedData.address);
         res.status(200).json({ response });
       } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json(getErrorMessage(err.message));
       }
     })
     .catch((err) => {
