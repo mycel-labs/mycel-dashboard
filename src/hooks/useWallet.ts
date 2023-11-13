@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import { useStore } from "@/store/index";
 import {
   useConnect as useConnectWagmi,
@@ -14,6 +14,18 @@ import {
   useOfflineSigners as useOfflineSignersGraz,
   WalletType as CosmosWalletType,
 } from "graz";
+import {
+  BECH32_PREFIX,
+  CompositeClient,
+  FaucetClient,
+  IndexerConfig,
+  LocalWallet,
+  onboarding,
+  Network,
+  ValidatorConfig,
+} from '@dydxprotocol/v4-client-js';
+import { MYCEL_CHAIN_INFO, type EvmAddress, type MycelAddress, type PrivateInformation } from "@/utils/wallets";
+
 
 export const WalletConfig = {
   // BitKeep: {
@@ -54,13 +66,6 @@ export const WalletConfig = {
 
 export type WalletType = keyof typeof WalletConfig;
 
-export const mycelChain = {
-  rpc: import.meta.env.VITE_WS_TENDERMINT ?? "",
-  rest: import.meta.env.VITE_WS_TENDERMINT ?? "",
-  chainId: import.meta.env.VITE_CHAIN_ID ?? "",
-  currencies: [],
-};
-
 export const useWallet = () => {
   // EVM
   const evmAddress = useStore((state) => state.evmAddress);
@@ -76,7 +81,7 @@ export const useWallet = () => {
   const { data: mycelAccountGraz, isConnected: isConnectedGraz } = useAccountGraz();
   const { offlineSigner: signerGraz } = useOfflineSignersGraz();
   const { disconnectAsync: disconnectGraz } = useDisconnectGraz();
-  const mycelAddressGraz = mycelAccountGraz?.bech32Address;
+  const mycelAddressGraz = mycelAccountGraz?.bech32Address as MycelAddress | undefined;
 
   // current wallet
   const currentWalletType = useStore((state) => state.currentWalletType);
@@ -91,7 +96,7 @@ export const useWallet = () => {
         if (WalletConfig[walletType].chainType === "cosmos") {
           if (!isConnectedGraz) {
             await connectGraz({
-              chainInfo: mycelChain,
+              chainInfo: MYCEL_CHAIN_INFO,
               walletType: CosmosWalletType.KEPLR,
             });
           }
@@ -126,12 +131,59 @@ export const useWallet = () => {
     updateCurrentWalletType(undefined);
   }, [isConnectedGraz, isConnectedWagmi]);
 
-  useEffect(() => {
-    updateEvmAddress(evmAddressWagmi);
-    updateMycelAddress(mycelAddressGraz);
-  }, [evmAddressWagmi, mycelAddressGraz]);
 
-  console.log("aaaaa", isConnectedGraz, isConnectedWagmi, isConnectedGraz || isConnectedWagmi);
+  // mycel wallet
+  const [localMycelWallet, setLocalMycelWallet] = useState<LocalWallet>();
+  const [hdKey, setHdKey] = useState<PrivateInformation>();
+
+  const mycelAccounts = useMemo(() => localMycelWallet?.accounts, [localMycelWallet]);
+
+  const getWalletFromEvmSignature = async ({ signature }: { signature: string }) => {
+    const { mnemonic, privateKey, publicKey } =
+      onboarding.deriveHDKeyFromEthereumSignature(signature);
+
+    return {
+      wallet: await LocalWallet.fromMnemonic(mnemonic, BECH32_PREFIX),
+      mnemonic,
+      privateKey,
+      publicKey,
+    };
+  };
+
+  const setWalletFromEvmSignature = async (signature: string) => {
+    const { wallet, mnemonic, privateKey, publicKey } = await getWalletFromEvmSignature({
+      signature,
+    });
+    setLocalMycelWallet(wallet);
+    setHdKey({ mnemonic, privateKey, publicKey });
+  };
+
+  const saveEvmSignature = useCallback(
+    (encryptedSignature: string) => {
+      evmDerivedAddresses[evmAddress!].encryptedSignature = encryptedSignature;
+      saveEvmDerivedAddresses(evmDerivedAddresses);
+    },
+    [evmDerivedAddresses, evmAddress]
+  );
+
+  const forgetEvmSignature = useCallback(
+    (_evmAddress = evmAddress) => {
+      if (_evmAddress) {
+        delete evmDerivedAddresses[_evmAddress]?.encryptedSignature;
+        saveEvmDerivedAddresses(evmDerivedAddresses);
+      }
+    },
+    [evmDerivedAddresses, evmAddress]
+  );
+
+  useEffect(() => {
+    if (evmAddressWagmi) {
+      updateEvmAddress(evmAddressWagmi);
+    }
+    if (mycelAddressGraz) {
+      updateMycelAddress(mycelAddressGraz);
+    }
+  }, [evmAddressWagmi, mycelAddressGraz]);
 
   return {
     // Wallet connection
@@ -143,11 +195,18 @@ export const useWallet = () => {
     evmAddress,
     evmAddressWagmi,
     signerWagmi,
-    // publicClientWagmi,
     // Cosmos
     mycelAddress,
     mycelAddressGraz,
     signerGraz,
+    // EVM → mycel account derivation
+    setWalletFromEvmSignature,
+    saveEvmSignature,
+    forgetEvmSignature,
+    // mycel accounts
+    hdKey,
+    localMycelWallet,
+    mycelAccounts,
   };
 };
 

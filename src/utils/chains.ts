@@ -1,4 +1,4 @@
-import { Chain } from "@wagmi/chains";
+import { Chain } from "@wagmi/core/chains";
 import { RegistryNetworkName } from "mycel-client-ts/mycel.registry/rest";
 
 import {

@@ -3,8 +3,8 @@ import useWallet from "@/hooks/useWallet";
 import { useStore } from "@/store/index";
 import Button from "@/components/Button";
 import { Unplug, Wallet } from "lucide-react";
-import MetamaskIcon from "@/assets/icons/metamask.svg";
-import KeplrIcon from "@/assets/icons/keplr.svg";
+import MetamaskIcon from "@/assets/icons/wallets/metamask.svg";
+import KeplrIcon from "@/assets/icons/wallets/keplr.svg";
 
 export default function Account() {
   const dialog = useStore((state) => state.dialog);
@@ -35,19 +35,37 @@ export default function Account() {
               </Button>
             ) : (
               <div className="space-y-4 font-semibold">
-                <Button className="btn-secondary w-full h-12" onClick={() => connectWallet({ walletType: "MetaMask" })}>
+                <Button
+                  className="btn-secondary w-full h-12"
+                  onClick={async () => {
+                    connectWallet({ walletType: "MetaMask" });
+                    updateDialog(undefined);
+                  }}
+                >
                   <span className="flex items-center justify-center px-6 mr-2">
-                    <img src={MetamaskIcon} width={32} height={32} alt="MetaMask" />
+                    <img src={MetamaskIcon} width={24} height={24} alt="MetaMask" />
                     <span className="ml-3">MetaMask</span>
                   </span>
                 </Button>
-                <Button className="btn-secondary w-full h-12" onClick={() => connectWallet({ walletType: "Injected" })}>
+                <Button
+                  className="btn-secondary w-full h-12"
+                  onClick={async () => {
+                    connectWallet({ walletType: "Injected" });
+                    updateDialog(undefined);
+                  }}
+                >
                   <span className="flex items-center justify-center px-6 mr-2">
                     <Wallet className="text-chocolat" />
                     <span className="ml-3"> Browser Wallet</span>
                   </span>
                 </Button>
-                <Button className="btn-secondary w-full h-12" onClick={() => connectWallet({ walletType: "Keplr" })}>
+                <Button
+                  className="btn-secondary w-full h-12"
+                  onClick={async () => {
+                    await connectWallet({ walletType: "Keplr" });
+                    updateDialog(undefined);
+                  }}
+                >
                   <span className="flex items-center justify-center px-6 mr-2">
                     <img src={KeplrIcon} width={24} height={24} alt="Keplr" />
                     <span className="ml-3">Keplr</span>
