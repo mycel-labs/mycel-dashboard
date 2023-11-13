@@ -2,6 +2,7 @@
   "dependencies": {
     "@cosmjs/encoding": "^0.29.3",
     "@cosmjs/stargate": "^0.29.3",
+    "@dydxprotocol/v4-client-js": "^1.0.3",
     "@headlessui/react": "^0.0.0-insiders.bfacb64",
     "@headlessui/tailwindcss": "^0.2.0",
     "@ignt/react-library": "^0.4.3",
@@ -47,7 +48,7 @@
     "@vitejs/plugin-react": "^4.1.1",
     "autoprefixer": "^10.4.16",
     "clsx": "^2.0.0",
-    "eslint": "^8.52.0",
+    "eslint": "^8.53.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-import": "^2.29.0",

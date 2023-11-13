@@ -1,9 +1,10 @@
 import { create } from "zustand";
 import { persist, devtools } from "zustand/middleware";
+import type { EvmAddress, MycelAddress } from "@/utils/wallets";
 
 type StoreState = {
-  evmAddress: string | undefined;
-  mycelAddress: string | undefined;
+  evmAddress: EvmAddress | undefined;
+  mycelAddress: MycelAddress | undefined;
   currentWalletType: string | undefined;
   dialog: "wallet" | undefined;
 };
@@ -23,11 +24,12 @@ export const useStore = create<StoreState & StoreSAction>()(
         mycelAddress: undefined,
         currentWalletType: undefined,
         dialog: undefined,
-        updateEvmAddress: (payload: string | undefined) => set((state) => ({ ...state, evmAddress: payload })),
-        updateMycelAddress: (payload: string | undefined) => set((state) => ({ ...state, mycelAddress: payload })),
+        updateEvmAddress: (payload: EvmAddress | undefined) => set((state) => ({ ...state, evmAddress: payload })),
+        updateMycelAddress: (payload: MycelAddress | undefined) =>
+          set((state) => ({ ...state, mycelAddress: payload })),
         updateCurrentWalletType: (payload: string | undefined) =>
           set((state) => ({ ...state, currentWalletType: payload })),
-        updateDialog: (payload: string | undefined) => set((state) => ({ ...state, dialog: payload })),
+        updateDialog: (payload: "wallet" | undefined) => set((state) => ({ ...state, dialog: payload })),
       }),
       {
         name: "mycel",
