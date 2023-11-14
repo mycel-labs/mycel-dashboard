@@ -8,6 +8,7 @@ import { useClient } from "../hooks/useClient";
 
 import useCosmosBaseTendermintV1Beta1 from "../hooks/useCosmosBaseTendermintV1Beta1";
 import { Wallet } from "../utils/interfaces";
+import Button from "./Button";
 import {
   IgntProfileIcon,
   IgntWarningIcon,
@@ -88,7 +89,7 @@ export default function IgntAcc() {
       {wallet ? (
         <div
           className={
-            "shadow-std acc-dd-btn flex items-center p-3 rounded-lg mr-3 hover:bg-gray-100 text-sm font-bold " +
+            "acc-dd-btn flex items-center p-3 mr-3 hover:bg-gray-100 text-sm font-bold " +
             (state.accountDropdown ? "active" : "")
           }
           onClick={() => {
@@ -101,15 +102,15 @@ export default function IgntAcc() {
           </div>
         </div>
       ) : (
-        <IgntButton
+        <Button
           aria-label="Connect wallet"
-          type="primary"
           onClick={() => {
             setState((oldState) => ({ ...oldState, connectWalletModal: true }));
           }}
+          className="btn-primary py-2 px-4 font-semibold inline-flex"
         >
-          Connect wallet
-        </IgntButton>
+          Connect<span className="hidden md:inline-flex md:ml-1">Wallet</span>
+        </Button>
       )}
       {state.accountDropdown && wallet && (
         <IgntAccDropdown
@@ -126,7 +127,7 @@ export default function IgntAcc() {
         closeIcon={false}
         cancelButton={false}
         submitButton={false}
-        className="text-center"
+        className="text-center border"
         close={() => {
           setState((oldState) => ({ ...oldState, connectWalletModal: false }));
         }}
@@ -136,8 +137,12 @@ export default function IgntAcc() {
         header={
           state.modalPage === "connect" ? (
             <div className="flex items-center flex-col my-3">
-              <IgntKeplrIcon className="text-[48px]" />
-              {isKeplrAvailable ? <h3 className="text-2xl font-bold">Connect your wallet</h3> : <h3>Install Keplr</h3>}
+              <IgntKeplrIcon className="text-[48px] mb-6" />
+              {isKeplrAvailable ? (
+                <h3 className="font-cursive text-2xl font-semibold">Connect your wallet</h3>
+              ) : (
+                <h3 className="font-cursive text-2xl font-semibold">Install Keplr</h3>
+              )}
             </div>
           ) : state.modalPage === "connecting" ? (
             <div className="flex items-center flex-col my-3">
@@ -194,10 +199,10 @@ export default function IgntAcc() {
         }
         footer={
           state.modalPage === "connect" ? (
-            <div className="my-3">
-              <IgntButton aria-label="Connect Keplr" type="primary" onClick={tryToConnectToKeplr}>
+            <div className="mt-8 mb-3">
+              <Button aria-label="Connect Keplr" onClick={tryToConnectToKeplr} className="btn-primary px-8 py-3">
                 Connect Keplr
-              </IgntButton>
+              </Button>
             </div>
           ) : (
             state.modalPage === "error" && (

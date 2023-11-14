@@ -1,11 +1,47 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Gabriela&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-input[type="search"]::-webkit-search-decoration,
-input[type="search"]::-webkit-search-cancel-button,
-input[type="search"]::-webkit-search-results-button,
-input[type="search"]::-webkit-search-results-decoration {
-  display: none;
-  -webkit-appearance: none;
+
+
+:root {
+  --c-cream: #FFFCDF;
+  --c-lemon: #F3E49D;
+  --c-orange: #E6A894;
+  --c-chocolat: #EA5506;
+}
+
+@layer base {
+  html, body, div#root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-cream;
+  }
+
+  .btn-primary {
+    @apply text-black bg-transparent border-2 border-black bg-orange hover:opacity-80 disabled:opacity-60 disabled:cursor-not-allowed;
+    box-shadow: 3px 3px;
+    &:hover {
+      box-shadow: 1px 1px;
+    }
+  }
+
+  .btn-secondary {
+    @apply text-black bg-transparent border-2 border-black bg-lemon hover:opacity-80 disabled:opacity-60 disabled:cursor-not-allowed;
+    box-shadow: 2px 2px;
+    &:hover {
+      box-shadow: 1px 1px;
+    }
+  }
+
+  input[type="search"]::-webkit-search-decoration,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-results-button,
+  input[type="search"]::-webkit-search-results-decoration {
+    display: none;
+    -webkit-appearance: none;
+  }
 }

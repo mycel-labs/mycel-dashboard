@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNetwork, usePrepareSendTransaction, useSendTransaction, useWaitForTransaction } from "wagmi";
 import { parseEther } from "ethers/lib/utils.js";
 import { useDebounce } from "use-debounce";
 import { Web3Button, Web3NetworkSwitch } from "@web3modal/react";
-import { IgntButton } from "@ignt/react-library";
-import { RegistryDomain, RegistryWalletRecordType } from "mycel-client-ts/mycel.registry/rest";
+import { RegistryDomain, RegistryNetworkName } from "mycel-client-ts/mycel.registry/rest";
+import { Send } from "lucide-react";
 import { useRegistryDomain } from "../def-hooks/useRegistryDomain";
-import { getConnectedWalletRecordType } from "../utils/chains";
+import { getConnectedNetworkName } from "../utils/chains";
 
-const getWalletAddr = (domain: RegistryDomain, recordType: RegistryWalletRecordType) => {
+const getWalletAddr = (domain: RegistryDomain, recordType: RegistryNetworkName) => {
   if (!domain || !domain.walletRecords || !domain.walletRecords[recordType]) {
     return "";
   }
@@ -19,7 +19,7 @@ export default function SendView() {
   const { chain } = useNetwork();
   const { registryDomain, isLoading: isLoadingRegistryDomain, updateRegistryDomain } = useRegistryDomain();
   const [domainName, setDomainName] = useState("");
-  const [targetWalletRecordType, setTargetWalletRecordType] = useState(RegistryWalletRecordType.ETHEREUM_MAINNET);
+  const [targetNetworkName, setTargetNetworkName] = useState(RegistryNetworkName.ETHEREUM_MAINNET_MAINNET);
   const [debouncedDomainName] = useDebounce(domainName, 500);
   const [to, setTo] = useState("");
   const [amount, setAmount] = useState("");
@@ -44,8 +44,8 @@ export default function SendView() {
       if (!chainId) {
         return;
       }
-      const walletRecordType = getConnectedWalletRecordType(chainId);
-      setTargetWalletRecordType(walletRecordType);
+      const networkName = getConnectedNetworkName(chainId);
+      setTargetNetworkName(networkName);
     } catch (e) {
       // TODO If walletRecordType is invalid, show an error message
       console.log(e);
@@ -54,7 +54,7 @@ export default function SendView() {
 
   useEffect(() => {
     if (registryDomain) {
-      const walletAddr = registryDomain ? getWalletAddr(registryDomain, targetWalletRecordType) : "";
+      const walletAddr = registryDomain ? getWalletAddr(registryDomain, targetNetworkName) : "";
       setTo(walletAddr || "");
     } else {
       setTo("");
@@ -79,16 +79,20 @@ export default function SendView() {
   }, [debouncedDomainName, chain]);
 
   return (
-    <div className="w-3/4 mx-auto">
+    <div className="container my-12">
+      <h2 className="font-cursive text-3xl text-black font-semibold mb-6 flex items-center">
+        <Send className="opacity-70 mr-2" size={28} />
+        Send Token
+      </h2>
       <div className="relative flex flex-row">
-        <div className="px-3">
+        <div className="px-2">
           <Web3NetworkSwitch />
         </div>
         <Web3Button />
       </div>
-      <div className="flex-row m-4">
+      <div className="flex-row my-8">
         <input
-          className="mr-6 mt-2 py-2 px-4 h-14 bg-gray-100 w-full border-xs text-base leading-tight rounded-xl outline-0"
+          className="mt-2 py-2 px-4 h-14 bg-white border border-black w-full border-xs text-base leading-tight outline-0"
           aria-label="Recipient"
           onChange={async (e) => {
             setDomainName(e.target.value);
@@ -98,38 +102,37 @@ export default function SendView() {
         />
         {to ? (
           <p className="m-2 text-sm text-gray-700">
-            <span className="italic">{domainName}</span> on {targetWalletRecordType} is{" "}
-            <span className="italic">{to}</span>.
+            <span className="italic">{domainName}</span> on {targetNetworkName} is <span className="italic">{to}</span>.
           </p>
         ) : (
-          <p className="m-2 text-sm text-red-500">
-            <span className="italic">{domainName}</span> doesn&apos;t exists in registry on {targetWalletRecordType}.
+          <p className="m-2 text-sm text-error">
+            <span className="italic">{domainName}</span> doesn&apos;t exists in registry on {targetNetworkName}.
           </p>
         )}
         <input
-          className="mr-6 my-2 py-2 px-4 h-14 bg-gray-100 w-full border-xs text-base leading-tight rounded-xl outline-0"
+          className="mt-2 py-2 px-4 h-14 bg-white border border-black w-full border-xs text-base leading-tight outline-0"
           aria-label="Amount (ether)"
           onChange={(e) => setAmount(e.target.value)}
           placeholder="Token Amount (e.g. 0.05)"
           value={amount}
         />
         {!isValidAmount && (
-          <p className="m-2 text-sm text-red-500">
+          <p className="m-2 text-sm text-error">
             <span className="italic">{domainName}</span> Invalid Amount.
           </p>
         )}
 
-        <IgntButton
-          className="mt-1 h-14 w-full"
+        <button
+          className="btn-primary h-14 w-full mt-6"
           onClick={async () => {
             const res = await sendTransactionAsync?.();
             console.log("%o", res);
           }}
-          busy={isLoadingTx || isLoadingRegistryDomain}
+          // busy={isLoadingTx || isLoadingRegistryDomain}
           disabled={isLoadingTx || isLoadingRegistryDomain || !sendTransactionAsync || !to || !amount}
         >
           {isLoadingTx ? "Sending..." : "Send"}
-        </IgntButton>
+        </button>
         {isSuccess && (
           <div className="m-4">
             <p>

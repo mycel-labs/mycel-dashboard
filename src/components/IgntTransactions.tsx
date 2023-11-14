@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import IgntDenom from "./IgntDenom";
 import { useMemo } from "react";
 import cx from "classnames";
+import { Zap } from "lucide-react";
 
 interface IgntTransactionsProps {
   className?: string;
@@ -61,59 +62,62 @@ export default function IgntTransactions(props: IgntTransactionsProps) {
   };
   return (
     <section className={props.className ?? ""}>
-      <header className="flex items-center justify-between">
-        <h2 className="text-3xl text-black font-semibold p-0 m-0 mb-2.5 flex-1">Transactions</h2>
-      </header>
-      {txs.length > 0 ? (
-        <table className="table-auto w-full">
-          <tbody>
-            {txs.map((tx, i) => (
-              <tr key={tx.txhash + "_" + i}>
-                <td className="flex text-xs py-2">
-                  <div
-                    className={cx({
-                      "text-2xl w-10 h-10 rounded-sm bg-gray-200 flex items-center justify-center mr-2": true,
-                      "rotate-180 text-green-500": tx.type == "received",
-                      "text-error": tx.type == "sent",
-                    })}
-                  >
-                    <IgntTxArrowIcon />
-                  </div>
-                  <div className="flex flex-col justify-between flex-1">
-                    <div className="font-medium">
-                      {shortenHash(tx.txhash ?? "")}
-                      <span className="font-bold text-warning">{tx.ibc ? "IBC" : ""}</span>
+      <h3 className="text-xl text-black font-semibold px-1 py-2 mb-4 flex flex-1 items-center border-b-2 border-black">
+        <Zap className="opacity-70 mr-2" size={24} />
+        Transactions
+      </h3>
+      <div className="tx-2">
+        {txs.length > 0 ? (
+          <table className="table-auto w-full">
+            <tbody>
+              {txs.map((tx, i) => (
+                <tr key={tx.txhash + "_" + i}>
+                  <td className="flex text-xs py-2">
+                    <div
+                      className={cx({
+                        "text-2xl w-10 h-10 rounded-sm bg-gray-200 flex items-center justify-center mr-2": true,
+                        "rotate-180 text-green-500": tx.type == "received",
+                        "text-error": tx.type == "sent",
+                      })}
+                    >
+                      <IgntTxArrowIcon />
                     </div>
-                    <div className="opacity-60">{dayjs(tx.timestamp).format("MMMM D YYYY, h:mma")}</div>
-                  </div>
-                  <div className="flex flex-col justify-between items-end">
-                    <div className="font-medium text-right text-xs text-gray-600 inline">
-                      {tx.amount.map((amount, index) => (
-                        <span
-                          key={tx.txhash + "_" + i + "_" + index}
-                          className={cx({
-                            "p-1 rounded-md": true,
-                            "bg-green-200": tx.type == "received",
-                            "bg-red-200": tx.type == "sent",
-                          })}
-                        >
-                          {tx.type == "received" ? "+" + amount.amount : -amount.amount}
-                          <IgntDenom denom={amount.denom ?? ""} />
-                        </span>
-                      ))}
+                    <div className="flex flex-col justify-between flex-1">
+                      <div className="font-medium">
+                        {shortenHash(tx.txhash ?? "")}
+                        <span className="font-bold text-warning">{tx.ibc ? "IBC" : ""}</span>
+                      </div>
+                      <div className="opacity-60">{dayjs(tx.timestamp).format("MMMM D YYYY, h:mma")}</div>
                     </div>
-                    <div className="opacity-60">
-                      {tx.type == "received" ? "from: " + tx.sender : "to: " + tx.receiver}
+                    <div className="flex flex-col justify-between items-end">
+                      <div className="font-medium text-right text-xs text-gray-600 inline">
+                        {tx.amount.map((amount, index) => (
+                          <span
+                            key={tx.txhash + "_" + i + "_" + index}
+                            className={cx({
+                              "p-1 rounded-md": true,
+                              "bg-green-200": tx.type == "received",
+                              "bg-red-200": tx.type == "sent",
+                            })}
+                          >
+                            {tx.type == "received" ? "+" + amount.amount : -amount.amount}
+                            <IgntDenom denom={amount.denom ?? ""} />
+                          </span>
+                        ))}
+                      </div>
+                      <div className="opacity-60">
+                        {tx.type == "received" ? "from: " + tx.sender : "to: " + tx.receiver}
+                      </div>
                     </div>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <div className="text-left text-black opacity-75 text-md font-normal py-8">Transaction history is empty</div>
-      )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <div className="text-center text-black/70 font-normal py-8">Transaction history is empty</div>
+        )}
+      </div>
       {(hasMoreReceived || hasMoreSent) && (
         <div
           className="shadow-std flex items-center justify-center w-40 rounded-full text-sm font-medium mx-auto inset-x-0 py-2"

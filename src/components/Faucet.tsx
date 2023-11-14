@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { DeliverTxResponse } from "@cosmjs/stargate";
-import { IgntButton } from "@ignt/react-library";
 import { useClient } from "../hooks/useClient";
 import { useAddressContext } from "../def-hooks/addressContext";
 import TxModal from "../components/TxModal";
+import Button from "../components/Button";
 
 export default function Faucet() {
   const { address } = useAddressContext();
@@ -23,6 +23,7 @@ export default function Faucet() {
       }
     });
     setBalance(balance ?? "0");
+    return balance;
   };
 
   useEffect(() => {
@@ -53,15 +54,18 @@ export default function Faucet() {
           setIsShow(false);
           console.log(err);
         });
+    } else {
+      setTxResponse({ code: -1, rawLog: "You have enough balance" } as DeliverTxResponse);
+      setIsLoading(false);
     }
   };
 
   return (
-    <>
-      <IgntButton className="w-full" disabled={!isClaimable} onClick={claimFaucet}>
+    <div>
+      <Button className="btn-primary w-full py-2" disabled={!isClaimable} onClick={claimFaucet}>
         Claim
-      </IgntButton>
+      </Button>
       <TxModal isShow={isShow} setIsShow={setIsShow} txResponse={txResponse} isLoading={isLoading} />
-    </>
+    </div>
   );
 }
