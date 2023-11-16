@@ -13,7 +13,7 @@ import { Domain } from "@/types/domain";
 export default function RegisterView() {
   const client = useClient();
   const navigate = useNavigate();
-  const { topLevelDomain, secondLevelDomain, registryQueryDomain } = useMycelRegistry();
+  const { secondLevelDomain, registryQueryDomain } = useMycelRegistry();
   const { isConnected, mycelAccount } = useWallet();
   const [query, setQuery] = useState<string>("");
   const [isRegistrable, setIsRegistable] = useState<boolean>(false);
@@ -33,12 +33,13 @@ export default function RegisterView() {
   }, [domain]);
 
   useEffect(() => {
-    if (topLevelDomain?.isRegistered) {
-      setIsRegistable(!secondLevelDomain || !secondLevelDomain.isRegistered);
+    console.log(isRegistrable);
+    if (secondLevelDomain?.parent?.isRegistered) {
+      setIsRegistable(!secondLevelDomain?.isRegistered);
     } else {
       setIsRegistable(false);
     }
-  }, [topLevelDomain, secondLevelDomain]);
+  }, [secondLevelDomain]);
 
   const registerDomain = async () => {
     setIsLoading(true);
@@ -88,7 +89,7 @@ export default function RegisterView() {
             </div>
             {!isConnected && <p className="text-error m-2 font-semibold">Please connect wallet first</p>}
           </div>
-        ) : secondLevelDomain ? (
+        ) : secondLevelDomain?.info ? (
           <div className="border-t border-b border-dashed border-black py-8 px-4">
             <div className="w-full flex justify-between">
               <h2 className=" text-2xl m-2 font-semibold">{query}</h2>

@@ -1,13 +1,16 @@
-import { useState} from "react";
+import { useState } from "react";
 import { useClient } from "@/hooks/useClient";
 import { RegistryTopLevelDomain, RegistrySecondLevelDomainResponse } from "mycel-client-ts/mycel.registry/rest";
 import { Domain } from "@/types/domain";
 
-interface TopLevelDomain extends RegistryTopLevelDomain {
+type TopLevelDomain = {
+  info: RegistryTopLevelDomain | undefined;
   isRegistered: boolean;
 }
 
-interface SecondLevelDomain extends RegistrySecondLevelDomainResponse {
+type SecondLevelDomain = {
+  info: RegistrySecondLevelDomainResponse | undefined;
+  parent: TopLevelDomain | undefined;
   isRegistered: boolean;
 }
 
@@ -18,35 +21,36 @@ export const useMycelRegistry = () => {
   const [topLevelDomain, setTopLevelDomain] = useState<TopLevelDomain | undefined>(undefined);
   const [secondLevelDomain, setSecondLevelDomain] = useState<SecondLevelDomain | undefined>(undefined);
 
+
   const registryQueryDomain = async (domain: Domain) => {
     setIsLoading(true);
 
-    const queryDomain = async (queryFunc: () => Promise<any>, setter: (value: any) => void) => {
+    const queryDomain = async (queryFunc: () => Promise<any>, isTopLevel: boolean) => {
       try {
         const res = await queryFunc();
         if (res.data) {
-          setter({ ...res.data, isRegistered: true });
-        } else {
-          setter(undefined);
+          const domainData = isTopLevel ? res.data.topLevelDomain : res.data.secondLevelDomain;
+          return isTopLevel ? { info: domainData, isRegistered: !!domainData } : { info: domainData, isRegistered: !!domainData, parent: topLevelDomainResult };
         }
+        return isTopLevel ? { info: undefined, isRegistered: false } : { info: undefined, isRegistered: false, parent: topLevelDomainResult };
       } catch (error) {
-        setter(undefined);
+        return isTopLevel ? { info: undefined, isRegistered: false } : { info: undefined, isRegistered: false, parent: topLevelDomainResult };
       }
     };
 
-    // Query top level domain
-    await queryDomain(
+    const topLevelDomainResult = await queryDomain(
       () => client.MycelRegistry.query.queryTopLevelDomain(domain.parent),
-      setTopLevelDomain
+      true
     );
 
-    // Query second level domain
-    if (domain.parent !== "") {
-      await queryDomain(
-        () => client.MycelRegistry.query.querySecondLevelDomain(domain.name, domain.parent),
-        setSecondLevelDomain
-      );
-    }
+    setTopLevelDomain(topLevelDomainResult);
+
+    const secondLevelDomainResult = domain.parent !== "" ? await queryDomain(
+      () => client.MycelRegistry.query.querySecondLevelDomain(domain.name, domain.parent),
+      false
+    ) : { info: undefined, isRegistered: false, parent: topLevelDomainResult };
+
+    setSecondLevelDomain(secondLevelDomainResult);
 
     setIsLoading(false);
   };
@@ -58,3 +62,4 @@ export const useMycelRegistry = () => {
     registryQueryDomain,
   };
 };
+
