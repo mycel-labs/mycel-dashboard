@@ -6,6 +6,7 @@ import {
   useDisconnect as useDisconnectWagmi,
   // usePublicClient as usePublicClientWagmi,
   useWalletClient as useWalletClientWagmi,
+  useSignTypedData,
 } from "wagmi";
 import {
   useSuggestChainAndConnect as useConnectGraz,
@@ -14,57 +15,9 @@ import {
   useOfflineSigners as useOfflineSignersGraz,
   WalletType as CosmosWalletType,
 } from "graz";
-import {
-  BECH32_PREFIX,
-  CompositeClient,
-  FaucetClient,
-  IndexerConfig,
-  LocalWallet,
-  onboarding,
-  Network,
-  ValidatorConfig,
-} from '@dydxprotocol/v4-client-js';
-import { MYCEL_CHAIN_INFO, type EvmAddress, type MycelAddress, type PrivateInformation } from "@/utils/wallets";
-
-
-export const WalletConfig = {
-  // BitKeep: {
-  //   chainType: 'cosmos',
-  //   name: 'BITKEEP'
-  // },
-  // BitPie: {
-  //   chainType: 'cosmos',
-  //   name:"BITPIE"
-  // },
-  // CloverWallet = "CLOVER_WALLET",
-  // CoinbaseWallet = "COINBASE_WALLET",
-  // Coin98 = "COIN98",
-  // HuobiWallet = "HUOBI_WALLET",
-  // ImToken = "IMTOKEN",
-  Keplr: {
-    id: "keplr",
-    name: "KEPLR",
-    chainType: "cosmos",
-  },
-  // Ledger = 'LEDGER',
-  // MathWallet = "MATH_WALLET",
-  MetaMask: {
-    id: "metaMask",
-    name: "MetaMask",
-    chainType: "evm",
-  },
-  // Rainbow = "RAINBOW_WALLET",
-  // TokenPocket = "TOKEN_POCKET",
-  // TrustWallet = "TRUST_WALLET",
-  // WalletConnect2 = "WALLETCONNECT_2",
-  Injected: {
-    id: "injected",
-    name: "Injected",
-    chainType: "evm",
-  },
-};
-
-export type WalletType = keyof typeof WalletConfig;
+import { LocalWallet, onboarding } from "@dydxprotocol/v4-client-js";
+import { WALLET_CONFIG, MYCEL_CHAIN_INFO, getSignTypedData, BECH32_PREFIX, type EvmAddress, type MycelAddress, type PrivateInformation, type WalletType } from "@/utils/wallets";
+import { AES, enc } from 'crypto-js';
 
 export const useWallet = () => {
   // EVM
@@ -79,7 +32,7 @@ export const useWallet = () => {
   const mycelAddress = useStore((state) => state.mycelAddress);
   const updateMycelAddress = useStore((state) => state.updateMycelAddress);
   const { data: mycelAccountGraz, isConnected: isConnectedGraz } = useAccountGraz();
-  const { offlineSigner: signerGraz } = useOfflineSignersGraz();
+  const { data: signerGraz } = useOfflineSignersGraz();
   const { disconnectAsync: disconnectGraz } = useDisconnectGraz();
   const mycelAddressGraz = mycelAccountGraz?.bech32Address as MycelAddress | undefined;
 
@@ -90,20 +43,25 @@ export const useWallet = () => {
   const { connectAsync: connectWagmi, connectors: connectorsWagmi } = useConnectWagmi();
   const { suggestAndConnect: connectGraz } = useConnectGraz();
 
+  // EVM → mycel account derivation
+  const evmDerivedAddresses = useStore((state) => state.evmDerivedAddresses);
+  const updateEvmDerivedAddress = useStore((state) => state.updateEvmDerivedAddress);
+  const staticEncryptionKey = import.meta.env.VITE_PK_ENCRYPTION_KEY;
+
   const connectWallet = useCallback(
     async ({ walletType }: { walletType: WalletType }) => {
       try {
-        if (WalletConfig[walletType].chainType === "cosmos") {
+        if (WALLET_CONFIG[walletType].chainType === "cosmos") {
           if (!isConnectedGraz) {
             await connectGraz({
               chainInfo: MYCEL_CHAIN_INFO,
               walletType: CosmosWalletType.KEPLR,
             });
           }
-        } else if (WalletConfig[walletType].chainType === "evm") {
+        } else if (WALLET_CONFIG[walletType].chainType === "evm") {
           if (!isConnectedWagmi) {
             await connectWagmi({
-              connector: connectorsWagmi.find((cn: any) => cn.id === WalletConfig[walletType].id),
+              connector: connectorsWagmi.find((cn: any) => cn.id === WALLET_CONFIG[walletType].id),
             });
           }
         }
@@ -111,23 +69,23 @@ export const useWallet = () => {
       } catch (error) {
         console.log(error);
       }
-
-      // return {
-      //   walletType,
-      //   walletConnectionType: walletConnection.type,
-      // };
     },
     [isConnectedGraz, signerGraz, isConnectedWagmi, signerWagmi],
   );
 
   // Disconnect
-  const disconnectWallet = useCallback(async () => {
-    updateEvmAddress(undefined);
-    updateMycelAddress(undefined);
+  const disconnectLocalWallet = () => {
+    setLocalMycelWallet(undefined);
+    setHdKey(undefined);
+  }
 
+  const disconnectWallet = useCallback(async () => {
     if (isConnectedWagmi) await disconnectWagmi();
     if (isConnectedGraz) await disconnectGraz();
-
+    updateEvmAddress(undefined);
+    updateMycelAddress(undefined);
+    disconnectLocalWallet();
+    forgetEvmSignature();
     updateCurrentWalletType(undefined);
   }, [isConnectedGraz, isConnectedWagmi]);
 
@@ -160,21 +118,58 @@ export const useWallet = () => {
 
   const saveEvmSignature = useCallback(
     (encryptedSignature: string) => {
-      evmDerivedAddresses[evmAddress!].encryptedSignature = encryptedSignature;
-      saveEvmDerivedAddresses(evmDerivedAddresses);
+      console.log("saveEvmSignature", evmAddress, mycelAddress, encryptedSignature);
+      if (evmAddress) {
+        updateEvmDerivedAddress({
+          evmAddress,
+          mycelAddress,
+          encryptedSignature,
+        });
+      }
     },
     [evmDerivedAddresses, evmAddress]
   );
 
   const forgetEvmSignature = useCallback(
     (_evmAddress = evmAddress) => {
+      console.log("forgetEvmSignature", _evmAddress);
       if (_evmAddress) {
-        delete evmDerivedAddresses[_evmAddress]?.encryptedSignature;
-        saveEvmDerivedAddresses(evmDerivedAddresses);
+        updateEvmDerivedAddress({
+          evmAddress: _evmAddress,
+          mycelAddress,
+          encryptedSignature: undefined,
+        });
+        // delete evmDerivedAddresses[_evmAddress]?.encryptedSignature;
+        // updateEvmDerivedAddresses(evmDerivedAddresses);
       }
     },
     [evmDerivedAddresses, evmAddress]
   );
+
+  const signTypedData = getSignTypedData();
+  const { signTypedDataAsync } = useSignTypedData({
+    ...signTypedData,
+    domain: {
+      ...signTypedData.domain,
+      chainId: 1,
+    },
+  });
+
+  const deriveKeys = async () => {
+    const signature = await signTypedDataAsync();
+    await setWalletFromEvmSignature(signature);
+    const encryptedSignature = AES.encrypt(signature, staticEncryptionKey).toString();
+    saveEvmSignature(encryptedSignature);
+  };
+
+  const decryptSignature = (encryptedSignature: string | undefined) => {
+    if (!staticEncryptionKey) throw new Error('No decryption key found');
+    if (!encryptedSignature) throw new Error('No signature found');
+
+    const decrypted = AES.decrypt(encryptedSignature, staticEncryptionKey);
+    const signature = decrypted.toString(enc.Utf8);
+    return signature;
+  };
 
   useEffect(() => {
     if (evmAddressWagmi) {
@@ -185,9 +180,40 @@ export const useWallet = () => {
     }
   }, [evmAddressWagmi, mycelAddressGraz]);
 
+  // LocalWallet
+  const updateDialog = useStore((state) => state.updateDialog);
+  useEffect(() => {
+    (async () => {
+      if (mycelAddress && signerGraz?.offlineSigner) {
+        try {
+          setLocalMycelWallet(await LocalWallet.fromOfflineSigner(signerGraz?.offlineSigner));
+        } catch (error) {
+          console.log(error);
+        }
+      } else if (evmAddress) {
+        if (!localMycelWallet) {
+          const evmDerivedAccount = evmDerivedAddresses[evmAddress];
+          if (evmDerivedAccount?.encryptedSignature) {
+            try {
+              const signature = decryptSignature(evmDerivedAccount.encryptedSignature);
+              await setWalletFromEvmSignature(signature);
+            } catch (error) {
+              console.log(error);
+              forgetEvmSignature();
+            }
+          } else {
+            updateDialog("wallet2")
+          }
+        }
+      }
+    })();
+  }, [evmAddress, evmDerivedAddresses, signerWagmi, mycelAddress, signerGraz]);
+
   return {
     // Wallet connection
     isConnected: isConnectedGraz || isConnectedWagmi,
+    isConnectedGraz,
+    isConnectedWagmi,
     connectWallet,
     disconnectWallet,
     currentWalletType,
@@ -202,11 +228,12 @@ export const useWallet = () => {
     // EVM → mycel account derivation
     setWalletFromEvmSignature,
     saveEvmSignature,
-    forgetEvmSignature,
+    // forgetEvmSignature,
+    deriveKeys,
     // mycel accounts
     hdKey,
     localMycelWallet,
-    mycelAccounts,
+    mycelAccount: mycelAccounts?.[0],
   };
 };
 

@@ -1,10 +1,10 @@
-import { RouterProvider } from "react-router-dom";
 import { GrazProvider } from "graz";
+import { RouterProvider } from "react-router-dom";
+import router from "@/router";
 import { WagmiConfig, createConfig, configureChains, mainnet } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { publicProvider } from "wagmi/providers/public";
-import router from "@/router";
 import "@ignt/react-library/dist/style.css";
 import AddressProvider from "../def-hooks/addressContext";
 import DenomProvider from "../def-hooks/denomContext";

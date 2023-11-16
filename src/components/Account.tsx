@@ -2,9 +2,10 @@ import useWallet from "@/hooks/useWallet";
 import Button from "@/components/Button";
 import WalletDialog from "@/components/dialog/WalletDialog";
 import { useStore } from "@/store/index";
+import { shortAddress } from "@/utils/wallets";
 
 export default function Account() {
-  const { isConnected } = useWallet();
+  const { isConnected, mycelAccount } = useWallet();
   const updateDialog = useStore((state) => state.updateDialog);
 
   return (
@@ -15,7 +16,7 @@ export default function Account() {
         onClick={() => updateDialog("wallet")}
       >
         {isConnected ? (
-          <>aaaa</>
+          <span>{shortAddress(mycelAccount?.address)}</span>
         ) : (
           <>
             Connect<span className="hidden md:inline-flex md:ml-1">Wallet</span>

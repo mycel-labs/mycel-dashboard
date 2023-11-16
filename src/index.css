@@ -4,16 +4,17 @@
 @tailwind components;
 @tailwind utilities;
 
-
 :root {
-  --c-cream: #FFFCDF;
-  --c-lemon: #F3E49D;
-  --c-orange: #E6A894;
-  --c-chocolat: #EA5506;
+  --c-cream: #fffcdf;
+  --c-lemon: #f3e49d;
+  --c-orange: #e6a894;
+  --c-chocolat: #ea5506;
 }
 
 @layer base {
-  html, body, div#root {
+  html,
+  body,
+  div#root {
     height: 100%;
   }
 
@@ -43,5 +44,9 @@
   input[type="search"]::-webkit-search-results-decoration {
     display: none;
     -webkit-appearance: none;
+  }
+
+  input[type="text"] {
+    @apply bg-white border-2 border-black px-4 h-12 hover:border-black;
   }
 }
