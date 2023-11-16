@@ -80,7 +80,7 @@ export default function RegisterView() {
           <div className="border-t border-b border-dashed border-black py-8 px-4">
             <div className="w-full flex justify-between">
               <h2 className=" text-2xl m-2 font-semibold">{query + ".cel"}</h2>
-              <button disabled={!isConnected} onClick={registerDomain} className="btn-primary w-40 py-1">
+              <button disabled={!isConnected} onClick={registerDomain} className="btn-primary w-40 py-1 rounded-md">
                 Register
               </button>
             </div>
