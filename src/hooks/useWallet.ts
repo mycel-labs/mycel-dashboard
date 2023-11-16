@@ -218,6 +218,7 @@ export const useWallet = () => {
     evmAddress,
     evmAddressWagmi,
     signerWagmi,
+    connectorsWagmi,
     // Cosmos
     mycelAddress,
     mycelAddressGraz,

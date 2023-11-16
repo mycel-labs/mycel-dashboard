@@ -12,12 +12,14 @@ import { copyClipboard } from "@/utils/lib";
 export default function WalletDialog() {
   const dialog = useStore((state) => state.dialog);
   const updateDialog = useStore((state) => state.updateDialog);
-  const { connectWallet, disconnectWallet, isConnected, evmAddress, deriveKeys, mycelAccount } = useWallet();
+  const { connectWallet, disconnectWallet, isConnected, evmAddress, deriveKeys, mycelAccount, connectorsWagmi } =
+    useWallet();
 
   const DialogContent = () => (
     <div className="space-y-4 font-semibold">
       <Button
         className="btn-secondary w-full h-12"
+        disabled={!connectorsWagmi.find((cn) => cn.id === "MetaMask")?.ready}
         onClick={async () => {
           connectWallet({ walletType: "MetaMask" });
         }}
