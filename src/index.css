@@ -47,6 +47,17 @@
   }
 
   input[type="text"] {
-    @apply bg-white border-2 border-black px-4 h-12 hover:border-black;
+    @apply bg-white border-2 border-black px-4 h-12 hover:border-black font-normal text-base;
+  }
+
+  label {
+    @apply text-sm font-semibold mb-1 block;
+  }
+  label + label {
+    @apply mt-4;
+  }
+
+  label > input {
+    @apply mt-0.5;
   }
 }
