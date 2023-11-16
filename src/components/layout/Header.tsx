@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Account from "@/components/Account";
+import HeaderAccount from "@/components/layout/HeaderAccount";
 import Logo from "@/assets/mycel.svg";
 import { Menu } from "lucide-react";
 
@@ -29,7 +29,7 @@ export default function Header(props: HeaderProps) {
       <div className="w-full flex flex-wrap items-center justify-between mx-auto p-4">
         <img src={Logo} width="125" alt="mycel" className="mt-0.5" />
         <div className="flex lg:order-2">
-          <Account />
+          <HeaderAccount />
           <button
             type="button"
             className="inline-flex items-center justify-center ml-6 lg:hidden focus:outline-none"
@@ -44,7 +44,7 @@ export default function Header(props: HeaderProps) {
             showMenu ? "block fixed top-14 right-0 left-0 px-6" : "hidden"
           }`}
         >
-          <ul className="flex flex-col bg-lemon border-2 border-black shadow-solid lg:shadow-transparent px-8 py-10 text-2xl h-full lg:h-auto lg:text-base z-30 w-full lg:bg-transparent lg:p-0 mt-4 lg:flex-row lg:mt-0 lg:border-0">
+          <ul className="flex flex-col bg-cream border-2 border-black shadow-solid lg:shadow-transparent px-8 py-10 text-2xl h-full lg:h-auto lg:text-base z-30 w-full lg:bg-transparent lg:p-0 mt-4 lg:flex-row lg:mt-0 lg:border-0">
             {navItems.map((item) => (
               <li className="py-2 lg:py-0 font-bold" key={item.label}>
                 <button

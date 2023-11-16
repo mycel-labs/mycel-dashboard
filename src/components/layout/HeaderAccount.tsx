@@ -12,11 +12,11 @@ export default function Account() {
     <>
       <Button
         aria-label="Connect wallet"
-        className="btn-primary py-2 px-4 font-semibold inline-flex"
+        className="btn-primary py-2 px-4 font-semibold inline-flex rounded-md"
         onClick={() => updateDialog("wallet")}
       >
         {isConnected ? (
-          <span>{shortAddress(mycelAccount?.address)}</span>
+          <span className="text-sm font-normal">{shortAddress(mycelAccount?.address)}</span>
         ) : (
           <>
             Connect<span className="hidden md:inline-flex md:ml-1">Wallet</span>

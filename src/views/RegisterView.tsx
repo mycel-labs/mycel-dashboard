@@ -1,17 +1,18 @@
 import { useState, useEffect } from "react";
-import { useClient } from "../hooks/useClient";
+import { useClient } from "@/hooks/useClient";
 import { useNavigate } from "react-router-dom";
 import { RegistryDomain } from "mycel-client-ts/mycel.registry/rest";
 import { useAddressContext } from "../def-hooks/addressContext";
-import { IgntButton } from "@ignt/react-library";
+import useWallet from "@/hooks/useWallet";
 import { DeliverTxResponse } from "@cosmjs/stargate";
 import { PencilRuler } from "lucide-react";
-import TxModal from "../components/TxModal";
-import ResolveButton from "../components/ResolveButton";
+import TxModal from "@/components/TxModal";
+import ResolveButton from "@/components/ResolveButton";
 
 export default function RegisterView() {
   const client = useClient();
   const navigate = useNavigate();
+  const { isConnected, mycelAccount } = useWallet();
   const { address } = useAddressContext();
   const [query, setQuery] = useState<string>("");
   const [isRegistable, setIsRegistable] = useState<boolean>(false);
@@ -80,11 +81,11 @@ export default function RegisterView() {
           <div className="border-t border-b border-dashed border-black py-8 px-4">
             <div className="w-full flex justify-between">
               <h2 className=" text-2xl m-2 font-semibold">{query + ".cel"}</h2>
-              <button disabled={!address} onClick={registerDomain} className="btn-primary w-40 py-1">
+              <button disabled={!isConnected} onClick={registerDomain} className="btn-primary w-40 py-1">
                 Register
               </button>
             </div>
-            {!address && <p className="text-error m-2 font-semibold">Please connect wallet first</p>}
+            {!isConnected && <p className="text-error m-2 font-semibold">Please connect wallet first</p>}
           </div>
         ) : domain ? (
           <div className="border-t border-b border-dashed border-black py-8 px-4">

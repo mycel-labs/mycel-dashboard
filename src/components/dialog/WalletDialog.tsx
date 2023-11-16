@@ -18,7 +18,7 @@ export default function WalletDialog() {
   const DialogContent = () => (
     <div className="space-y-4 font-semibold">
       <Button
-        className="btn-secondary w-full h-12"
+        className="btn-secondary w-full h-12 rounded"
         disabled={!connectorsWagmi.find((cn) => cn.id === "MetaMask")?.ready}
         onClick={async () => {
           connectWallet({ walletType: "MetaMask" });
@@ -30,7 +30,7 @@ export default function WalletDialog() {
         </span>
       </Button>
       <Button
-        className="btn-secondary w-full h-12"
+        className="btn-secondary w-full h-12 rounded"
         onClick={async () => {
           connectWallet({ walletType: "Injected" });
         }}
@@ -41,7 +41,7 @@ export default function WalletDialog() {
         </span>
       </Button>
       <Button
-        className="btn-secondary w-full h-12"
+        className="btn-secondary w-full h-12 rounded"
         onClick={async () => {
           await connectWallet({ walletType: "Keplr" });
           updateDialog(undefined);
@@ -71,14 +71,14 @@ export default function WalletDialog() {
       <label className="relative">
         Mycel Address
         <input type="text" readOnly value={shortAddress(mycelAccount?.address)} className="w-full" />
-        <div className="absolute right-0 bottom-0 h-12 w-12  flex items-center justify-center">
+        <div className="absolute right-0 bottom-0 h-12 w-12 flex items-center justify-center">
           <button className="text-chocolat" onClick={() => copyClipboard(mycelAccount?.address ?? "")}>
             <ClipboardCopy size={20} />
           </button>
         </div>
       </label>
       <Button
-        className="btn-secondary w-full mt-8 py-2"
+        className="btn-secondary w-full mt-8 h-12 rounded-md"
         onClick={async () => {
           await disconnectWallet();
           updateDialog(undefined);

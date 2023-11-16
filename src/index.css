@@ -29,19 +29,11 @@
   }
 
   .btn-primary {
-    @apply text-black bg-transparent border-2 border-black bg-orange hover:opacity-80 disabled:opacity-60 disabled:cursor-not-allowed;
-    box-shadow: 3px 3px;
-    &:hover {
-      box-shadow: 1px 1px;
-    }
+    @apply text-black bg-transparent border-2 border-black bg-orange shadow-solid-sm hover:shadow-solid focus:outline-none hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed;
   }
 
   .btn-secondary {
-    @apply text-black bg-transparent border-2 border-black bg-lemon hover:opacity-80 disabled:opacity-60 disabled:cursor-not-allowed;
-    box-shadow: 2px 2px;
-    &:hover {
-      box-shadow: 1px 1px;
-    }
+    @apply text-black bg-transparent border-2 border-black bg-lemon shadow-solid-sm hover:shadow-solid focus:outline-none hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed;
   }
 
   input[type="search"]::-webkit-search-decoration,
@@ -53,7 +45,7 @@
   }
 
   input[type="text"] {
-    @apply bg-white border-2 border-black px-4 h-12 hover:border-black font-normal text-base;
+    @apply bg-white border-2 border-black px-4 h-12 hover:border-black font-normal text-base focus:outline-none focus:shadow-solid;
   }
 
   label {

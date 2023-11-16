@@ -72,7 +72,8 @@ module.exports = {
       boxShadow: {
         border: "0px 0.5px 0px #CBCBCB",
         border_double: "0px -0.5px 0px #CBCBCB, 0px 0.5px 0px #CBCBCB",
-        solid: "3px 3px #111111",
+        solid: "2px 2px #111111",
+        "solid-sm": "1px 1px #111111",
         transparent: "0px 0px transparent",
         max: "16px 32px 128px 8px rgba(0, 0, 0, 0.07)",
         dropdown: "-112px 73px 191px 59px rgba(0, 0, 0, 0.09)",
