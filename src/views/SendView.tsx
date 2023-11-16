@@ -6,7 +6,8 @@ import { Web3Button, Web3NetworkSwitch } from "@web3modal/react";
 import { Send } from "lucide-react";
 import { RegistryNetworkName } from "mycel-client-ts/mycel.resolver/rest";
 import { useMycelResolver } from "@/hooks/useMycelResolver";
-import { getConnectedNetworkName } from "../utils/chains";
+import { convertToDomain } from "@/utils/domainName";
+import { getConnectedNetworkName } from "@/utils/chains";
 
 export default function SendView() {
   const { chain } = useNetwork();
@@ -68,7 +69,7 @@ export default function SendView() {
   }, [amount]);
 
   useEffect(() => {
-    updateMycelRecords(domainName)
+    updateMycelRecords(convertToDomain(domainName))
       .then()
       .catch((e) => {
         console.error(e);
