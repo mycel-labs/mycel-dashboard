@@ -85,7 +85,7 @@ export const useWallet = () => {
     updateEvmAddress(undefined);
     updateMycelAddress(undefined);
     disconnectLocalWallet();
-    forgetEvmSignature();
+    // forgetEvmSignature();
     updateCurrentWalletType(undefined);
   }, [isConnectedGraz, isConnectedWagmi]);
 
@@ -132,15 +132,12 @@ export const useWallet = () => {
 
   const forgetEvmSignature = useCallback(
     (_evmAddress = evmAddress) => {
-      console.log("forgetEvmSignature", _evmAddress);
       if (_evmAddress) {
         updateEvmDerivedAddress({
           evmAddress: _evmAddress,
           mycelAddress,
           encryptedSignature: undefined,
         });
-        // delete evmDerivedAddresses[_evmAddress]?.encryptedSignature;
-        // updateEvmDerivedAddresses(evmDerivedAddresses);
       }
     },
     [evmDerivedAddresses, evmAddress]

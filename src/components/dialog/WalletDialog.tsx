@@ -92,9 +92,19 @@ export default function WalletDialog() {
 
   const DialogContentKeyGen = () => (
     <>
-      <input type="text" readOnly value={shortAddress(evmAddress)} className="w-full mb-4" />
+      {evmAddress && (
+        <label className="relative">
+          EVM Address
+          <input type="text" readOnly value={shortAddress(evmAddress)} className="w-full" />
+          <div className="absolute right-0 bottom-0 h-12 w-12  flex items-center justify-center">
+            <button className="text-chocolat" onClick={() => copyClipboard(evmAddress)}>
+              <ClipboardCopy size={20} />
+            </button>
+          </div>
+        </label>
+      )}
       <Button
-        className="btn-secondary w-full py-2"
+        className="btn-secondary w-full py-2 mt-8"
         onClick={async () => {
           await deriveKeys();
           updateDialog(undefined);
@@ -102,7 +112,7 @@ export default function WalletDialog() {
       >
         <span className="flex items-center justify-center px-6 mr-2">
           <KeySquare />
-          <span className="ml-4">Keygen</span>
+          <span className="ml-4">Generate Mycel Account</span>
         </span>
       </Button>
     </>
@@ -120,7 +130,7 @@ export default function WalletDialog() {
           <Dialog.Panel className="mx-auto w-full sm:max-w-sm bg-cream py-12 px-10 rounded-t-lg sm:rounded-lg">
             <Dialog.Title className="text-2xl font-semibold mb-8 text-center">
               {dialog === "wallet2" ? (
-                "Generate Mycel Account"
+                "Generate Mycel Account from EVM address"
               ) : isConnected ? (
                 <img src={MycelCharactor} width={144} height={144} alt="Mycel" className="mx-auto" />
               ) : (

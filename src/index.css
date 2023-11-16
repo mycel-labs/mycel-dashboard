@@ -22,6 +22,12 @@
     @apply bg-cream;
   }
 
+  *,
+  *:focus,
+  *:hover {
+    outline: none;
+  }
+
   .btn-primary {
     @apply text-black bg-transparent border-2 border-black bg-orange hover:opacity-80 disabled:opacity-60 disabled:cursor-not-allowed;
     box-shadow: 3px 3px;
