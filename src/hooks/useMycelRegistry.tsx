@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useClient } from "@/hooks/useClient";
-import { RegistryTopLevelDomain, RegistrySecondLevelDomainResponse } from "mycel-client-ts/mycel.registry/rest";
+import { RegistryTopLevelDomain, RegistrySecondLevelDomainResponse, RegistryOwnedDomain } from "mycel-client-ts/mycel.registry/rest";
 import { Domain } from "@/types/domain";
 
 type TopLevelDomain = {
@@ -20,8 +20,10 @@ export const useMycelRegistry = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [topLevelDomain, setTopLevelDomain] = useState<TopLevelDomain | undefined>(undefined);
   const [secondLevelDomain, setSecondLevelDomain] = useState<SecondLevelDomain | undefined>(undefined);
+  const [ownedDomains, setOwnedDomains] = useState<RegistryOwnedDomain[]>([]);
 
 
+  // Query domain
   const registryQueryDomain = async (domain: Domain) => {
     setIsLoading(true);
 
@@ -55,11 +57,26 @@ export const useMycelRegistry = () => {
     setIsLoading(false);
   };
 
+  // Query owned domains
+  const registryQueryOwnedDomains = async (address: string) => {
+    setIsLoading(true);
+    try {
+      const res = await client.MycelRegistry.query.queryDomainOwnership(address);
+      if (res.data.domainOwnership?.domains) {
+        setOwnedDomains(res.data.domainOwnership.domains);
+      }
+    } catch (error) {
+      setOwnedDomains([]);
+    }
+    setIsLoading(false);
+  };
   return {
     isLoading,
     topLevelDomain,
     secondLevelDomain,
+    ownedDomains,
     registryQueryDomain,
+    registryQueryOwnedDomains,
   };
 };
 

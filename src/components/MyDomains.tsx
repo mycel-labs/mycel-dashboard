@@ -1,6 +1,7 @@
+import { useEffect } from "react";
 import { useAddressContext } from "../def-hooks/addressContext";
 import ResolveButton from "../components/ResolveButton";
-import { useDomainOwnership } from "../def-hooks/useDomainOwnership";
+import { useMycelRegistry } from "@/hooks/useMycelRegistry";
 import { Network } from "lucide-react";
 
 interface MyDomainsProps {
@@ -9,7 +10,13 @@ interface MyDomainsProps {
 export default function MyDomains(props: MyDomainsProps) {
   const { className } = props;
   const { address } = useAddressContext();
-  const { domains, isLoading } = useDomainOwnership();
+  const { isLoading, ownedDomains, registryQueryOwnedDomains } = useMycelRegistry();
+
+  useEffect(() => {
+    if (address) {
+      registryQueryOwnedDomains(address);
+    }
+  }, [address]);
 
   return (
     <section className={className ?? ""}>
@@ -19,7 +26,7 @@ export default function MyDomains(props: MyDomainsProps) {
       </h3>
       <table className="table-auto w-full">
         <tbody>
-          {domains?.map((domain) => (
+          {ownedDomains?.map((domain) => (
             <tr className="py-2" key={domain.name}>
               <td className="flex items-center py-5 font-semibold">
                 <h2 className="text-2xl font-semibold">
@@ -38,7 +45,7 @@ export default function MyDomains(props: MyDomainsProps) {
           <span className="sr-only">Loading...</span>
         </div>
       )}
-      {!domains && <div className="text-black/70 text-center font-normal py-8">You have no domains</div>}
+      {!ownedDomains && <div className="text-black/70 text-center font-normal py-8">You have no domains</div>}
     </section>
   );
 }

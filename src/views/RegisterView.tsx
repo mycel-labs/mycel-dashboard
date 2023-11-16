@@ -33,7 +33,6 @@ export default function RegisterView() {
   }, [domain]);
 
   useEffect(() => {
-    console.log(isRegistrable);
     if (secondLevelDomain?.parent?.isRegistered) {
       setIsRegistable(!secondLevelDomain?.isRegistered);
     } else {
@@ -93,7 +92,7 @@ export default function RegisterView() {
           <div className="border-t border-b border-dashed border-black py-8 px-4">
             <div className="w-full flex justify-between">
               <h2 className=" text-2xl m-2 font-semibold">{query}</h2>
-              <ResolveButton name={domain?.name} parent={domain?.parent} />
+              <ResolveButton name={domain?.name} parent={domain?.parent} text={"Registered"} />
             </div>
           </div>
         ) : query !== "" ? (

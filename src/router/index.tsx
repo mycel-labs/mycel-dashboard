@@ -14,7 +14,7 @@ const router = createBrowserRouter([
       </Layout>
     ),
     children: [
-      // { path: "/", element: <PortfolioView /> },
+      { path: "/", element: <PortfolioView /> },
       { path: "/resolve", element: <ResolveView /> },
       { path: "/send", element: <SendView /> },
       { path: "/register", element: <RegisterView /> },
