@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useClient } from "@/hooks/useClient";
 import { useNavigate } from "react-router-dom";
 import useWallet from "@/hooks/useWallet";
+import { useMycelRegistry } from "@/hooks/useMycelRegistry";
 import { DeliverTxResponse } from "@cosmjs/stargate";
 import { PencilRuler } from "lucide-react";
 import TxModal from "@/components/TxModal";
@@ -12,41 +13,32 @@ import { Domain } from "@/types/domain";
 export default function RegisterView() {
   const client = useClient();
   const navigate = useNavigate();
+  const { topLevelDomain, secondLevelDomain, registryQueryDomain } = useMycelRegistry();
   const { isConnected, mycelAccount } = useWallet();
   const [query, setQuery] = useState<string>("");
-  const [isRegistable, setIsRegistable] = useState<boolean>(false);
+  const [isRegistrable, setIsRegistable] = useState<boolean>(false);
   const [domain, setDomain] = useState<Domain>();
-  const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [isShow, setIsShow] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [txResponse, setTxResponse] = useState<DeliverTxResponse>();
 
-  const getIsRegisterd = async (domain: Domain) => {
-    await client.MycelRegistry.query
-      .querySecondLevelDomain(domain.name, domain.parent)
-      .then((res) => {
-        if (res.data.secondLevelDomain) {
-          setIsRegistered(true);
-        }
-      })
-      .catch(() => {
-        setIsRegistered(false);
-      });
-  };
+  useEffect(() => {
+    setDomain(convertToDomain(query));
+  }, [query]);
 
   useEffect(() => {
-    if (query !== "") {
-      const domain = convertToDomain(query);
-      setDomain(domain);
-      getIsRegisterd(domain);
-      // queried domain is not registered
-      if (!domain && query !== "") {
-        setIsRegistable(true);
-      } else {
-        setIsRegistable(false);
-      }
+    if (domain) {
+      registryQueryDomain(domain);
     }
-  }, [query, domain]);
+  }, [domain]);
+
+  useEffect(() => {
+    if (topLevelDomain?.isRegistered) {
+      setIsRegistable(!secondLevelDomain || !secondLevelDomain.isRegistered);
+    } else {
+      setIsRegistable(false);
+    }
+  }, [topLevelDomain, secondLevelDomain]);
 
   const registerDomain = async () => {
     setIsLoading(true);
@@ -55,8 +47,8 @@ export default function RegisterView() {
       .sendMsgRegisterSecondLevelDomain({
         value: {
           creator: mycelAccount?.address ?? "",
-          name: query,
-          parent: "cel",
+          name: domain?.name ?? "",
+          parent: domain?.parent ?? "",
           registrationPeriodInYear: 1,
         },
       })
@@ -86,26 +78,31 @@ export default function RegisterView() {
             }}
           />
         </div>
-        {isRegistable ? (
+        {isRegistrable ? (
           <div className="border-t border-b border-dashed border-black py-8 px-4">
             <div className="w-full flex justify-between">
-              <h2 className=" text-2xl m-2 font-semibold">{query + ".cel"}</h2>
+              <h2 className=" text-2xl m-2 font-semibold">{query}</h2>
               <button disabled={!isConnected} onClick={registerDomain} className="btn-primary w-40 py-1 rounded-md">
-                Register
+                Available
               </button>
             </div>
             {!isConnected && <p className="text-error m-2 font-semibold">Please connect wallet first</p>}
           </div>
-        ) : domain ? (
+        ) : secondLevelDomain ? (
           <div className="border-t border-b border-dashed border-black py-8 px-4">
             <div className="w-full flex justify-between">
-              <h2 className=" text-2xl m-2 font-semibold">{domain.name + "." + domain.parent}</h2>
-
-              <ResolveButton name={domain.name} parent={domain.parent} />
+              <h2 className=" text-2xl m-2 font-semibold">{query}</h2>
+              <ResolveButton name={domain?.name} parent={domain?.parent} />
+            </div>
+          </div>
+        ) : query !== "" ? (
+          <div className="border-t border-b border-dashed border-black py-8 px-4">
+            <div className="w-full flex justify-between">
+              <h2 className=" text-2xl m-2 font-semibold">{query} is not available</h2>
             </div>
           </div>
         ) : (
-          <div></div>
+          <></>
         )}
       </div>
       <TxModal
@@ -114,7 +111,7 @@ export default function RegisterView() {
         txResponse={txResponse}
         isLoading={isLoading}
         onClosed={() => {
-          navigate(`/resolve?name=${query}&parent=${"cel"}`);
+          navigate(`/resolve?name=${domain?.name}&parent=${domain?.parent}`);
         }}
       />
     </>

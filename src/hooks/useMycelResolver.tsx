@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useClient } from "../hooks/useClient";
+import { useClient } from "@/hooks/useClient";
 import { RegistryRecord, RegistryNetworkName } from "mycel-client-ts/mycel.resolver/rest";
-import { convertToDomain } from "../utils/domainName";
+import { convertToDomain } from "@/utils/domainName";
 
 export const useMycelResolver = () => {
   const client = useClient();

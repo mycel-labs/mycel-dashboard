@@ -12,10 +12,6 @@ const items = [
     to: "/register",
   },
   {
-    label: "Explore",
-    to: "/explore",
-  },
-  {
     label: "Send Token",
     to: "/send",
   },
