@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useClient } from "../hooks/useClient";
 import { RegistryRecord, RegistryNetworkName } from "mycel-client-ts/mycel.resolver/rest";
-import { convertToNameAndParent } from "../utils/domainName";
+import { convertToDomain } from "../utils/domainName";
 
 export const useMycelResolver = () => {
   const client = useClient();
@@ -11,7 +11,7 @@ export const useMycelResolver = () => {
   );
 
   const updateMycelRecords = async (domainName: string) => {
-    const { name, parent } = convertToNameAndParent(domainName);
+    const { name, parent } = convertToDomain(domainName);
     setIsLoading(true);
     try {
       const record = await client.MycelResolver.query.queryAllRecords(name, parent);

@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { useClient } from "@/hooks/useClient";
 import { useNavigate } from "react-router-dom";
-import { RegistryDomain } from "mycel-client-ts/mycel.registry/rest";
 import useWallet from "@/hooks/useWallet";
 import { DeliverTxResponse } from "@cosmjs/stargate";
 import { PencilRuler } from "lucide-react";
 import TxModal from "@/components/TxModal";
 import ResolveButton from "@/components/ResolveButton";
+import { convertToDomain } from "@/utils/domainName";
+import { Domain } from "@/types/domain";
 
 export default function RegisterView() {
   const client = useClient();
@@ -14,27 +15,36 @@ export default function RegisterView() {
   const { isConnected, mycelAccount } = useWallet();
   const [query, setQuery] = useState<string>("");
   const [isRegistable, setIsRegistable] = useState<boolean>(false);
-  const [domain, setDomain] = useState<RegistryDomain>();
+  const [domain, setDomain] = useState<Domain>();
+  const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [isShow, setIsShow] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [txResponse, setTxResponse] = useState<DeliverTxResponse>();
 
-  const getDomain = async () => {
+  const getIsRegisterd = async (domain: Domain) => {
     await client.MycelRegistry.query
-      .queryDomain(query, "cel")
-      .then((res) => setDomain(res.data.domain))
+      .querySecondLevelDomain(domain.name, domain.parent)
+      .then((res) => {
+        if (res.data.secondLevelDomain) {
+          setIsRegistered(true);
+        }
+      })
       .catch(() => {
-        setDomain(undefined);
+        setIsRegistered(false);
       });
   };
 
   useEffect(() => {
-    getDomain();
-    // queried domain is not registered
-    if (!domain && query !== "") {
-      setIsRegistable(true);
-    } else {
-      setIsRegistable(false);
+    if (query !== "") {
+      const domain = convertToDomain(query);
+      setDomain(domain);
+      getIsRegisterd(domain);
+      // queried domain is not registered
+      if (!domain && query !== "") {
+        setIsRegistable(true);
+      } else {
+        setIsRegistable(false);
+      }
     }
   }, [query, domain]);
 
@@ -42,7 +52,7 @@ export default function RegisterView() {
     setIsLoading(true);
     setIsShow(true);
     await client.MycelRegistry.tx
-      .sendMsgRegisterDomain({
+      .sendMsgRegisterSecondLevelDomain({
         value: {
           creator: mycelAccount?.address ?? "",
           name: query,

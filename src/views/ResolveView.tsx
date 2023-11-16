@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import Button from "../components/Button";
-import { convertToDomainName, convertToNameAndParent } from "../utils/domainName";
+import { convertToDomain, convertToDomainString } from "../utils/domainName";
 import { useSearchParams } from "react-router-dom";
 import { useAddressContext } from "../def-hooks/addressContext";
-import { useRegistryDomain } from "../def-hooks/useRegistryDomain";
 import EditRecordModal from "../components/EditRecordModal";
 import { BadgeInfo, FileStack, Network } from "lucide-react";
 
@@ -18,7 +17,7 @@ export default function ResolveView() {
     try {
       await updateRegistryDomain(domainName);
       // Update query
-      const { name, parent } = convertToNameAndParent(domainName);
+      const { name, parent } = convertToDomain(domainName);
       query.set("name", name);
       query.set("parent", parent);
       setQuery(query);
@@ -37,7 +36,7 @@ export default function ResolveView() {
     if (inputtedDomainName || !name || !parent) {
       return;
     }
-    const domainName = convertToDomainName(name, parent);
+    const domainName = convertToDomainString(name, parent);
     setInputtedDomainName(domainName);
     updateRegistryHandler(domainName)
       .then()
@@ -67,7 +66,7 @@ export default function ResolveView() {
               </div>
               <div className=" table-row">
                 <div className="table-cell py-2 pr-2">
-                  {convertToDomainName(registryDomain?.name, registryDomain?.parent)}
+                  {convertToDomainString(registryDomain?.name, registryDomain?.parent)}
                 </div>
                 <div className="table-cell py-2 pr-2">{registryDomain?.owner}</div>
                 <div className="table-cell py-2 pr-2">
