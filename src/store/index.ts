@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist, devtools } from "zustand/middleware";
 import type { EvmAddress, MycelAddress } from "@/utils/wallets";
 
-export type Dialog = "wallet" | "wallet2" | undefined;
+export type Dialog = "wallet" | "wallet2" | "tx" | undefined;
 
 export type EvmDerivedAddresses = {
   version?: string;
