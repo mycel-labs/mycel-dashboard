@@ -36,8 +36,7 @@ export default function Pagenation(props: PaginationProps) {
       <nav className="relative z-0 inline-flex -space-x-px" aria-label="Pagination">
         <button
           onClick={() => props.onPageChange(props.currentPage - 1)}
-          className={`relative inline-flex items-center px-4 py-2 border border-black text-sm font-medium ${
-            props.currentPage === 1 ? "text-black/60 cursor-not-allowed" : "text-black hover:bg-lemon"
+          className={`relative inline-flex items-center px-4 py-2 border-2 border-black text-sm font-medium rounded-l-md
           }`}
           disabled={props.currentPage === 1}
         >
@@ -47,8 +46,8 @@ export default function Pagenation(props: PaginationProps) {
           <button
             key={page}
             onClick={() => props.onPageChange(page)}
-            className={`relative inline-flex items-center px-4 py-2 border-t border-b border-black text-sm font-medium ${
-              page === props.currentPage ? "text-black font-semibold" : "text-black hover:bg-lemon"
+            className={`relative inline-flex items-center px-4 py-2 border-t-2 border-b-2 border-black text-sm font-medium ${
+              page === props.currentPage ? "text-black font-semibold" : "text-black hover:bg-lemon/40"
             }`}
           >
             {page}
@@ -56,8 +55,8 @@ export default function Pagenation(props: PaginationProps) {
         ))}
         <button
           onClick={() => props.onPageChange(props.currentPage + 1)}
-          className={`relative inline-flex items-center px-4 py-2 border border-black bg-white text-sm font-medium ${
-            props.currentPage === props.totalPages ? "text-black/60 cursor-not-allowed" : "text-black hover:bg-lemon"
+          className={`relative inline-flex items-center px-4 py-2 border-2 border-black text-sm font-medium rounded-r-md ${
+            props.currentPage === props.totalPages ? "text-black/60 cursor-not-allowed" : "text-black hover:bg-lemon/40"
           }`}
           disabled={props.currentPage === props.totalPages}
         >

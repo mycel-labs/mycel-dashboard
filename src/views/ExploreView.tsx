@@ -1,9 +1,9 @@
 import { useRef, useState, useEffect } from "react";
 import { Search } from "lucide-react";
-import { useClient } from "../hooks/useClient";
+import { useClient } from "@/hooks/useClient";
 import { RegistryDomain } from "mycel-client-ts/mycel.registry/rest";
-import ResolveButton from "../components/ResolveButton";
-import Pagenation from "../components/Pagenation";
+import ResolveButton from "@/components/ResolveButton";
+import Pagenation from "@/components/Pagenation";
 
 import Fuse from "fuse.js";
 
@@ -75,7 +75,8 @@ export default function ExploreView() {
         Explore
       </h2>
       <input
-        className="mr-6 mt-1 py-2 px-4 h-14 bg-white w-full text-base leading-tight outline-0 border border-black"
+        type="search"
+        className="w-full"
         placeholder="Search"
         onChange={(event) => {
           setQuery(event.target.value);

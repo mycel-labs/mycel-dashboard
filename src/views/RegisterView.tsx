@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useClient } from "@/hooks/useClient";
 import { useNavigate } from "react-router-dom";
 import { RegistryDomain } from "mycel-client-ts/mycel.registry/rest";
-import { useAddressContext } from "../def-hooks/addressContext";
 import useWallet from "@/hooks/useWallet";
 import { DeliverTxResponse } from "@cosmjs/stargate";
 import { PencilRuler } from "lucide-react";
@@ -13,7 +12,6 @@ export default function RegisterView() {
   const client = useClient();
   const navigate = useNavigate();
   const { isConnected, mycelAccount } = useWallet();
-  const { address } = useAddressContext();
   const [query, setQuery] = useState<string>("");
   const [isRegistable, setIsRegistable] = useState<boolean>(false);
   const [domain, setDomain] = useState<RegistryDomain>();
@@ -46,7 +44,7 @@ export default function RegisterView() {
     await client.MycelRegistry.tx
       .sendMsgRegisterDomain({
         value: {
-          creator: address,
+          creator: mycelAccount?.address ?? "",
           name: query,
           parent: "cel",
           registrationPeriodInYear: 1,
@@ -70,7 +68,8 @@ export default function RegisterView() {
         </h2>
         <div className="flex mt-2 mb-10">
           <input
-            className="mt-1 py-2 px-4 h-14 bg-white w-full border border-black text-base leading-tight outline-0"
+            type="search"
+            className="w-full leading-tight"
             placeholder=".cel"
             onChange={(event) => {
               setQuery(event.target.value);
