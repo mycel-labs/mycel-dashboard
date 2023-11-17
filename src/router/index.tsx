@@ -2,7 +2,6 @@ import { createBrowserRouter, Outlet } from "react-router-dom";
 import PortfolioView from "@/views/PortfolioView";
 import ResolveView from "@/views/ResolveView";
 import SendView from "@/views/SendView";
-import ExploreView from "@/views/ExploreView";
 import RegisterView from "@/views/RegisterView";
 import Layout from "@/components/layout/Layout";
 
@@ -18,7 +17,6 @@ const router = createBrowserRouter([
       { path: "/", element: <PortfolioView /> },
       { path: "/resolve", element: <ResolveView /> },
       { path: "/send", element: <SendView /> },
-      { path: "/explore", element: <ExploreView /> },
       { path: "/register", element: <RegisterView /> },
     ],
   },

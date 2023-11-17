@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 interface ResolveButtonProps {
   name: string | undefined;
   parent: string | undefined;
+  text?: string;
 }
 export default function ResolveButton(props: ResolveButtonProps) {
   const navigate = useNavigate();
@@ -10,9 +11,9 @@ export default function ResolveButton(props: ResolveButtonProps) {
     <>
       <button
         onClick={() => navigate(`/resolve?name=${props.name}&parent=${props.parent}`)}
-        className="btn-primary w-28 h-10 shrink-0 rounded-md mr-0.5"
+        className="btn-secondary w-40 py-1 rounded-md"
       >
-        Resolve
+        {props.text ?? "Resolve"}
       </button>
     </>
   );

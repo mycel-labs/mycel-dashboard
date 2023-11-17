@@ -3,21 +3,15 @@ import { useNetwork, usePrepareSendTransaction, useSendTransaction, useWaitForTr
 import { parseEther } from "ethers/lib/utils.js";
 import { useDebounce } from "use-debounce";
 import { Web3Button, Web3NetworkSwitch } from "@web3modal/react";
-import { RegistryDomain, RegistryNetworkName } from "mycel-client-ts/mycel.registry/rest";
 import { Send } from "lucide-react";
-import { useRegistryDomain } from "../def-hooks/useRegistryDomain";
-import { getConnectedNetworkName } from "../utils/chains";
-
-const getWalletAddr = (domain: RegistryDomain, recordType: RegistryNetworkName) => {
-  if (!domain || !domain.walletRecords || !domain.walletRecords[recordType]) {
-    return "";
-  }
-  return domain.walletRecords[recordType].value;
-};
+import { RegistryNetworkName } from "mycel-client-ts/mycel.resolver/rest";
+import { useMycelResolver } from "@/hooks/useMycelResolver";
+import { convertToDomain } from "@/utils/domainName";
+import { getConnectedNetworkName } from "@/utils/chains";
 
 export default function SendView() {
   const { chain } = useNetwork();
-  const { registryDomain, isLoading: isLoadingRegistryDomain, updateRegistryDomain } = useRegistryDomain();
+  const { mycelRecords, isLoading, updateMycelRecords, getWalletAddr } = useMycelResolver();
   const [domainName, setDomainName] = useState("");
   const [targetNetworkName, setTargetNetworkName] = useState(RegistryNetworkName.ETHEREUM_MAINNET_MAINNET);
   const [debouncedDomainName] = useDebounce(domainName, 500);
@@ -53,13 +47,17 @@ export default function SendView() {
   }, [chain]);
 
   useEffect(() => {
-    if (registryDomain) {
-      const walletAddr = registryDomain ? getWalletAddr(registryDomain, targetNetworkName) : "";
-      setTo(walletAddr || "");
-    } else {
-      setTo("");
+    if (domainName) {
+      if (mycelRecords && targetNetworkName) {
+        const walletAddr = getWalletAddr(targetNetworkName);
+        if (walletAddr) {
+          setTo(walletAddr);
+        }
+      } else {
+        setTo("");
+      }
     }
-  }, [registryDomain]);
+  }, [mycelRecords, targetNetworkName, domainName]);
 
   useEffect(() => {
     const pattern = /^[0-9]+(\.[0-9]+)?$/;
@@ -71,7 +69,7 @@ export default function SendView() {
   }, [amount]);
 
   useEffect(() => {
-    updateRegistryDomain(domainName)
+    updateMycelRecords(convertToDomain(domainName))
       .then()
       .catch((e) => {
         console.error(e);
@@ -129,7 +127,7 @@ export default function SendView() {
             console.log("%o", res);
           }}
           // busy={isLoadingTx || isLoadingRegistryDomain}
-          disabled={isLoadingTx || isLoadingRegistryDomain || !sendTransactionAsync || !to || !amount}
+          disabled={isLoadingTx || isLoading || !sendTransactionAsync || !to || !amount}
         >
           {isLoadingTx ? "Sending..." : "Send"}
         </button>
