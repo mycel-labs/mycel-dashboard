@@ -63,7 +63,7 @@ export const getSignTypedData = () =>
       mycel: [{ name: "action", type: "string" }],
     },
     message: {
-      action: "Myel Chain Authentication",
+      action: "Mycel Chain Authentication",
     },
   }) as const;
 
