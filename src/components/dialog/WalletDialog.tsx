@@ -1,4 +1,5 @@
 import { Dialog } from "@headlessui/react";
+import BaseDialog from "@/components/dialog/BaseDialog";
 import useWallet from "@/hooks/useWallet";
 import { useStore } from "@/store/index";
 import Button from "@/components/Button";
@@ -121,34 +122,17 @@ export default function WalletDialog() {
   );
 
   return (
-    <Dialog
-      open={dialog === "wallet" || dialog === "wallet2"}
-      onClose={() => updateDialog(undefined)}
-      className="relative z-50"
-    >
-      <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
-      <div className="fixed inset-0 w-screen overflow-y-auto">
-        <div className="flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4">
-          <Dialog.Panel className="mx-auto w-full sm:max-w-sm bg-cream py-12 px-10 rounded-t-lg sm:rounded-lg">
-            <Dialog.Title className="text-2xl font-semibold mb-8 text-center">
-              {dialog === "wallet2" ? (
-                "Generate Mycel Account from EVM address"
-              ) : isConnected ? (
-                <img src={MycelCharactor} width={144} height={144} alt="Mycel" className="mx-auto" />
-              ) : (
-                "Select Wallet"
-              )}
-            </Dialog.Title>
-            {dialog === "wallet2" ? (
-              <DialogContentKeyGen />
-            ) : isConnected ? (
-              <DialogContentConnected />
-            ) : (
-              <DialogContent />
-            )}
-          </Dialog.Panel>
-        </div>
-      </div>
-    </Dialog>
+    <BaseDialog open={dialog === "wallet" || dialog === "wallet2"}>
+      <Dialog.Title className="text-2xl font-semibold mb-8 text-center">
+        {dialog === "wallet2" ? (
+          "Generate Mycel Account from EVM address"
+        ) : isConnected ? (
+          <img src={MycelCharactor} width={144} height={144} alt="Mycel" className="mx-auto" />
+        ) : (
+          "Select Wallet"
+        )}
+      </Dialog.Title>
+      {dialog === "wallet2" ? <DialogContentKeyGen /> : isConnected ? <DialogContentConnected /> : <DialogContent />}
+    </BaseDialog>
   );
 }
