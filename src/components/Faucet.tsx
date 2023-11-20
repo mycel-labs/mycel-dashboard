@@ -6,11 +6,16 @@ import { useClient } from "../hooks/useClient";
 import { useAddressContext } from "../def-hooks/addressContext";
 import TxModal from "../components/TxModal";
 import Button from "../components/Button";
+import { HandMetal } from "lucide-react";
 
-export default function Faucet() {
+interface faucetProps {
+  className?: string;
+}
+export default function Faucet(props: faucetProps) {
   const { address } = useAddressContext();
   const client = useClient();
 
+  const { className } = props;
   const [isShow, setIsShow] = useState<boolean>(false);
   const [isClaimable, setIsClaimable] = useState<boolean>(false);
   const [balance, setBalance] = useState<string>("");
@@ -70,11 +75,17 @@ export default function Faucet() {
   };
 
   return (
-    <div>
-      <Button className="btn-primary w-full py-2" disabled={!isClaimable} onClick={claimFaucet}>
-        Claim
-      </Button>
-      <TxModal isShow={isShow} setIsShow={setIsShow} txResponse={txResponse} isLoading={isLoading} />
-    </div>
+    <section className={className ?? ""}>
+      <h3 className="text-xl text-black font-semibold px-1 py-2 flex flex-1 items-center border-b-2 border-black">
+        <HandMetal className="opacity-70 mr-2" size={24} />
+        Faucet
+      </h3>
+      <div>
+        <Button className="btn-primary w-full py-2 mt-6" disabled={!isClaimable} onClick={claimFaucet}>
+          Claim
+        </Button>
+        <TxModal isShow={isShow} setIsShow={setIsShow} txResponse={txResponse} isLoading={isLoading} />
+      </div>
+    </section>
   );
 }

@@ -13,6 +13,8 @@ export default function MyDomains(props: MyDomainsProps) {
   const { isLoading, ownedDomains, registryQueryOwnedDomains } = useMycelRegistry();
 
   useEffect(() => {
+    registryQueryOwnedDomains(address);
+    console.log(ownedDomains);
     if (address) {
       registryQueryOwnedDomains(address);
     }
@@ -45,7 +47,9 @@ export default function MyDomains(props: MyDomainsProps) {
           <span className="sr-only">Loading...</span>
         </div>
       )}
-      {!ownedDomains && <div className="text-black/70 text-center font-normal py-8">You have no domains</div>}
+      {ownedDomains.length === 0 && (
+        <div className="text-black/70 text-center font-normal py-8">You have no domains</div>
+      )}
     </section>
   );
 }

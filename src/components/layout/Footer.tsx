@@ -29,7 +29,6 @@ export default function Footer() {
     <footer className="w-full bg-lemon border-t-2 border-black pt-12 pb-6 px-6">
       <h2 className="font-cursive text-lg">
         <img src={Logo} width="100" alt="mycel" />
-        <p className="opacity-70 mt-2">NAME EVERYTHING, RESOLVE FROM EVERYWHERE.</p>
       </h2>
       <div className="flex justify-between items-end flex-nowrap mt-4">
         <ul className="inline-flex md:mb-0 mb-10">

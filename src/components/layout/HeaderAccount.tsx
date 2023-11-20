@@ -19,7 +19,7 @@ export default function Account() {
           <span className="text-sm font-normal">{shortAddress(mycelAccount?.address)}</span>
         ) : (
           <>
-            Connect<span className="hidden md:inline-flex md:ml-1">Wallet</span>
+            Login<span className="hidden md:inline-flex md:ml-1">to Mycel</span>
           </>
         )}
       </Button>
