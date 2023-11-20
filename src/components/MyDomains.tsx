@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useAddressContext } from "../def-hooks/addressContext";
-import ResolveButton from "../components/ResolveButton";
+import { useWallet } from "@/hooks/useWallet";
+import ResolveButton from "@/components/ResolveButton";
 import { useMycelRegistry } from "@/hooks/useMycelRegistry";
 import { Network } from "lucide-react";
 
@@ -9,16 +9,14 @@ interface MyDomainsProps {
 }
 export default function MyDomains(props: MyDomainsProps) {
   const { className } = props;
-  const { address } = useAddressContext();
+  const { mycelAccount } = useWallet();
   const { isLoading, ownedDomains, registryQueryOwnedDomains } = useMycelRegistry();
 
   useEffect(() => {
-    registryQueryOwnedDomains(address);
-    console.log(ownedDomains);
-    if (address) {
-      registryQueryOwnedDomains(address);
+    if (mycelAccount?.address) {
+      registryQueryOwnedDomains(mycelAccount.address);
     }
-  }, [address]);
+  }, [mycelAccount]);
 
   return (
     <section className={className ?? ""}>
@@ -42,7 +40,7 @@ export default function MyDomains(props: MyDomainsProps) {
           ))}
         </tbody>
       </table>
-      {address && isLoading && (
+      {mycelAccount?.address && isLoading && (
         <div role="status" className="w-100 animate-pulse flex flex-col">
           <span className="sr-only">Loading...</span>
         </div>

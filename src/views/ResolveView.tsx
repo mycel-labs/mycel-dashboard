@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Button from "../components/Button";
 import { convertToDomainString } from "../utils/domainName";
 import { useSearchParams } from "react-router-dom";
-import { useAddressContext } from "../def-hooks/addressContext";
+import { useWallet } from "@/hooks/useWallet";
 import EditRecordModal from "../components/EditRecordModal";
 import { BadgeInfo, FileStack, Network } from "lucide-react";
 import { Domain } from "@/types/domain";
@@ -10,7 +10,7 @@ import { useMycelResolver } from "@/hooks/useMycelResolver";
 import { useMycelRegistry } from "@/hooks/useMycelRegistry";
 
 export default function ResolveView() {
-  const { address } = useAddressContext();
+  const { mycelAccount } = useWallet();
   const { mycelRecords, updateMycelRecords } = useMycelResolver();
   const { topLevelDomain, registryQueryDomain } = useMycelRegistry();
   const [domain, setDomain] = useState<Domain>();
@@ -33,10 +33,6 @@ export default function ResolveView() {
       setQuery(query);
     }
   };
-
-  useEffect(() => {
-    console.log(topLevelDomain);
-  }, [topLevelDomain]);
 
   useEffect(() => {
     const name = query.get("name") || "";
@@ -115,7 +111,7 @@ export default function ResolveView() {
               </div>
             </div>
             <Button
-              disabled={!address}
+              disabled={!mycelAccount?.address}
               onClick={() => {
                 setIsShow(true);
               }}
@@ -126,7 +122,15 @@ export default function ResolveView() {
           </div>
         )}
       </div>
-      {domain && <EditRecordModal domain={domain} records={mycelRecords} isShow={isShow} setIsShow={setIsShow} />}
+      {domain && (
+        <EditRecordModal
+          domain={domain}
+          records={mycelRecords}
+          address={mycelAccount?.address}
+          isShow={isShow}
+          setIsShow={setIsShow}
+        />
+      )}
     </>
   );
 }

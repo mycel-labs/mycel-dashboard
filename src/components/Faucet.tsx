@@ -3,7 +3,7 @@ import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { SigningStargateClient, DeliverTxResponse } from "@cosmjs/stargate";
 import { OfflineDirectSigner } from "@keplr-wallet/types";
 import { useClient } from "../hooks/useClient";
-import { useAddressContext } from "../def-hooks/addressContext";
+import { useWallet } from "@/hooks/useWallet";
 import TxModal from "../components/TxModal";
 import Button from "../components/Button";
 import { HandMetal } from "lucide-react";
@@ -12,8 +12,8 @@ interface faucetProps {
   className?: string;
 }
 export default function Faucet(props: faucetProps) {
-  const { address } = useAddressContext();
   const client = useClient();
+  const { mycelAccount } = useWallet();
 
   const { className } = props;
   const [isShow, setIsShow] = useState<boolean>(false);
@@ -25,17 +25,22 @@ export default function Faucet(props: faucetProps) {
   const faucetMnemonic = import.meta.env.VITE_FAUCET_MNEMONIC ?? "";
 
   const queryBalance = async () => {
-    const balance = await client.CosmosBankV1Beta1.query.queryBalance(address, { denom: "umycel" }).then((res) => {
-      if (res.data.balance?.amount) {
-        return res.data.balance.amount;
-      }
-    });
+    if (!mycelAccount?.address) {
+      return;
+    }
+    const balance = await client.CosmosBankV1Beta1.query
+      .queryBalance(mycelAccount?.address, { denom: "umycel" })
+      .then((res) => {
+        if (res.data.balance?.amount) {
+          return res.data.balance.amount;
+        }
+      });
     setBalance(balance ?? "0");
   };
 
   useEffect(() => {
     queryBalance();
-  }, [address]);
+  }, [mycelAccount]);
 
   useEffect(() => {
     if (parseInt(balance) < 1000) {
@@ -49,7 +54,7 @@ export default function Faucet(props: faucetProps) {
     setIsLoading(true);
     setIsShow(true);
 
-    if (isClaimable) {
+    if (isClaimable && mycelAccount?.address) {
       const faucetSigner = (await DirectSecp256k1HdWallet.fromMnemonic(faucetMnemonic, {
         prefix: "mycel",
       })) as OfflineDirectSigner;
@@ -59,7 +64,7 @@ export default function Faucet(props: faucetProps) {
       const faucetClient = await SigningStargateClient.connectWithSigner(rpc, faucetSigner);
 
       await faucetClient
-        .sendTokens(faucetAddress, address, [{ denom: "umycel", amount: amount }], {
+        .sendTokens(faucetAddress, mycelAccount?.address, [{ denom: "umycel", amount: amount }], {
           amount: [{ denom: "umycel", amount: "500" }],
           gas: "200000",
         })

@@ -5,7 +5,6 @@ import { DnsRecordType } from "mycel-client-ts/mycel.registry/types/mycel/regist
 import { NetworkName } from "mycel-client-ts/mycel.registry/types/mycel/registry/network_name";
 import { RegistryRecord } from "mycel-client-ts/mycel.resolver/rest";
 import { DeliverTxResponse } from "@cosmjs/stargate";
-import { useAddressContext } from "../def-hooks/addressContext";
 import Dropdown from "./Dropdown";
 import Button from "./Button";
 import Radio, { Option } from "./Radio";
@@ -16,6 +15,7 @@ import { Domain } from "@/types/domain";
 interface EditRecordModalProps {
   domain: Domain;
   records: Record<string, RegistryRecord> | undefined;
+  address: string;
   isShow: boolean;
   setIsShow: (isShow: boolean) => void;
 }
@@ -38,7 +38,6 @@ const RecordTypeToOptions = (recordType: any) => {
 export default function EditRecordModal(props: EditRecordModalProps) {
   const client = useClient();
   const navigate = useNavigate();
-  const { address } = useAddressContext();
   const [recordOption, setRecordOption] = useState("wallet");
   const [typeOption, setTypeOption] = useState("");
   const [typeOptions, setTypeOptions] = useState<Option[]>([]);
@@ -91,7 +90,7 @@ export default function EditRecordModal(props: EditRecordModalProps) {
       await client.MycelRegistry.tx
         .sendMsgUpdateDnsRecord({
           value: {
-            creator: address,
+            creator: props.address,
             name: props.domain?.name || "",
             parent: props.domain?.parent || "",
             dnsRecordType: typeOption,
@@ -111,7 +110,7 @@ export default function EditRecordModal(props: EditRecordModalProps) {
       await client.MycelRegistry.tx
         .sendMsgUpdateWalletRecord({
           value: {
-            creator: address,
+            creator: props.address,
             name: props.domain?.name || "",
             parent: props.domain?.parent || "",
             walletRecordType: typeOption,
@@ -162,7 +161,7 @@ export default function EditRecordModal(props: EditRecordModalProps) {
                 onChange={(e) => setNewRecordValue(e.target.value)}
               />
               <Button
-                disabled={!address || newRecordValue === ""}
+                disabled={!props.address || newRecordValue === ""}
                 onClick={updateRecord}
                 className="btn-primary mt-10 h-10 w-48"
               >
