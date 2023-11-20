@@ -12,8 +12,8 @@ import { Domain } from "@/types/domain";
 import { MYCEL_COIN_DECIMALS, MYCEL_HUMAN_COIN_UNIT, convertToDecimalString } from "@/utils/coin";
 
 export default function RegisterView() {
-  const { isConnected, mycelAccount, mycelOfflineSigner } = useWallet();
-  const client = useClient(mycelOfflineSigner);
+  const { isConnected, mycelAccount } = useWallet();
+  const client = useClient();
   const navigate = useNavigate();
   const { secondLevelDomain, fee, registryQueryDomain, registryQueryRegistrationFee } = useMycelRegistry();
   const [query, setQuery] = useState<string>("");
@@ -38,8 +38,6 @@ export default function RegisterView() {
   const registerDomain = async () => {
     setIsLoading(true);
     setIsShow(true);
-
-    console.log(client);
 
     if (domain) {
       if (domain.parent === "") {

@@ -25,7 +25,6 @@ export default function ResolveView() {
 
       if (mycelAccount) {
         const role = await registryQueryRole({ name, parent }, mycelAccount.address);
-        console.log(role);
         if (role === "OWNER" || role === "EDITOR") {
           setIsEditable(true);
         } else {

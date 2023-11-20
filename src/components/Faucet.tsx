@@ -23,6 +23,7 @@ export default function Faucet(props: faucetProps) {
   const [txResponse, setTxResponse] = useState<DeliverTxResponse>();
 
   const faucetMnemonic = import.meta.env.VITE_FAUCET_MNEMONIC ?? "";
+  const faucetThreshold = import.meta.env.VITE_FAUCET_CLAIMABLE_THRESHOLD ?? "500000";
 
   const queryBalance = async () => {
     if (!mycelAccount?.address) {
@@ -43,7 +44,7 @@ export default function Faucet(props: faucetProps) {
   }, [mycelAccount]);
 
   useEffect(() => {
-    if (parseInt(balance) < 1000) {
+    if (parseInt(balance) < faucetThreshold) {
       setIsClaimable(true);
     } else {
       setIsClaimable(false);

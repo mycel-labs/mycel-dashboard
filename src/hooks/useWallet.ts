@@ -17,7 +17,7 @@ import {
 } from "graz";
 import { LocalWallet, onboarding } from "@dydxprotocol/v4-client-js";
 import { Secp256k1HdWallet } from "@cosmjs/launchpad";
-import { OfflineSigner } from "@cosmjs/proto-signing";
+import { DirectSecp256k1HdWallet, OfflineSigner } from "@cosmjs/proto-signing";
 import {
   WALLET_CONFIG,
   MYCEL_CHAIN_INFO,
@@ -124,7 +124,7 @@ export const useWallet = () => {
     });
     setLocalMycelWallet(wallet);
     setHdKey({ mnemonic, privateKey, publicKey });
-    setMycelOfflineSigner(await Secp256k1HdWallet.fromMnemonic(mnemonic, { prefix: BECH32_PREFIX }));
+    setMycelOfflineSigner(await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, { prefix: BECH32_PREFIX }));
   };
 
   const saveEvmSignature = useCallback(
