@@ -5,13 +5,13 @@ import type { Ref } from "vue";
 
 export default function useCosmosEvidenceV1Beta1() {
   const client = useClient();
-  const QueryEvidence = (evidence_hash: string, options: any) => {
-    const key = { type: "QueryEvidence", evidence_hash };
+  const QueryEvidence = (hash: string, query: any, options: any) => {
+    const key = { type: "QueryEvidence", hash, query };
     return useQuery(
       [key],
       () => {
-        const { evidence_hash } = key;
-        return client.CosmosEvidenceV1Beta1.query.queryEvidence(evidence_hash).then((res) => res.data);
+        const { hash, query } = key;
+        return client.CosmosEvidenceV1Beta1.query.queryEvidence(hash, query ?? undefined).then((res) => res.data);
       },
       options,
     );

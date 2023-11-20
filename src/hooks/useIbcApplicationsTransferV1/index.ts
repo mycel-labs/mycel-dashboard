@@ -86,5 +86,24 @@ export default function useIbcApplicationsTransferV1() {
     );
   };
 
-  return { QueryDenomTrace, QueryDenomTraces, QueryParams, QueryDenomHash, QueryEscrowAddress };
+  const QueryTotalEscrowForDenom = (denom: string, options: any) => {
+    const key = { type: "QueryTotalEscrowForDenom", denom };
+    return useQuery(
+      [key],
+      () => {
+        const { denom } = key;
+        return client.IbcApplicationsTransferV1.query.queryTotalEscrowForDenom(denom).then((res) => res.data);
+      },
+      options,
+    );
+  };
+
+  return {
+    QueryDenomTrace,
+    QueryDenomTraces,
+    QueryParams,
+    QueryDenomHash,
+    QueryEscrowAddress,
+    QueryTotalEscrowForDenom,
+  };
 }

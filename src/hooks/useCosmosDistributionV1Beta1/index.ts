@@ -16,6 +16,20 @@ export default function useCosmosDistributionV1Beta1() {
     );
   };
 
+  const QueryValidatorDistributionInfo = (validator_address: string, options: any) => {
+    const key = { type: "QueryValidatorDistributionInfo", validator_address };
+    return useQuery(
+      [key],
+      () => {
+        const { validator_address } = key;
+        return client.CosmosDistributionV1Beta1.query
+          .queryValidatorDistributionInfo(validator_address)
+          .then((res) => res.data);
+      },
+      options,
+    );
+  };
+
   const QueryValidatorOutstandingRewards = (validator_address: string, options: any) => {
     const key = { type: "QueryValidatorOutstandingRewards", validator_address };
     return useQuery(
@@ -147,6 +161,7 @@ export default function useCosmosDistributionV1Beta1() {
 
   return {
     QueryParams,
+    QueryValidatorDistributionInfo,
     QueryValidatorOutstandingRewards,
     QueryValidatorCommission,
     QueryValidatorSlashes,

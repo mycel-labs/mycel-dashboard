@@ -107,5 +107,59 @@ export default function useCosmosTxV1Beta1() {
     );
   };
 
-  return { ServiceSimulate, ServiceGetTx, ServiceBroadcastTx, ServiceGetTxsEvent, ServiceGetBlockWithTxs };
+  const ServiceTxDecode = (options: any) => {
+    const key = { type: "ServiceTxDecode" };
+    return useQuery(
+      [key],
+      () => {
+        return client.CosmosTxV1Beta1.query.serviceTxDecode({ ...key }).then((res) => res.data);
+      },
+      options,
+    );
+  };
+
+  const ServiceTxEncode = (options: any) => {
+    const key = { type: "ServiceTxEncode" };
+    return useQuery(
+      [key],
+      () => {
+        return client.CosmosTxV1Beta1.query.serviceTxEncode({ ...key }).then((res) => res.data);
+      },
+      options,
+    );
+  };
+
+  const ServiceTxEncodeAmino = (options: any) => {
+    const key = { type: "ServiceTxEncodeAmino" };
+    return useQuery(
+      [key],
+      () => {
+        return client.CosmosTxV1Beta1.query.serviceTxEncodeAmino({ ...key }).then((res) => res.data);
+      },
+      options,
+    );
+  };
+
+  const ServiceTxDecodeAmino = (options: any) => {
+    const key = { type: "ServiceTxDecodeAmino" };
+    return useQuery(
+      [key],
+      () => {
+        return client.CosmosTxV1Beta1.query.serviceTxDecodeAmino({ ...key }).then((res) => res.data);
+      },
+      options,
+    );
+  };
+
+  return {
+    ServiceSimulate,
+    ServiceGetTx,
+    ServiceBroadcastTx,
+    ServiceGetTxsEvent,
+    ServiceGetBlockWithTxs,
+    ServiceTxDecode,
+    ServiceTxEncode,
+    ServiceTxEncodeAmino,
+    ServiceTxDecodeAmino,
+  };
 }

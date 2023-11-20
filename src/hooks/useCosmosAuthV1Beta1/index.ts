@@ -51,13 +51,13 @@ export default function useCosmosAuthV1Beta1() {
     );
   };
 
-  const QueryAccountAddressByID = (id: string, options: any) => {
-    const key = { type: "QueryAccountAddressByID", id };
+  const QueryAccountAddressByID = (id: string, query: any, options: any) => {
+    const key = { type: "QueryAccountAddressByID", id, query };
     return useQuery(
       [key],
       () => {
-        const { id } = key;
-        return client.CosmosAuthV1Beta1.query.queryAccountAddressByID(id).then((res) => res.data);
+        const { id, query } = key;
+        return client.CosmosAuthV1Beta1.query.queryAccountAddressByID(id, query ?? undefined).then((res) => res.data);
       },
       options,
     );
@@ -132,6 +132,18 @@ export default function useCosmosAuthV1Beta1() {
     );
   };
 
+  const QueryAccountInfo = (address: string, options: any) => {
+    const key = { type: "QueryAccountInfo", address };
+    return useQuery(
+      [key],
+      () => {
+        const { address } = key;
+        return client.CosmosAuthV1Beta1.query.queryAccountInfo(address).then((res) => res.data);
+      },
+      options,
+    );
+  };
+
   return {
     QueryAccounts,
     QueryAccount,
@@ -142,5 +154,6 @@ export default function useCosmosAuthV1Beta1() {
     QueryBech32Prefix,
     QueryAddressBytesToString,
     QueryAddressStringToBytes,
+    QueryAccountInfo,
   };
 }

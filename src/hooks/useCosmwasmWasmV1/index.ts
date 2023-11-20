@@ -3,22 +3,22 @@ import { useQuery, type UseQueryOptions, useInfiniteQuery, type UseInfiniteQuery
 import { useClient } from "../useClient";
 import type { Ref } from "vue";
 
-export default function useCosmosBankV1Beta1() {
+export default function useCosmwasmWasmV1() {
   const client = useClient();
-  const QueryBalance = (address: string, query: any, options: any) => {
-    const key = { type: "QueryBalance", address, query };
+  const QueryContractInfo = (address: string, options: any) => {
+    const key = { type: "QueryContractInfo", address };
     return useQuery(
       [key],
       () => {
-        const { address, query } = key;
-        return client.CosmosBankV1Beta1.query.queryBalance(address, query ?? undefined).then((res) => res.data);
+        const { address } = key;
+        return client.CosmwasmWasmV1.query.queryContractInfo(address).then((res) => res.data);
       },
       options,
     );
   };
 
-  const QueryAllBalances = (address: string, query: any, options: any, perPage: number) => {
-    const key = { type: "QueryAllBalances", address, query };
+  const QueryContractHistory = (address: string, query: any, options: any, perPage: number) => {
+    const key = { type: "QueryContractHistory", address, query };
     return useInfiniteQuery(
       [key],
       ({ pageParam = 1 }: { pageParam?: number }) => {
@@ -27,8 +27,8 @@ export default function useCosmosBankV1Beta1() {
         query["pagination.limit"] = perPage;
         query["pagination.offset"] = (pageParam - 1) * perPage;
         query["pagination.count_total"] = true;
-        return client.CosmosBankV1Beta1.query
-          .queryAllBalances(address, query ?? undefined)
+        return client.CosmwasmWasmV1.query
+          .queryContractHistory(address, query ?? undefined)
           .then((res) => ({ ...res.data, pageParam }));
       },
       {
@@ -51,18 +51,18 @@ export default function useCosmosBankV1Beta1() {
     );
   };
 
-  const QuerySpendableBalances = (address: string, query: any, options: any, perPage: number) => {
-    const key = { type: "QuerySpendableBalances", address, query };
+  const QueryContractsByCode = (code_id: string, query: any, options: any, perPage: number) => {
+    const key = { type: "QueryContractsByCode", code_id, query };
     return useInfiniteQuery(
       [key],
       ({ pageParam = 1 }: { pageParam?: number }) => {
-        const { address, query } = key;
+        const { code_id, query } = key;
 
         query["pagination.limit"] = perPage;
         query["pagination.offset"] = (pageParam - 1) * perPage;
         query["pagination.count_total"] = true;
-        return client.CosmosBankV1Beta1.query
-          .querySpendableBalances(address, query ?? undefined)
+        return client.CosmwasmWasmV1.query
+          .queryContractsByCode(code_id, query ?? undefined)
           .then((res) => ({ ...res.data, pageParam }));
       },
       {
@@ -85,22 +85,78 @@ export default function useCosmosBankV1Beta1() {
     );
   };
 
-  const QuerySpendableBalanceByDenom = (address: string, query: any, options: any) => {
-    const key = { type: "QuerySpendableBalanceByDenom", address, query };
+  const QueryAllContractState = (address: string, query: any, options: any, perPage: number) => {
+    const key = { type: "QueryAllContractState", address, query };
+    return useInfiniteQuery(
+      [key],
+      ({ pageParam = 1 }: { pageParam?: number }) => {
+        const { address, query } = key;
+
+        query["pagination.limit"] = perPage;
+        query["pagination.offset"] = (pageParam - 1) * perPage;
+        query["pagination.count_total"] = true;
+        return client.CosmwasmWasmV1.query
+          .queryAllContractState(address, query ?? undefined)
+          .then((res) => ({ ...res.data, pageParam }));
+      },
+      {
+        ...options,
+        getNextPageParam: (lastPage, allPages) => {
+          if ((lastPage.pagination?.total ?? 0) > (lastPage.pageParam ?? 0) * perPage) {
+            return lastPage.pageParam + 1;
+          } else {
+            return undefined;
+          }
+        },
+        getPreviousPageParam: (firstPage, allPages) => {
+          if (firstPage.pageParam == 1) {
+            return undefined;
+          } else {
+            return firstPage.pageParam - 1;
+          }
+        },
+      },
+    );
+  };
+
+  const QueryRawContractState = (address: string, query_data: string, options: any) => {
+    const key = { type: "QueryRawContractState", address, query_data };
     return useQuery(
       [key],
       () => {
-        const { address, query } = key;
-        return client.CosmosBankV1Beta1.query
-          .querySpendableBalanceByDenom(address, query ?? undefined)
-          .then((res) => res.data);
+        const { address, query_data } = key;
+        return client.CosmwasmWasmV1.query.queryRawContractState(address, query_data).then((res) => res.data);
       },
       options,
     );
   };
 
-  const QueryTotalSupply = (query: any, options: any, perPage: number) => {
-    const key = { type: "QueryTotalSupply", query };
+  const QuerySmartContractState = (address: string, query_data: string, options: any) => {
+    const key = { type: "QuerySmartContractState", address, query_data };
+    return useQuery(
+      [key],
+      () => {
+        const { address, query_data } = key;
+        return client.CosmwasmWasmV1.query.querySmartContractState(address, query_data).then((res) => res.data);
+      },
+      options,
+    );
+  };
+
+  const QueryCode = (code_id: string, options: any) => {
+    const key = { type: "QueryCode", code_id };
+    return useQuery(
+      [key],
+      () => {
+        const { code_id } = key;
+        return client.CosmwasmWasmV1.query.queryCode(code_id).then((res) => res.data);
+      },
+      options,
+    );
+  };
+
+  const QueryCodes = (query: any, options: any, perPage: number) => {
+    const key = { type: "QueryCodes", query };
     return useInfiniteQuery(
       [key],
       ({ pageParam = 1 }: { pageParam?: number }) => {
@@ -109,9 +165,7 @@ export default function useCosmosBankV1Beta1() {
         query["pagination.limit"] = perPage;
         query["pagination.offset"] = (pageParam - 1) * perPage;
         query["pagination.count_total"] = true;
-        return client.CosmosBankV1Beta1.query
-          .queryTotalSupply(query ?? undefined)
-          .then((res) => ({ ...res.data, pageParam }));
+        return client.CosmwasmWasmV1.query.queryCodes(query ?? undefined).then((res) => ({ ...res.data, pageParam }));
       },
       {
         ...options,
@@ -133,15 +187,37 @@ export default function useCosmosBankV1Beta1() {
     );
   };
 
-  const QuerySupplyOf = (query: any, options: any) => {
-    const key = { type: "QuerySupplyOf", query };
-    return useQuery(
+  const QueryPinnedCodes = (query: any, options: any, perPage: number) => {
+    const key = { type: "QueryPinnedCodes", query };
+    return useInfiniteQuery(
       [key],
-      () => {
+      ({ pageParam = 1 }: { pageParam?: number }) => {
         const { query } = key;
-        return client.CosmosBankV1Beta1.query.querySupplyOf(query ?? undefined).then((res) => res.data);
+
+        query["pagination.limit"] = perPage;
+        query["pagination.offset"] = (pageParam - 1) * perPage;
+        query["pagination.count_total"] = true;
+        return client.CosmwasmWasmV1.query
+          .queryPinnedCodes(query ?? undefined)
+          .then((res) => ({ ...res.data, pageParam }));
       },
-      options,
+      {
+        ...options,
+        getNextPageParam: (lastPage, allPages) => {
+          if ((lastPage.pagination?.total ?? 0) > (lastPage.pageParam ?? 0) * perPage) {
+            return lastPage.pageParam + 1;
+          } else {
+            return undefined;
+          }
+        },
+        getPreviousPageParam: (firstPage, allPages) => {
+          if (firstPage.pageParam == 1) {
+            return undefined;
+          } else {
+            return firstPage.pageParam - 1;
+          }
+        },
+      },
     );
   };
 
@@ -150,104 +226,24 @@ export default function useCosmosBankV1Beta1() {
     return useQuery(
       [key],
       () => {
-        return client.CosmosBankV1Beta1.query.queryParams().then((res) => res.data);
+        return client.CosmwasmWasmV1.query.queryParams().then((res) => res.data);
       },
       options,
     );
   };
 
-  const QueryDenomMetadata = (denom: string, options: any) => {
-    const key = { type: "QueryDenomMetadata", denom };
-    return useQuery(
-      [key],
-      () => {
-        const { denom } = key;
-        return client.CosmosBankV1Beta1.query.queryDenomMetadata(denom).then((res) => res.data);
-      },
-      options,
-    );
-  };
-
-  const QueryDenomsMetadata = (query: any, options: any, perPage: number) => {
-    const key = { type: "QueryDenomsMetadata", query };
+  const QueryContractsByCreator = (creator_address: string, query: any, options: any, perPage: number) => {
+    const key = { type: "QueryContractsByCreator", creator_address, query };
     return useInfiniteQuery(
       [key],
       ({ pageParam = 1 }: { pageParam?: number }) => {
-        const { query } = key;
+        const { creator_address, query } = key;
 
         query["pagination.limit"] = perPage;
         query["pagination.offset"] = (pageParam - 1) * perPage;
         query["pagination.count_total"] = true;
-        return client.CosmosBankV1Beta1.query
-          .queryDenomsMetadata(query ?? undefined)
-          .then((res) => ({ ...res.data, pageParam }));
-      },
-      {
-        ...options,
-        getNextPageParam: (lastPage, allPages) => {
-          if ((lastPage.pagination?.total ?? 0) > (lastPage.pageParam ?? 0) * perPage) {
-            return lastPage.pageParam + 1;
-          } else {
-            return undefined;
-          }
-        },
-        getPreviousPageParam: (firstPage, allPages) => {
-          if (firstPage.pageParam == 1) {
-            return undefined;
-          } else {
-            return firstPage.pageParam - 1;
-          }
-        },
-      },
-    );
-  };
-
-  const QueryDenomOwners = (denom: string, query: any, options: any, perPage: number) => {
-    const key = { type: "QueryDenomOwners", denom, query };
-    return useInfiniteQuery(
-      [key],
-      ({ pageParam = 1 }: { pageParam?: number }) => {
-        const { denom, query } = key;
-
-        query["pagination.limit"] = perPage;
-        query["pagination.offset"] = (pageParam - 1) * perPage;
-        query["pagination.count_total"] = true;
-        return client.CosmosBankV1Beta1.query
-          .queryDenomOwners(denom, query ?? undefined)
-          .then((res) => ({ ...res.data, pageParam }));
-      },
-      {
-        ...options,
-        getNextPageParam: (lastPage, allPages) => {
-          if ((lastPage.pagination?.total ?? 0) > (lastPage.pageParam ?? 0) * perPage) {
-            return lastPage.pageParam + 1;
-          } else {
-            return undefined;
-          }
-        },
-        getPreviousPageParam: (firstPage, allPages) => {
-          if (firstPage.pageParam == 1) {
-            return undefined;
-          } else {
-            return firstPage.pageParam - 1;
-          }
-        },
-      },
-    );
-  };
-
-  const QuerySendEnabled = (query: any, options: any, perPage: number) => {
-    const key = { type: "QuerySendEnabled", query };
-    return useInfiniteQuery(
-      [key],
-      ({ pageParam = 1 }: { pageParam?: number }) => {
-        const { query } = key;
-
-        query["pagination.limit"] = perPage;
-        query["pagination.offset"] = (pageParam - 1) * perPage;
-        query["pagination.count_total"] = true;
-        return client.CosmosBankV1Beta1.query
-          .querySendEnabled(query ?? undefined)
+        return client.CosmwasmWasmV1.query
+          .queryContractsByCreator(creator_address, query ?? undefined)
           .then((res) => ({ ...res.data, pageParam }));
       },
       {
@@ -271,16 +267,16 @@ export default function useCosmosBankV1Beta1() {
   };
 
   return {
-    QueryBalance,
-    QueryAllBalances,
-    QuerySpendableBalances,
-    QuerySpendableBalanceByDenom,
-    QueryTotalSupply,
-    QuerySupplyOf,
+    QueryContractInfo,
+    QueryContractHistory,
+    QueryContractsByCode,
+    QueryAllContractState,
+    QueryRawContractState,
+    QuerySmartContractState,
+    QueryCode,
+    QueryCodes,
+    QueryPinnedCodes,
     QueryParams,
-    QueryDenomMetadata,
-    QueryDenomsMetadata,
-    QueryDenomOwners,
-    QuerySendEnabled,
+    QueryContractsByCreator,
   };
 }
