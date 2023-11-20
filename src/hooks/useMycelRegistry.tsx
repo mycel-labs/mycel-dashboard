@@ -1,27 +1,31 @@
 import { useState } from "react";
 import { useClient } from "@/hooks/useClient";
-import { RegistryTopLevelDomain, RegistrySecondLevelDomainResponse, RegistryOwnedDomain } from "mycel-client-ts/mycel.registry/rest";
+import {
+  RegistryTopLevelDomain,
+  RegistrySecondLevelDomainResponse,
+  RegistryOwnedDomain,
+  RegistryQueryDomainRegistrationFeeResponse,
+} from "mycel-client-ts/mycel.registry/rest";
 import { Domain } from "@/types/domain";
 
 type TopLevelDomain = {
   info: RegistryTopLevelDomain | undefined;
   isRegistered: boolean;
-}
+};
 
 type SecondLevelDomain = {
   info: RegistrySecondLevelDomainResponse | undefined;
   parent: TopLevelDomain | undefined;
   isRegistered: boolean;
-}
-
+};
 
 export const useMycelRegistry = () => {
   const client = useClient();
   const [isLoading, setIsLoading] = useState(false);
   const [topLevelDomain, setTopLevelDomain] = useState<TopLevelDomain | undefined>(undefined);
   const [secondLevelDomain, setSecondLevelDomain] = useState<SecondLevelDomain | undefined>(undefined);
+  const [fee, setFee] = useState<RegistryQueryDomainRegistrationFeeResponse | undefined>(undefined);
   const [ownedDomains, setOwnedDomains] = useState<RegistryOwnedDomain[]>([]);
-
 
   // Query domain
   const registryQueryDomain = async (domain: Domain) => {
@@ -32,28 +36,50 @@ export const useMycelRegistry = () => {
         const res = await queryFunc();
         if (res.data) {
           const domainData = isTopLevel ? res.data.topLevelDomain : res.data.secondLevelDomain;
-          return isTopLevel ? { info: domainData, isRegistered: !!domainData } : { info: domainData, isRegistered: !!domainData, parent: topLevelDomainResult };
+          return isTopLevel
+            ? { info: domainData, isRegistered: !!domainData }
+            : { info: domainData, isRegistered: !!domainData, parent: topLevelDomainResult };
         }
-        return isTopLevel ? { info: undefined, isRegistered: false } : { info: undefined, isRegistered: false, parent: topLevelDomainResult };
+        return isTopLevel
+          ? { info: undefined, isRegistered: false }
+          : { info: undefined, isRegistered: false, parent: topLevelDomainResult };
       } catch (error) {
-        return isTopLevel ? { info: undefined, isRegistered: false } : { info: undefined, isRegistered: false, parent: topLevelDomainResult };
+        return isTopLevel
+          ? { info: undefined, isRegistered: false }
+          : { info: undefined, isRegistered: false, parent: topLevelDomainResult };
       }
     };
 
     const topLevelDomainResult = await queryDomain(
       () => client.MycelRegistry.query.queryTopLevelDomain(domain.parent),
-      true
+      true,
     );
 
     setTopLevelDomain(topLevelDomainResult);
 
-    const secondLevelDomainResult = domain.parent !== "" ? await queryDomain(
-      () => client.MycelRegistry.query.querySecondLevelDomain(domain.name, domain.parent),
-      false
-    ) : { info: undefined, isRegistered: false, parent: topLevelDomainResult };
+    const secondLevelDomainResult =
+      domain.parent !== ""
+        ? await queryDomain(() => client.MycelRegistry.query.querySecondLevelDomain(domain.name, domain.parent), false)
+        : { info: undefined, isRegistered: false, parent: topLevelDomainResult };
 
     setSecondLevelDomain(secondLevelDomainResult);
 
+    setIsLoading(false);
+  };
+
+  // Query registration fee
+  const registryQueryRegistrationFee = async (domain: Domain) => {
+    setIsLoading(true);
+    try {
+      const res = await client.MycelRegistry.query.queryDomainRegistrationFee(domain.name, domain.parent, {
+        registrationPeriodInYear: "1",
+      });
+      if (res.data) {
+        setFee(res.data);
+      }
+    } catch (error) {
+      setFee(undefined);
+    }
     setIsLoading(false);
   };
 
@@ -74,9 +100,10 @@ export const useMycelRegistry = () => {
     isLoading,
     topLevelDomain,
     secondLevelDomain,
+    fee,
     ownedDomains,
     registryQueryDomain,
+    registryQueryRegistrationFee,
     registryQueryOwnedDomains,
   };
 };
-

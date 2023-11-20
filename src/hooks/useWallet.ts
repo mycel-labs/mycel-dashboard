@@ -16,8 +16,19 @@ import {
   WalletType as CosmosWalletType,
 } from "graz";
 import { LocalWallet, onboarding } from "@dydxprotocol/v4-client-js";
-import { WALLET_CONFIG, MYCEL_CHAIN_INFO, getSignTypedData, BECH32_PREFIX, type EvmAddress, type MycelAddress, type PrivateInformation, type WalletType } from "@/utils/wallets";
-import { AES, enc } from 'crypto-js';
+import { Secp256k1HdWallet } from "@cosmjs/launchpad";
+import { OfflineSigner } from "@cosmjs/proto-signing";
+import {
+  WALLET_CONFIG,
+  MYCEL_CHAIN_INFO,
+  getSignTypedData,
+  BECH32_PREFIX,
+  type EvmAddress,
+  type MycelAddress,
+  type PrivateInformation,
+  type WalletType,
+} from "@/utils/wallets";
+import { AES, enc } from "crypto-js";
 
 export const useWallet = () => {
   // EVM
@@ -77,7 +88,7 @@ export const useWallet = () => {
   const disconnectLocalWallet = () => {
     setLocalMycelWallet(undefined);
     setHdKey(undefined);
-  }
+  };
 
   const disconnectWallet = useCallback(async () => {
     if (isConnectedWagmi) await disconnectWagmi();
@@ -89,16 +100,15 @@ export const useWallet = () => {
     updateCurrentWalletType(undefined);
   }, [isConnectedGraz, isConnectedWagmi]);
 
-
   // mycel wallet
   const [localMycelWallet, setLocalMycelWallet] = useState<LocalWallet>();
+  const [mycelOfflineSigner, setMycelOfflineSigner] = useState<OfflineSigner>();
   const [hdKey, setHdKey] = useState<PrivateInformation>();
 
   const mycelAccounts = useMemo(() => localMycelWallet?.accounts, [localMycelWallet]);
 
   const getWalletFromEvmSignature = async ({ signature }: { signature: string }) => {
-    const { mnemonic, privateKey, publicKey } =
-      onboarding.deriveHDKeyFromEthereumSignature(signature);
+    const { mnemonic, privateKey, publicKey } = onboarding.deriveHDKeyFromEthereumSignature(signature);
 
     return {
       wallet: await LocalWallet.fromMnemonic(mnemonic, BECH32_PREFIX),
@@ -114,6 +124,7 @@ export const useWallet = () => {
     });
     setLocalMycelWallet(wallet);
     setHdKey({ mnemonic, privateKey, publicKey });
+    setMycelOfflineSigner(await Secp256k1HdWallet.fromMnemonic(mnemonic, { prefix: BECH32_PREFIX }));
   };
 
   const saveEvmSignature = useCallback(
@@ -127,7 +138,7 @@ export const useWallet = () => {
         });
       }
     },
-    [evmDerivedAddresses, evmAddress]
+    [evmDerivedAddresses, evmAddress],
   );
 
   const forgetEvmSignature = useCallback(
@@ -140,7 +151,7 @@ export const useWallet = () => {
         });
       }
     },
-    [evmDerivedAddresses, evmAddress]
+    [evmDerivedAddresses, evmAddress],
   );
 
   const signTypedData = getSignTypedData();
@@ -160,8 +171,8 @@ export const useWallet = () => {
   };
 
   const decryptSignature = (encryptedSignature: string | undefined) => {
-    if (!staticEncryptionKey) throw new Error('No decryption key found');
-    if (!encryptedSignature) throw new Error('No signature found');
+    if (!staticEncryptionKey) throw new Error("No decryption key found");
+    if (!encryptedSignature) throw new Error("No signature found");
 
     const decrypted = AES.decrypt(encryptedSignature, staticEncryptionKey);
     const signature = decrypted.toString(enc.Utf8);
@@ -184,6 +195,7 @@ export const useWallet = () => {
       if (mycelAddress && signerGraz?.offlineSigner) {
         try {
           setLocalMycelWallet(await LocalWallet.fromOfflineSigner(signerGraz?.offlineSigner));
+          setMycelOfflineSigner(signerGraz?.offlineSigner);
         } catch (error) {
           console.log(error);
         }
@@ -199,7 +211,7 @@ export const useWallet = () => {
               forgetEvmSignature();
             }
           } else {
-            updateDialog("wallet2")
+            updateDialog("wallet2");
           }
         }
       }
@@ -231,6 +243,7 @@ export const useWallet = () => {
     // mycel accounts
     hdKey,
     localMycelWallet,
+    mycelOfflineSigner,
     mycelAccount: mycelAccounts?.[0],
   };
 };
