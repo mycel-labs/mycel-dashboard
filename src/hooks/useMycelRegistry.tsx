@@ -51,12 +51,19 @@ export const useMycelRegistry = () => {
     };
 
     const topLevelDomainResult = await queryDomain(
-      () => client.MycelRegistry.query.queryTopLevelDomain(domain.parent),
+      async () => {
+        // If parent is empty, query top level domain
+        if (domain.parent === "") {
+          return await client.MycelRegistry.query.queryTopLevelDomain(domain.name);
+        }
+        else {
+          return await client.MycelRegistry.query.queryTopLevelDomain(domain.parent)
+        }
+      },
       true,
     );
 
     setTopLevelDomain(topLevelDomainResult);
-
     const secondLevelDomainResult =
       domain.parent !== ""
         ? await queryDomain(() => client.MycelRegistry.query.querySecondLevelDomain(domain.name, domain.parent), false)

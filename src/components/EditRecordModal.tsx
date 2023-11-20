@@ -1,29 +1,31 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useClient } from "../hooks/useClient";
 import { IgntModal } from "@ignt/react-library";
-import Button from "./Button";
 import { DnsRecordType } from "mycel-client-ts/mycel.registry/types/mycel/registry/dns_record";
 import { NetworkName } from "mycel-client-ts/mycel.registry/types/mycel/registry/network_name";
-import { RegistryDomain } from "mycel-client-ts/mycel.registry/rest";
+import { RegistryRecord } from "mycel-client-ts/mycel.resolver/rest";
 import { DeliverTxResponse } from "@cosmjs/stargate";
 import { useAddressContext } from "../def-hooks/addressContext";
-import Radio, { Option } from "./Radio";
 import Dropdown from "./Dropdown";
-import TxModal from "../components/TxModal";
+import Button from "./Button";
+import Radio, { Option } from "./Radio";
+import TxModal from "@/components/TxModal";
+import { useClient } from "@/hooks/useClient";
+import { Domain } from "@/types/domain";
 
 interface EditRecordModalProps {
-  registryDomain: RegistryDomain | null;
+  domain: Domain;
+  records: Record<string, RegistryRecord> | undefined;
   isShow: boolean;
   setIsShow: (isShow: boolean) => void;
 }
 
 const recordOptions: Option[] = [
-  { value: "dns", label: "DNS Record" },
   { value: "wallet", label: "Wallet Record" },
+  { value: "dns", label: "DNS Record" },
 ];
 
-const RecordTypeToOptions = (recordType) => {
+const RecordTypeToOptions = (recordType: any) => {
   const options: Option[] = [];
   Object.values(recordType).forEach((value) => {
     if (typeof value === "string" && value !== "UNRECOGNIZED") {
@@ -42,7 +44,6 @@ export default function EditRecordModal(props: EditRecordModalProps) {
   const [typeOptions, setTypeOptions] = useState<Option[]>([]);
   const [currentRecordValue, setCurrentRecordValue] = useState("");
   const [newRecordValue, setNewRecordValue] = useState("");
-  const [isUpdatable, setIsUpdatable] = useState<boolean>(false);
   const [isShow, setIsShow] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [txResponse, setTxResponse] = useState<DeliverTxResponse>();
@@ -53,19 +54,20 @@ export default function EditRecordModal(props: EditRecordModalProps) {
       setTypeOption("A");
     } else if (recordOption === "wallet") {
       setTypeOptions(RecordTypeToOptions(NetworkName));
-      setTypeOption("ETHEREUM_MAINNET");
+      setTypeOption("ETHEREUM_TESTNET_GOERLI");
     }
   }, [recordOption]);
 
   useEffect(() => {
-    let values;
-    if (recordOption === "dns" && props.registryDomain?.dnsRecords) {
-      values = props.registryDomain?.dnsRecords;
-    } else if (recordOption === "wallet" && props.registryDomain?.walletRecords) {
-      values = props.registryDomain?.walletRecords;
-    }
-    if (values && values[typeOption] !== undefined) {
-      setCurrentRecordValue(values[typeOption].value);
+    if (props.records && props.records[typeOption] !== undefined) {
+      switch (recordOption) {
+        case "dns":
+          setCurrentRecordValue(props.records[typeOption].dnsRecord?.value || "");
+          break;
+        case "wallet":
+          setCurrentRecordValue(props.records[typeOption].walletRecord?.value || "");
+          break;
+      }
     } else {
       setCurrentRecordValue("");
     }
@@ -90,8 +92,8 @@ export default function EditRecordModal(props: EditRecordModalProps) {
         .sendMsgUpdateDnsRecord({
           value: {
             creator: address,
-            name: props.registryDomain?.name || "",
-            parent: props.registryDomain?.parent || "",
+            name: props.domain?.name || "",
+            parent: props.domain?.parent || "",
             dnsRecordType: typeOption,
             value: newRecordValue,
           },
@@ -110,8 +112,8 @@ export default function EditRecordModal(props: EditRecordModalProps) {
         .sendMsgUpdateWalletRecord({
           value: {
             creator: address,
-            name: props.registryDomain?.name || "",
-            parent: props.registryDomain?.parent || "",
+            name: props.domain?.name || "",
+            parent: props.domain?.parent || "",
             walletRecordType: typeOption,
             value: newRecordValue,
           },
@@ -126,8 +128,8 @@ export default function EditRecordModal(props: EditRecordModalProps) {
     }
   };
 
-  const onClosed = () => {
-    navigate(`/resolve?name=${props.registryDomain?.name}&parent=${props.registryDomain?.parent}`);
+  const onClosed = async () => {
+    navigate(0);
     props.setIsShow(false);
   };
 
