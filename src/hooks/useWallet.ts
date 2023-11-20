@@ -64,7 +64,7 @@ export const useWallet = () => {
       try {
         if (WALLET_CONFIG[walletType].chainType === "cosmos") {
           if (!isConnectedGraz) {
-            await connectGraz({
+            connectGraz({
               chainInfo: MYCEL_CHAIN_INFO,
               walletType: CosmosWalletType.KEPLR,
             });

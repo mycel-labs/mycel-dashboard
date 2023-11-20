@@ -6,9 +6,7 @@ import { Domain } from "@/types/domain";
 export const useMycelResolver = () => {
   const client = useClient();
   const [isLoading, setIsLoading] = useState(false);
-  const [mycelRecords, setMycelRecord] = useState<Record<string, RegistryRecord> | null>(
-    null
-  );
+  const [mycelRecords, setMycelRecord] = useState<Record<string, RegistryRecord> | null>(null);
 
   const updateMycelRecords = async (domain: Domain) => {
     setIsLoading(true);

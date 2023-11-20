@@ -20,7 +20,7 @@ export default function Faucet() {
   const faucetMnemonic = import.meta.env.VITE_FAUCET_MNEMONIC ?? "";
 
   const queryBalance = async () => {
-    const balance = await client.CosmosBankV1Beta1.query.queryBalance(address, { denom: "mycel" }).then((res) => {
+    const balance = await client.CosmosBankV1Beta1.query.queryBalance(address, { denom: "umycel" }).then((res) => {
       if (res.data.balance?.amount) {
         return res.data.balance.amount;
       }
@@ -54,8 +54,8 @@ export default function Faucet() {
       const faucetClient = await SigningStargateClient.connectWithSigner(rpc, faucetSigner);
 
       await faucetClient
-        .sendTokens(faucetAddress, address, [{ denom: "mycel", amount: amount }], {
-          amount: [{ denom: "mycel", amount: "500" }],
+        .sendTokens(faucetAddress, address, [{ denom: "umycel", amount: amount }], {
+          amount: [{ denom: "umycel", amount: "500" }],
           gas: "200000",
         })
         .then((res) => {

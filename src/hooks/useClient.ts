@@ -1,9 +1,11 @@
 import { Client } from "mycel-client-ts";
 import { OfflineSigner } from "@cosmjs/proto-signing";
 import { env } from "@/env";
+import useWallet from "@/hooks/useWallet";
 
 const useClientInstance = (signer?: OfflineSigner) => {
-  return new Client(env, signer);
+  const { mycelOfflineSigner } = useWallet();
+  return new Client(env, signer ?? mycelOfflineSigner);
 };
 let clientInstance: ReturnType<typeof useClientInstance>;
 
