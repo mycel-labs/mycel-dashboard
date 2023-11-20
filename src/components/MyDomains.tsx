@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useWallet } from "@/hooks/useWallet";
 import ResolveButton from "@/components/ResolveButton";
 import { useMycelRegistry } from "@/hooks/useMycelRegistry";
@@ -10,13 +9,7 @@ interface MyDomainsProps {
 export default function MyDomains(props: MyDomainsProps) {
   const { className } = props;
   const { mycelAccount } = useWallet();
-  const { isLoading, ownedDomains, registryQueryOwnedDomains } = useMycelRegistry();
-
-  useEffect(() => {
-    if (mycelAccount?.address) {
-      registryQueryOwnedDomains(mycelAccount.address);
-    }
-  }, [mycelAccount]);
+  const { isLoading, ownedDomains } = useMycelRegistry();
 
   return (
     <section className={className ?? ""}>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useClient } from "@/hooks/useClient";
 import {
   RegistryTopLevelDomain,
@@ -6,7 +6,9 @@ import {
   RegistryOwnedDomain,
   RegistryQueryDomainRegistrationFeeResponse,
 } from "mycel-client-ts/mycel.registry/rest";
+import { useWallet } from "@/hooks/useWallet";
 import { Domain } from "@/types/domain";
+import { convertToDomainString } from "@/utils/domainName";
 
 type TopLevelDomain = {
   info: RegistryTopLevelDomain | undefined;
@@ -21,11 +23,18 @@ type SecondLevelDomain = {
 
 export const useMycelRegistry = () => {
   const client = useClient();
+  const { mycelAccount } = useWallet();
   const [isLoading, setIsLoading] = useState(false);
   const [topLevelDomain, setTopLevelDomain] = useState<TopLevelDomain | undefined>(undefined);
   const [secondLevelDomain, setSecondLevelDomain] = useState<SecondLevelDomain | undefined>(undefined);
   const [fee, setFee] = useState<RegistryQueryDomainRegistrationFeeResponse | undefined>(undefined);
   const [ownedDomains, setOwnedDomains] = useState<RegistryOwnedDomain[]>([]);
+
+  useEffect(() => {
+    if (mycelAccount?.address) {
+      registryQueryOwnedDomains(mycelAccount.address);
+    }
+  }, [mycelAccount]);
 
   // Query domain
   const registryQueryDomain = async (domain: Domain) => {
@@ -99,6 +108,24 @@ export const useMycelRegistry = () => {
     }
     setIsLoading(false);
   };
+
+  // Query role
+  const registryQueryRole = async (domain: Domain, address: string) => {
+    setIsLoading(true);
+    try {
+      const res = await client.MycelRegistry.query.queryRole(
+        convertToDomainString(domain.name, domain.parent),
+        address,
+      );
+      if (res.data) {
+        return res.data.role;
+      }
+    } catch (error) {
+      return undefined;
+    }
+    setIsLoading(false);
+  };
+
   return {
     isLoading,
     topLevelDomain,
@@ -108,5 +135,6 @@ export const useMycelRegistry = () => {
     registryQueryDomain,
     registryQueryRegistrationFee,
     registryQueryOwnedDomains,
+    registryQueryRole,
   };
 };

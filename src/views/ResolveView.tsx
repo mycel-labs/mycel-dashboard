@@ -12,15 +12,26 @@ import { useMycelRegistry } from "@/hooks/useMycelRegistry";
 export default function ResolveView() {
   const { mycelAccount } = useWallet();
   const { mycelRecords, updateMycelRecords } = useMycelResolver();
-  const { topLevelDomain, registryQueryDomain } = useMycelRegistry();
+  const { topLevelDomain, registryQueryDomain, registryQueryRole } = useMycelRegistry();
   const [domain, setDomain] = useState<Domain>();
   const [query, setQuery] = useSearchParams({});
+  const [isEditable, setIsEditable] = useState<boolean>(false);
   const [isShow, setIsShow] = useState<boolean>(false);
 
   const updateRegistryHandler = async (name: string, parent: string) => {
     try {
       await updateMycelRecords({ name, parent });
       await registryQueryDomain({ name, parent });
+
+      if (mycelAccount) {
+        const role = await registryQueryRole({ name, parent }, mycelAccount.address);
+        console.log(role);
+        if (role === "OWNER" || role === "EDITOR") {
+          setIsEditable(true);
+        } else {
+          setIsEditable(false);
+        }
+      }
       // Update query
       query.set("name", name);
       query.set("parent", parent);
@@ -43,7 +54,7 @@ export default function ResolveView() {
       .catch((e) => {
         console.log(e);
       });
-  }, []);
+  }, [mycelAccount]);
 
   return (
     <>
@@ -110,19 +121,21 @@ export default function ResolveView() {
                   })}
               </div>
             </div>
-            <Button
-              disabled={!mycelAccount?.address}
-              onClick={() => {
-                setIsShow(true);
-              }}
-              className="btn-primary mt-5 h-10 w-48"
-            >
-              Edit Record
-            </Button>
+            {domain && isEditable && (
+              <Button
+                disabled={!mycelAccount?.address}
+                onClick={() => {
+                  setIsShow(true);
+                }}
+                className="btn-primary mt-5 h-10 w-48"
+              >
+                Edit Record
+              </Button>
+            )}
           </div>
         )}
       </div>
-      {domain && (
+      {domain && mycelAccount && (
         <EditRecordModal
           domain={domain}
           records={mycelRecords}
