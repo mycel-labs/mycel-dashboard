@@ -9,6 +9,7 @@ import TxModal from "@/components/TxModal";
 import ResolveButton from "@/components/ResolveButton";
 import { convertToDomain } from "@/utils/domainName";
 import { Domain } from "@/types/domain";
+import { MYCEL_COIN_DECIMALS, MYCEL_HUMAN_COIN_UNIT, convertToDecimalString } from "@/utils/coin";
 
 export default function RegisterView() {
   const { isConnected, mycelAccount, mycelOfflineSigner } = useWallet();
@@ -37,6 +38,8 @@ export default function RegisterView() {
   const registerDomain = async () => {
     setIsLoading(true);
     setIsShow(true);
+
+    console.log(client);
 
     if (domain) {
       if (domain.parent === "") {
@@ -91,7 +94,7 @@ export default function RegisterView() {
           <input
             type="search"
             className="w-full leading-tight"
-            placeholder=".cel"
+            placeholder="Enter Top Level or Second Level Domain Name"
             onChange={(event) => {
               setQuery(event.target.value);
             }}
@@ -102,9 +105,9 @@ export default function RegisterView() {
           <div className="border-t border-b border-dashed border-black py-8 px-4">
             <div className="w-full flex justify-between">
               <h2 className=" text-2xl m-2 font-semibold">{query}</h2>
-              {fee.fee && fee.fee[0] && (
+              {fee.fee && fee.fee[0].amount && (
                 <h2 className=" text-2xl pl-5 m-2">
-                  {fee.fee[0].amount} {fee.fee[0].denom}/ Year{" "}
+                  {convertToDecimalString(fee.fee[0].amount, MYCEL_COIN_DECIMALS)} {MYCEL_HUMAN_COIN_UNIT}/Year{" "}
                 </h2>
               )}
               <button disabled={!isConnected} onClick={registerDomain} className="btn-primary w-40 py-1 rounded-md">
