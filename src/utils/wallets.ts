@@ -1,5 +1,6 @@
 import { onboarding } from "@dydxprotocol/v4-client-js";
 import { ChainInfo } from "@keplr-wallet/types";
+import { MYCEL_BASE_COIN_UNIT, MYCEL_HUMAN_COIN_UNIT, MYCEL_COIN_DECIMALS } from "./coin";
 
 export type EvmAddress = `0x${string}`;
 export type MycelAddress = `mycel${string}`;
@@ -10,7 +11,7 @@ export const BECH32_PREFIX = "mycel";
 
 export const MYCEL_CHAIN_INFO: ChainInfo = {
   rpc: import.meta.env.VITE_WS_TENDERMINT ?? "",
-  rest: import.meta.env.VITE_WS_TENDERMINT ?? "",
+  rest: import.meta.env.VITE_API_COSMOS ?? "",
   chainId: import.meta.env.VITE_CHAIN_ID ?? "",
   chainName: import.meta.env.VITE_CHAIN_NAME ?? "",
   bip44: {
@@ -26,22 +27,22 @@ export const MYCEL_CHAIN_INFO: ChainInfo = {
   },
   currencies: [
     {
-      coinDenom: "MYCEL",
-      coinMinimalDenom: "umycel",
-      coinDecimals: 6,
+      coinDenom: MYCEL_HUMAN_COIN_UNIT,
+      coinMinimalDenom: MYCEL_BASE_COIN_UNIT,
+      coinDecimals: MYCEL_COIN_DECIMALS,
     },
   ],
   feeCurrencies: [
     {
-      coinDenom: "MYCEL",
-      coinMinimalDenom: "umycel",
-      coinDecimals: 6,
+      coinDenom: MYCEL_HUMAN_COIN_UNIT,
+      coinMinimalDenom: MYCEL_BASE_COIN_UNIT,
+      coinDecimals: MYCEL_COIN_DECIMALS,
     },
   ],
   stakeCurrency: {
-    coinDenom: "MYCEL",
-    coinMinimalDenom: "umycel",
-    coinDecimals: 6,
+    coinDenom: MYCEL_HUMAN_COIN_UNIT,
+    coinMinimalDenom: MYCEL_BASE_COIN_UNIT,
+    coinDecimals: MYCEL_COIN_DECIMALS,
   },
   beta: true,
 };
