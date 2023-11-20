@@ -4,6 +4,7 @@ import router from "@/router";
 import { WagmiConfig, createConfig, configureChains, mainnet } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
+import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { publicProvider } from "wagmi/providers/public";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -21,10 +22,25 @@ const wagmiConfig = createConfig({
         shimDisconnect: true,
       },
     }),
+    new InjectedConnector({
+      chains,
+      options: {
+        name: "OKXWallet",
+        shimDisconnect: true,
+        getProvider: () => (typeof window !== "undefined" ? window.okxwallet : undefined),
+      },
+    }),
+
     new MetaMaskConnector({
       chains,
       options: {
         shimDisconnect: true,
+      },
+    }),
+    new WalletConnectConnector({
+      chains,
+      options: {
+        projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID,
       },
     }),
   ],

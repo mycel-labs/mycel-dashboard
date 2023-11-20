@@ -16,7 +16,6 @@ import {
   WalletType as CosmosWalletType,
 } from "graz";
 import { LocalWallet, onboarding } from "@dydxprotocol/v4-client-js";
-import { Secp256k1HdWallet } from "@cosmjs/launchpad";
 import { DirectSecp256k1HdWallet, OfflineSigner } from "@cosmjs/proto-signing";
 import {
   WALLET_CONFIG,

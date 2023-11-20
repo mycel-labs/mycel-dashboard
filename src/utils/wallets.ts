@@ -73,6 +73,16 @@ export const WALLET_CONFIG = {
     name: "MetaMask",
     chainType: "evm",
   },
+  WalletConnect: {
+    id: "walletConnect",
+    name: "WalletConnect",
+    chainType: "evm",
+  },
+  OKXWallet: {
+    id: "injected",
+    name: "OKXWallet",
+    chainType: "evm",
+  },
   // Rainbow = "RAINBOW_WALLET",
   // TokenPocket = "TOKEN_POCKET",
   // TrustWallet = "TRUST_WALLET",
