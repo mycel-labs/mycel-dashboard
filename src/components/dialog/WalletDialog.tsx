@@ -6,6 +6,8 @@ import Button from "@/components/Button";
 import { Unplug, Wallet, KeySquare, ClipboardCopy } from "lucide-react";
 import MetamaskIcon from "@/assets/icons/wallets/metamask.svg";
 import KeplrIcon from "@/assets/icons/wallets/keplr.svg";
+import WalletConnectIcon from "@/assets/icons/wallets/walletconnect.svg";
+import OKXIcon from "@/assets/icons/wallets/okx.svg";
 import MycelCharactor from "@/assets/mycel_charactor.svg";
 import { shortAddress } from "@/utils/wallets";
 import { copyClipboard } from "@/utils/lib";
@@ -20,7 +22,7 @@ export default function WalletDialog() {
     <div className="space-y-4 font-semibold">
       <Button
         className="btn-secondary w-full h-12 rounded"
-        disabled={!connectorsWagmi.find((cn) => cn.id === "MetaMask")?.ready}
+        disabled={!connectorsWagmi.find((cn) => cn.id === "metaMask")?.ready}
         onClick={async () => {
           connectWallet({ walletType: "MetaMask" });
         }}
@@ -28,6 +30,30 @@ export default function WalletDialog() {
         <span className="flex items-center justify-center px-6 mr-2">
           <img src={MetamaskIcon} width={24} height={24} alt="MetaMask" />
           <span className="ml-3">MetaMask</span>
+        </span>
+      </Button>
+      <Button
+        className="btn-secondary w-full h-12 rounded"
+        disabled={!connectorsWagmi.find((cn) => cn.id === "walletConnect")?.ready}
+        onClick={async () => {
+          connectWallet({ walletType: "WalletConnect" });
+        }}
+      >
+        <span className="flex items-center justify-center px-6 mr-2">
+          <img src={WalletConnectIcon} width={24} height={24} alt="WalletConnect" />
+          <span className="ml-3">WalletConnect</span>
+        </span>
+      </Button>
+      <Button
+        className="btn-secondary w-full h-12 rounded"
+        disabled={!connectorsWagmi.find((cn) => cn.name === "OKXWallet")?.ready}
+        onClick={async () => {
+          connectWallet({ walletType: "OKXWallet" });
+        }}
+      >
+        <span className="flex items-center justify-center px-6 mr-2">
+          <img src={OKXIcon} width={24} height={24} alt="OKXWallet" />
+          <span className="ml-3"> OKX Wallet</span>
         </span>
       </Button>
       <Button

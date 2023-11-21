@@ -4,11 +4,8 @@ import router from "@/router";
 import { WagmiConfig, createConfig, configureChains, mainnet } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
+import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { publicProvider } from "wagmi/providers/public";
-import "@ignt/react-library/dist/style.css";
-import AddressProvider from "../def-hooks/addressContext";
-import DenomProvider from "../def-hooks/denomContext";
-import WalletProvider from "../def-hooks/walletContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
@@ -25,10 +22,25 @@ const wagmiConfig = createConfig({
         shimDisconnect: true,
       },
     }),
+    new InjectedConnector({
+      chains,
+      options: {
+        name: "OKXWallet",
+        shimDisconnect: true,
+        getProvider: () => (typeof window !== "undefined" ? window.okxwallet : undefined),
+      },
+    }),
+
     new MetaMaskConnector({
       chains,
       options: {
         shimDisconnect: true,
+      },
+    }),
+    new WalletConnectConnector({
+      chains,
+      options: {
+        projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID,
       },
     }),
   ],
@@ -41,13 +53,7 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <WagmiConfig config={wagmiConfig}>
         <GrazProvider>
-          <AddressProvider>
-            <WalletProvider>
-              <DenomProvider>
-                <RouterProvider router={router} />
-              </DenomProvider>
-            </WalletProvider>
-          </AddressProvider>
+          <RouterProvider router={router} />
         </GrazProvider>
       </WagmiConfig>
     </QueryClientProvider>

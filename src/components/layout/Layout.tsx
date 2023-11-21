@@ -4,16 +4,12 @@ import Footer from "@/components/layout/Footer";
 
 const items = [
   {
-    label: "Portfolio",
+    label: "Home",
     to: "/",
   },
   {
-    label: "Register",
+    label: "Register Domain",
     to: "/register",
-  },
-  {
-    label: "Send Token",
-    to: "/send",
   },
 ];
 

@@ -1,6 +1,5 @@
-import { useEffect } from "react";
-import { useAddressContext } from "../def-hooks/addressContext";
-import ResolveButton from "../components/ResolveButton";
+import { useWallet } from "@/hooks/useWallet";
+import ResolveButton from "@/components/ResolveButton";
 import { useMycelRegistry } from "@/hooks/useMycelRegistry";
 import { Network } from "lucide-react";
 
@@ -9,14 +8,8 @@ interface MyDomainsProps {
 }
 export default function MyDomains(props: MyDomainsProps) {
   const { className } = props;
-  const { address } = useAddressContext();
-  const { isLoading, ownedDomains, registryQueryOwnedDomains } = useMycelRegistry();
-
-  useEffect(() => {
-    if (address) {
-      registryQueryOwnedDomains(address);
-    }
-  }, [address]);
+  const { mycelAccount } = useWallet();
+  const { isLoading, ownedDomains } = useMycelRegistry();
 
   return (
     <section className={className ?? ""}>
@@ -40,12 +33,14 @@ export default function MyDomains(props: MyDomainsProps) {
           ))}
         </tbody>
       </table>
-      {address && isLoading && (
+      {mycelAccount?.address && isLoading && (
         <div role="status" className="w-100 animate-pulse flex flex-col">
           <span className="sr-only">Loading...</span>
         </div>
       )}
-      {!ownedDomains && <div className="text-black/70 text-center font-normal py-8">You have no domains</div>}
+      {ownedDomains.length === 0 && (
+        <div className="text-black/70 text-center font-normal py-8">You have no domains</div>
+      )}
     </section>
   );
 }

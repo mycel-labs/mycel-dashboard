@@ -3,14 +3,19 @@ import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { SigningStargateClient, DeliverTxResponse } from "@cosmjs/stargate";
 import { OfflineDirectSigner } from "@keplr-wallet/types";
 import { useClient } from "../hooks/useClient";
-import { useAddressContext } from "../def-hooks/addressContext";
+import { useWallet } from "@/hooks/useWallet";
 import TxModal from "../components/TxModal";
 import Button from "../components/Button";
+import { HandMetal } from "lucide-react";
 
-export default function Faucet() {
-  const { address } = useAddressContext();
+interface faucetProps {
+  className?: string;
+}
+export default function Faucet(props: faucetProps) {
   const client = useClient();
+  const { mycelAccount } = useWallet();
 
+  const { className } = props;
   const [isShow, setIsShow] = useState<boolean>(false);
   const [isClaimable, setIsClaimable] = useState<boolean>(false);
   const [balance, setBalance] = useState<string>("");
@@ -18,22 +23,28 @@ export default function Faucet() {
   const [txResponse, setTxResponse] = useState<DeliverTxResponse>();
 
   const faucetMnemonic = import.meta.env.VITE_FAUCET_MNEMONIC ?? "";
+  const faucetThreshold = import.meta.env.VITE_FAUCET_CLAIMABLE_THRESHOLD ?? "500000";
 
   const queryBalance = async () => {
-    const balance = await client.CosmosBankV1Beta1.query.queryBalance(address, { denom: "mycel" }).then((res) => {
-      if (res.data.balance?.amount) {
-        return res.data.balance.amount;
-      }
-    });
+    if (!mycelAccount?.address) {
+      return;
+    }
+    const balance = await client.CosmosBankV1Beta1.query
+      .queryBalance(mycelAccount?.address, { denom: "umycel" })
+      .then((res) => {
+        if (res.data.balance?.amount) {
+          return res.data.balance.amount;
+        }
+      });
     setBalance(balance ?? "0");
   };
 
   useEffect(() => {
     queryBalance();
-  }, [address]);
+  }, [mycelAccount]);
 
   useEffect(() => {
-    if (parseInt(balance) < 1000) {
+    if (parseInt(balance) < faucetThreshold) {
       setIsClaimable(true);
     } else {
       setIsClaimable(false);
@@ -44,7 +55,7 @@ export default function Faucet() {
     setIsLoading(true);
     setIsShow(true);
 
-    if (isClaimable) {
+    if (isClaimable && mycelAccount?.address) {
       const faucetSigner = (await DirectSecp256k1HdWallet.fromMnemonic(faucetMnemonic, {
         prefix: "mycel",
       })) as OfflineDirectSigner;
@@ -54,8 +65,8 @@ export default function Faucet() {
       const faucetClient = await SigningStargateClient.connectWithSigner(rpc, faucetSigner);
 
       await faucetClient
-        .sendTokens(faucetAddress, address, [{ denom: "mycel", amount: amount }], {
-          amount: [{ denom: "mycel", amount: "500" }],
+        .sendTokens(faucetAddress, mycelAccount?.address, [{ denom: "umycel", amount: amount }], {
+          amount: [{ denom: "umycel", amount: "500" }],
           gas: "200000",
         })
         .then((res) => {
@@ -70,11 +81,17 @@ export default function Faucet() {
   };
 
   return (
-    <div>
-      <Button className="btn-primary w-full py-2" disabled={!isClaimable} onClick={claimFaucet}>
-        Claim
-      </Button>
-      <TxModal isShow={isShow} setIsShow={setIsShow} txResponse={txResponse} isLoading={isLoading} />
-    </div>
+    <section className={className ?? ""}>
+      <h3 className="text-xl text-black font-semibold px-1 py-2 flex flex-1 items-center border-b-2 border-black">
+        <HandMetal className="opacity-70 mr-2" size={24} />
+        Faucet
+      </h3>
+      <div>
+        <Button className="btn-primary w-full py-2 mt-6" disabled={!isClaimable} onClick={claimFaucet}>
+          Claim
+        </Button>
+        <TxModal isShow={isShow} setIsShow={setIsShow} txResponse={txResponse} isLoading={isLoading} />
+      </div>
+    </section>
   );
 }

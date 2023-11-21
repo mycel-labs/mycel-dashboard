@@ -9,5 +9,11 @@ export const convertToDomain = (domain: string) => {
 };
 
 export const convertToDomainString = (name: string | undefined, parent: string | undefined) => {
-  return name && parent ? name + "." + parent : "";
+  if (name && parent) {
+    return name + "." + parent;
+  } else if (name) {
+    return name;
+  } else {
+    return "";
+  }
 };

@@ -6,18 +6,16 @@ import { Domain } from "@/types/domain";
 export const useMycelResolver = () => {
   const client = useClient();
   const [isLoading, setIsLoading] = useState(false);
-  const [mycelRecords, setMycelRecord] = useState<Record<string, RegistryRecord> | null>(
-    null
-  );
+  const [mycelRecords, setMycelRecord] = useState<Record<string, RegistryRecord> | undefined>(undefined);
 
   const updateMycelRecords = async (domain: Domain) => {
     setIsLoading(true);
     try {
       const record = await client.MycelResolver.query.queryAllRecords(domain.name, domain.parent);
-      setMycelRecord(record.data.values || null);
+      setMycelRecord(record.data.values || undefined);
     } catch (e) {
       console.error(e);
-      setMycelRecord(null);
+      setMycelRecord(undefined);
       setIsLoading(false);
     }
     setIsLoading(false);
