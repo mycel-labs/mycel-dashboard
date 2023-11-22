@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import Button from "../components/Button";
-import { convertToDomainString } from "../utils/domainName";
+import Button from "@/components/Button";
+import { convertToDomainString } from "@/utils/domainName";
 import { useSearchParams } from "react-router-dom";
 import { useWallet } from "@/hooks/useWallet";
-import EditRecordModal from "../components/EditRecordModal";
+import EditRecordDialog from "@/components/dialog/EditRecordDialog";
 import { BadgeInfo, FileStack, Network } from "lucide-react";
 import { Domain } from "@/types/domain";
 import { useMycelResolver } from "@/hooks/useMycelResolver";
 import { useMycelRegistry } from "@/hooks/useMycelRegistry";
+import { useStore } from "@/store/index";
 
 export default function ResolveView() {
   const { mycelAccount } = useWallet();
@@ -16,7 +17,7 @@ export default function ResolveView() {
   const [domain, setDomain] = useState<Domain>();
   const [query, setQuery] = useSearchParams({});
   const [isEditable, setIsEditable] = useState<boolean>(false);
-  const [isShow, setIsShow] = useState<boolean>(false);
+  const updateDialog = useStore((state) => state.updateDialog);
 
   const updateRegistryHandler = async (name: string, parent: string) => {
     try {
@@ -124,7 +125,7 @@ export default function ResolveView() {
               <Button
                 disabled={!mycelAccount?.address}
                 onClick={() => {
-                  setIsShow(true);
+                  updateDialog("editRecord");
                 }}
                 className="btn-primary mt-5 h-10 w-48"
               >
@@ -135,13 +136,7 @@ export default function ResolveView() {
         )}
       </div>
       {domain && mycelAccount && (
-        <EditRecordModal
-          domain={domain}
-          records={mycelRecords}
-          address={mycelAccount?.address}
-          isShow={isShow}
-          setIsShow={setIsShow}
-        />
+        <EditRecordDialog domain={domain} records={mycelRecords} address={mycelAccount?.address} />
       )}
     </>
   );
