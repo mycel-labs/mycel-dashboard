@@ -6,7 +6,6 @@
     "@headlessui/react": "^0.0.0-insiders.bfacb64",
     "@headlessui/tailwindcss": "^0.2.0",
     "@hookform/resolvers": "^3.3.2",
-    "@ignt/react-library": "^0.4.3",
     "@tanstack/react-query": "^4.36.1",
     "@vercel/node": "^3.0.9",
     "@web3modal/ethereum": "^2.3.0",

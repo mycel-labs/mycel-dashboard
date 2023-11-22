@@ -4,11 +4,7 @@
 const pxToRem = (dest) => 1 / (16 / dest);
 
 module.exports = {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-    "./node_modules/@ignt/react-library/src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     boxShadow: {
       DEFAULT: "16px 32px 128px -8px rgba(0, 0, 0, 0.07)",
