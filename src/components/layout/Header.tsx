@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import HeaderAccount from "@/components/layout/HeaderAccount";
 import Logo from "@/assets/mycel.svg";
+import LogoC from "@/assets/mycel_charactor.svg";
 import { Menu } from "lucide-react";
 
 type MenuItem = {
@@ -25,14 +26,15 @@ export default function Header(props: HeaderProps) {
   };
 
   return (
-    <header className="flex px-3 border-b-2 border-black fixed w-full h-20 justify-between z-40 bg-cream mb-20 flex-nowrap">
-      <div className="w-full flex flex-wrap items-center justify-between mx-auto p-4">
-        <img src={Logo} width="125" alt="mycel" className="mt-0.5" />
-        <div className="flex lg:order-2">
+    <header className="flex md:px-3 border-b-2 border-black fixed w-full h-20 justify-between z-40 bg-cream mb-20 flex-nowrap">
+      <div className="w-full flex flex-nowrap items-center justify-between mx-auto p-4">
+        <img src={Logo} width="144" alt="mycel" className="mt-0.5 hidden xs:flex" />
+        <img src={LogoC} width="44" alt="mycel" className="mt-0.5 flex xs:hidden" />
+        <div className="flex md:order-2">
           <HeaderAccount />
           <button
             type="button"
-            className="inline-flex items-center justify-center ml-6 lg:hidden focus:outline-none"
+            className="inline-flex items-center justify-center ml-4 md:hidden focus:outline-none"
             onClick={() => setShowMenu(!showMenu)}
           >
             <span className="sr-only">Open main menu</span>
@@ -40,13 +42,13 @@ export default function Header(props: HeaderProps) {
           </button>
         </div>
         <div
-          className={`items-center justify-between w-full lg:flex lg:w-auto lg:order-1 ${
+          className={`items-center justify-between w-full md:flex md:w-auto md:order-1 ${
             showMenu ? "block fixed top-14 right-0 left-0 px-6" : "hidden"
           }`}
         >
-          <ul className="flex flex-col bg-cream border-2 border-black shadow-solid lg:shadow-transparent px-8 py-10 text-2xl h-full lg:h-auto lg:text-base z-30 w-full lg:bg-transparent lg:p-0 mt-4 lg:flex-row lg:mt-0 lg:border-0">
+          <ul className="flex flex-col bg-cream border-2 border-black shadow-solid md:shadow-transparent px-8 py-10 text-2xl h-full md:h-auto md:text-base z-30 w-full md:bg-transparent md:p-0 mt-4 md:flex-row md:mt-0 md:border-0">
             {navItems.map((item) => (
-              <li className="py-2 lg:py-0 font-bold" key={item.label}>
+              <li className="py-2 md:py-0 font-bold" key={item.label}>
                 <button
                   type="button"
                   onClick={() => navigateTo(item.to ?? item.href ?? "")}

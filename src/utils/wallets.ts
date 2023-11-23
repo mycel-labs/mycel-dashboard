@@ -5,6 +5,8 @@ import { MYCEL_BASE_COIN_UNIT, MYCEL_HUMAN_COIN_UNIT, MYCEL_COIN_DECIMALS } from
 export type EvmAddress = `0x${string}`;
 export type MycelAddress = `mycel${string}`;
 
+export const EVM_CHAINID = 1;
+
 export type PrivateInformation = ReturnType<typeof onboarding.deriveHDKeyFromEthereumSignature>;
 
 export const BECH32_PREFIX = "mycel";

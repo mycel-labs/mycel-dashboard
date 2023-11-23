@@ -1,4 +1,4 @@
-import { cn } from "../utils/lib";
+import { cn } from "@/utils/lib";
 
 interface LoadingIconProps {
   className?: string;

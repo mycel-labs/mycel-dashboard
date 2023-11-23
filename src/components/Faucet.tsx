@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { DeliverTxResponse } from "@cosmjs/stargate";
 import { useClient } from "../hooks/useClient";
 import { useWallet } from "@/hooks/useWallet";
-import TxModal from "@/components/TxModal";
+import TxDialog from "@/components/dialog/TxDialog";
 import Button from "@/components/Button";
 import { HandMetal } from "lucide-react";
+import { useStore } from "@/store/index";
 
 interface faucetProps {
   className?: string;
@@ -13,9 +14,9 @@ export default function Faucet(props: faucetProps) {
   const client = useClient();
   const { mycelAccount } = useWallet();
   const threshold = import.meta.env.VITE_FAUCET_CLAIMABLE_THRESHOLD;
+  const updateDialog = useStore((state) => state.updateDialog);
 
   const { className } = props;
-  const [isShow, setIsShow] = useState<boolean>(false);
   const [isClaimable, setIsClaimable] = useState<boolean>(false);
   const [balance, setBalance] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -50,7 +51,7 @@ export default function Faucet(props: faucetProps) {
 
   const claimFaucet = async () => {
     setIsLoading(true);
-    setIsShow(true);
+    updateDialog("tx");
 
     if (isClaimable && mycelAccount?.address) {
       await fetch(`api/faucet?address=${mycelAccount?.address}`)
@@ -61,7 +62,7 @@ export default function Faucet(props: faucetProps) {
           queryBalance();
         })
         .catch((err) => {
-          setIsShow(false);
+          updateDialog(undefined);
           console.log(err);
         });
     } else {
@@ -80,7 +81,7 @@ export default function Faucet(props: faucetProps) {
         <Button className="btn-primary w-full py-2 mt-6" disabled={!isClaimable} onClick={claimFaucet}>
           Claim
         </Button>
-        <TxModal isShow={isShow} setIsShow={setIsShow} txResponse={txResponse} isLoading={isLoading} />
+        <TxDialog txResponse={txResponse} isLoading={isLoading} />
       </div>
     </section>
   );

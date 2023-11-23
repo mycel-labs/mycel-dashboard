@@ -7,6 +7,8 @@ import {
   // usePublicClient as usePublicClientWagmi,
   useWalletClient as useWalletClientWagmi,
   useSignTypedData,
+  useNetwork as useNetworkWagmi,
+  useSwitchNetwork as useSwitchNetworkWagmi,
 } from "wagmi";
 import {
   useSuggestChainAndConnect as useConnectGraz,
@@ -22,6 +24,7 @@ import {
   MYCEL_CHAIN_INFO,
   getSignTypedData,
   BECH32_PREFIX,
+  EVM_CHAINID,
   type EvmAddress,
   type MycelAddress,
   type PrivateInformation,
@@ -128,7 +131,6 @@ export const useWallet = () => {
 
   const saveEvmSignature = useCallback(
     (encryptedSignature: string) => {
-      console.log("saveEvmSignature", evmAddress, mycelAddress, encryptedSignature);
       if (evmAddress) {
         updateEvmDerivedAddress({
           evmAddress,
@@ -158,7 +160,7 @@ export const useWallet = () => {
     ...signTypedData,
     domain: {
       ...signTypedData.domain,
-      chainId: 1,
+      chainId: EVM_CHAINID,
     },
   });
 
@@ -180,12 +182,25 @@ export const useWallet = () => {
 
   useEffect(() => {
     if (evmAddressWagmi) {
+      if (evmAddress && evmAddress !== evmAddressWagmi) {
+        disconnectLocalWallet();
+        forgetEvmSignature(evmAddressWagmi);
+      }
       updateEvmAddress(evmAddressWagmi);
     }
     if (mycelAddressGraz) {
       updateMycelAddress(mycelAddressGraz);
     }
   }, [evmAddressWagmi, mycelAddressGraz]);
+
+  // Change EVM network
+  const { chain: chainWagmi } = useNetworkWagmi();
+  const { switchNetwork: switchNetworkWagmi } = useSwitchNetworkWagmi({ chainId: EVM_CHAINID });
+  useEffect(() => {
+    if (chainWagmi?.id !== EVM_CHAINID) {
+      switchNetworkWagmi && switchNetworkWagmi();
+    }
+  }, [chainWagmi?.id]);
 
   // LocalWallet
   const updateDialog = useStore((state) => state.updateDialog);
