@@ -7,11 +7,11 @@ type LoaderProps = {
 
 export default function Loader({ className, size = 8 }: LoaderProps) {
   return (
-    <div className="text-center" role="status">
+    <div className="flex items-center justify-center" role="status">
       <svg
         aria-hidden="true"
-        className={cn("text-gray-200 animate-spin dark:text-gray-400 fill-chocolat", `w-${size} h-${size}`, className)}
-        viewBox="0 0 100 101"
+        className={cn("text-lemon animate-spin fill-orange", `w-${size} h-${size}`, className)}
+        viewBox="0 0 100 100"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >

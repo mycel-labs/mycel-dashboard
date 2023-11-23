@@ -22,7 +22,7 @@ export default function TxDialog({ isLoading, txResponse, onClosed }: TxDialogPr
       </Dialog.Title>
       <div>
         {isLoading ? (
-          <Loader size={16} />
+          <Loader size={12} />
         ) : (
           <div>
             {txResponse?.code === 0 ? (
