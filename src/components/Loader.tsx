@@ -10,7 +10,7 @@ export default function Loader({ className, size = 8 }: LoaderProps) {
     <div className="text-center" role="status">
       <svg
         aria-hidden="true"
-        className={cn("text-gray-200 animate-spin dark:text-gray-600 fill-chocolat", `w-${size} h-${size}`, className)}
+        className={cn("text-gray-200 animate-spin dark:text-gray-400 fill-chocolat", `w-${size} h-${size}`, className)}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

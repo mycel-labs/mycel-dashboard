@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import useWallet from "@/hooks/useWallet";
 import { useMycelRegistry } from "@/hooks/useMycelRegistry";
 import { DeliverTxResponse } from "@cosmjs/stargate";
-import { PencilRuler } from "lucide-react";
+import { PencilRuler, PiggyBank } from "lucide-react";
 import TxDialog from "@/components/dialog/TxDialog";
 import ResolveButton from "@/components/ResolveButton";
 import { convertToDomain } from "@/utils/domainName";
@@ -19,6 +19,7 @@ export default function RegisterView() {
   const { secondLevelDomain, fee, registryQueryDomain, registryQueryRegistrationFee } = useMycelRegistry();
   const [query, setQuery] = useState<string>("");
   const [domain, setDomain] = useState<Domain>();
+  console.log("q,d:::", query, domain);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [txResponse, setTxResponse] = useState<DeliverTxResponse>();
   const [error, setError] = useState<string>("");
@@ -101,14 +102,30 @@ export default function RegisterView() {
         </div>
         {fee && fee.isRegistrable ? (
           <div className="border-t border-b border-dashed border-black py-8 px-4">
-            <div className="w-full flex justify-between">
-              <h2 className="text-2xl m-2 font-semibold">{query}</h2>
-              {fee.fee && fee.fee[0].amount && (
-                <h2 className="text-2xl pl-5 m-2">
-                  {convertToDecimalString(fee.fee[0].amount, MYCEL_COIN_DECIMALS)} {MYCEL_HUMAN_COIN_UNIT}/Year{" "}
+            <div className="w-full flex justify-between items-center">
+              <div className="m-2">
+                <h2 className="text-2xl font-semibold flex items-center">
+                  {query}
+                  <span className="ml-4 text-xs text-chocolat border-2 border-chocolat py-0.5 px-2 rounded-lg">
+                    <span className="hidden md:inline-flex">
+                      {domain?.parent ? "Second Level Domain" : "Top Level Domain"}
+                    </span>
+                    <span className="inline-flex md:hidden">{domain?.parent ? "SLD" : "TLD"}</span>
+                  </span>
                 </h2>
-              )}
-              <button disabled={!isConnected} onClick={registerDomain} className="btn-primary w-40 py-1 rounded-md">
+                {fee.fee && fee.fee[0].amount && (
+                  <h2 className="text-xl font-mon flex items-center mt-2">
+                    <PiggyBank size={20} className="mr-1.5 text-gray-500" />
+                    {convertToDecimalString(fee.fee[0].amount, MYCEL_COIN_DECIMALS)}
+                    <span className="ml-0.5 text-gray-600 text-base mt-0.5">{MYCEL_HUMAN_COIN_UNIT}/Year</span>
+                  </h2>
+                )}
+              </div>
+              <button
+                disabled={!isConnected}
+                onClick={registerDomain}
+                className="btn-primary px-6 h-12 py-1 rounded-md"
+              >
                 Register
               </button>
             </div>
