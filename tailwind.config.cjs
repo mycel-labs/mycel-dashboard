@@ -4,11 +4,7 @@
 const pxToRem = (dest) => 1 / (16 / dest);
 
 module.exports = {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-    "./node_modules/@ignt/react-library/src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     boxShadow: {
       DEFAULT: "16px 32px 128px -8px rgba(0, 0, 0, 0.07)",
@@ -31,12 +27,12 @@ module.exports = {
       colors: {
         transparent: "transparent",
         current: "currentColor",
-        white: {
-          500: "rgba(255,255,255,0.5)",
-          800: "rgba(255,255,255,0.82)",
-          1000: "#fff",
-        },
-        black: "#111111",
+        // white: {
+        //   500: "rgba(255,255,255,0.5)",
+        //   800: "rgba(255,255,255,0.82)",
+        //   1000: "#fff",
+        // },
+        // black: "#111111",
         gray: {
           0: "#000",
           50: "#f0f0f0",
@@ -72,7 +68,8 @@ module.exports = {
       boxShadow: {
         border: "0px 0.5px 0px #CBCBCB",
         border_double: "0px -0.5px 0px #CBCBCB, 0px 0.5px 0px #CBCBCB",
-        solid: "4px 4px #111111",
+        solid: "2px 2px #111111",
+        "solid-sm": "1px 1px #111111",
         transparent: "0px 0px transparent",
         max: "16px 32px 128px 8px rgba(0, 0, 0, 0.07)",
         dropdown: "-112px 73px 191px 59px rgba(0, 0, 0, 0.09)",
@@ -113,5 +110,5 @@ module.exports = {
       xl: `${pxToRem(1380)}rem`,
     },
   },
-  plugins: [require("@headlessui/tailwindcss")],
+  plugins: [require("@headlessui/tailwindcss"), require("@tailwindcss/forms")],
 };

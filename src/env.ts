@@ -1,6 +1,6 @@
 const apiURL = import.meta.env.VITE_API_COSMOS ?? "http://localhost:1317";
 const rpcURL = import.meta.env.VITE_WS_TENDERMINT ?? "http://localhost:26657";
-const prefix = import.meta.env.VITE_ADDRESS_PREFIX ?? "mycel-local";
+const prefix = import.meta.env.VITE_ADDRESS_PREFIX ?? "mycel";
 
 export const env = {
   apiURL,

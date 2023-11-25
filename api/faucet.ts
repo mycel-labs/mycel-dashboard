@@ -15,8 +15,8 @@ function getErrorMessage(err: any) {
 async function claimFaucet(address: string) {
   // Load environment variables
   dotenv.config();
-  const amount = process.env.FAUCET_AMOUNT ?? "10000";
-  const threashold = process.env.VITE_FAUCET_CLAIMABLE_THRESHOLD ?? "1000";
+  const amount = process.env.FAUCET_AMOUNT ?? "1000000";
+  const threashold = process.env.VITE_FAUCET_CLAIMABLE_THRESHOLD ?? "300000";
   const faucetMnemonic = process.env.FAUCET_MNEMONIC ?? "";
   const rpc = process.env.VITE_WS_TENDERMINT ?? "";
 
@@ -28,15 +28,15 @@ async function claimFaucet(address: string) {
   const faucetClient = await SigningStargateClient.connectWithSigner(rpc, faucetSigner);
 
   // Check if faucet has enough balance
-  const balance = await faucetClient.getBalance(address, "mycel");
+  const balance = await faucetClient.getBalance(address, "umycel");
   if (balance.amount > threashold) {
     return getErrorMessage("Faucet has insufficient balance");
   }
 
   // Send tokens
   const response = await faucetClient
-    .sendTokens(faucetAddress, address, [{ denom: "mycel", amount: amount }], {
-      amount: [{ denom: "mycel", amount: amount }],
+    .sendTokens(faucetAddress, address, [{ denom: "umycel", amount: amount }], {
+      amount: [{ denom: "umycel", amount: amount }],
       gas: "200000",
     })
     .then((res: DeliverTxResponse) => {

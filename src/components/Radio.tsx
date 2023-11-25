@@ -1,4 +1,4 @@
-import { ChangeEvent } from "react";
+import type { ChangeEvent } from "react";
 
 export interface Option {
   value: string;
@@ -14,15 +14,15 @@ export default function Radio(props: RadioProps) {
   return (
     <div>
       {props.options.map((option) => (
-        <label key={option.value} className="flex items-center space-x-2">
+        <label key={option.value} className="flex items-center cursor-pointer">
           <input
             type="radio"
             value={option.value}
             checked={option.value === props.selectedOption}
             onChange={props.onChange}
-            className="form-radio text-blue-500"
+            className="text-chocolat focus:ring-chocolat mr-2 -mt-0.5"
           />
-          <span className="">{option.label}</span>
+          <span className="text-lg">{option.label}</span>
         </label>
       ))}
     </div>

@@ -21,6 +21,10 @@ module.exports = {
     },
     // Tells eslint how to resolve imports
     "import/resolver": {
+      alias: {
+        map: [["@", "./src"]],
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
+      },
       node: {
         paths: ["src"],
         extensions: [".js", ".jsx", ".ts", ".tsx"],
