@@ -3,10 +3,13 @@ import { Widget, config } from "mycel-widget";
 
 const widgetConfig = {
   ...config,
+  wallets: ["metamask", "bitget", "okx", "petra", "sui"],
+  multiWallets: false,
   theme: {
     ...config.theme,
     mode: "light",
     colors: {
+      ...config.theme.colors,
       light: {
         background: "#fff",
         primary: "#E6A894",
