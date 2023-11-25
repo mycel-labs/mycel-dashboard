@@ -1,4 +1,5 @@
 import { Send } from "lucide-react";
+import { Widget, config as widgetConfig } from "mycel-widget";
 
 interface sendTokenProps {
   className?: string;
@@ -12,7 +13,9 @@ export default function SendToken(props: sendTokenProps) {
         <Send className="opacity-70 mr-2" size={24} />
         Send Token
       </h3>
-      <div></div>
+      <div>
+        <Widget config={widgetConfig} />
+      </div>
     </section>
   );
 }

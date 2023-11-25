@@ -119,7 +119,7 @@ export default function RegisterView() {
               {...register("text", { onBlur: () => onSubmit(getValues()) })}
             />
             <button className="absolute right-0 h-12 px-4" type="submit">
-              <SearchSlash className="text-chocolat" />
+              <SearchSlash className="text-chocolat bg-white/90" />
             </button>
           </div>
         </form>

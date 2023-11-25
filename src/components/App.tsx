@@ -53,7 +53,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <WagmiConfig config={wagmiConfig}>
-        <GrazProvider grazOptions={{ defaultChain: MYCEL_CHAIN_INFO }}>
+        <GrazProvider grazOptions={{ chains: [MYCEL_CHAIN_INFO] }}>
           <RouterProvider router={router} />
         </GrazProvider>
       </WagmiConfig>

@@ -189,6 +189,7 @@ export const useWallet = () => {
       updateEvmAddress(evmAddressWagmi);
     }
     if (mycelAddressGraz) {
+      console.log("aaaa", mycelAccountGraz);
       updateMycelAddress(mycelAddressGraz);
     }
   }, [evmAddressWagmi, mycelAddressGraz]);

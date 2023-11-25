@@ -14,26 +14,24 @@ export default function MyDomains(props: MyDomainsProps) {
 
   return (
     <section className={className ?? ""}>
-      <h3 className="text-xl text-black font-semibold px-1 py-2 flex flex-1 items-center border-b-2 border-black">
-        <Network className="opacity-70 mr-2" size={24} />
+      <h3 className="font-cursive text-2xl text-black font-semibold px-1 py-2 flex flex-1 items-center border-b-2 border-black">
+        <Network className="opacity-70 mr-2" size={26} />
         My Domains
       </h3>
-      <table className="table-auto w-full">
-        <tbody>
-          {ownedDomains?.map((domain) => (
-            <tr className="py-2" key={domain.name}>
-              <td className="flex items-center py-5 font-semibold">
-                <h2 className="text-2xl font-semibold">
-                  {domain.name}.{domain.parent}
-                </h2>
-              </td>
-              <td className="text-right">
-                <ResolveButton name={domain.name} parent={domain.parent} />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="flex w-full px-1">
+        {ownedDomains?.map((domain) => (
+          <div className="py-2 flex w-full justify-between items-center" key={domain.name}>
+            <div className="flex items-center py-5 font-semibold">
+              <h2 className="text-2xl font-semibold">
+                {domain.name}.{domain.parent}
+              </h2>
+            </div>
+            <div className="">
+              <ResolveButton name={domain.name} parent={domain.parent} />
+            </div>
+          </div>
+        ))}
+      </div>
       {mycelAccount?.address && isLoading && (
         <div role="status" className="w-100 animate-pulse flex flex-col">
           <span className="sr-only">Loading...</span>

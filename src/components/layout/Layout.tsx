@@ -11,6 +11,10 @@ const items = [
     label: "Register Domain",
     to: "/register",
   },
+  {
+    label: "Send",
+    to: "/send",
+  },
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {

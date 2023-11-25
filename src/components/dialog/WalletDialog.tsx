@@ -1,5 +1,6 @@
 import { Dialog } from "@headlessui/react";
 import BaseDialog from "@/components/dialog/BaseDialog";
+import useBalance from "@/hooks/useBalance";
 import useWallet from "@/hooks/useWallet";
 import { useStore } from "@/store/index";
 import Button from "@/components/Button";
@@ -105,6 +106,15 @@ export default function WalletDialog() {
             </button>
           </div>
         </label>
+        <label htmlFor="balances">My Balance</label>
+        <ul>
+          {balances?.map((coin) => (
+            <li key={coin.denom} className="font-mono text-xl px-0.5">
+              {new Intl.NumberFormat().format(coin.amount)}
+              <span className="text-gray-600 ml-1 text-lg">{coin.denom}</span>
+            </li>
+          ))}
+        </ul>
         <Button
           className="btn-secondary w-full mt-8 h-12 rounded-md"
           onClick={async () => {
@@ -148,6 +158,8 @@ export default function WalletDialog() {
       </Button>
     </>
   );
+
+  const { balances } = useBalance();
 
   return (
     <BaseDialog open={dialog === "wallet" || dialog === "wallet2"}>

@@ -10,9 +10,6 @@ interface DropdownProps {
 export default function Dropdown({ options, onSelect }: DropdownProps) {
   return (
     <select className="w-full" defaultValue="" onChange={(e) => onSelect(e.target.value)}>
-      <option value="" disabled className="hidden">
-        Select
-      </option>
       {options.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}
