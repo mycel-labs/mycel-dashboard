@@ -3,7 +3,6 @@ import Button from "@/components/Button";
 import WalletDialog from "@/components/dialog/WalletDialog";
 import { useStore } from "@/store/index";
 import { shortAddress } from "@/utils/wallets";
-
 export default function Account() {
   const { isConnected, mycelAccount } = useWallet();
   const updateDialog = useStore((state) => state.updateDialog);

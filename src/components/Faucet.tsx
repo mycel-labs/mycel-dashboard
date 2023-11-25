@@ -13,7 +13,7 @@ interface faucetProps {
 }
 export default function Faucet(props: faucetProps) {
   const client = useClient();
-  const { mycelAccount } = useWallet();
+  const { mycelAccount, isConnected } = useWallet();
   const threshold = import.meta.env.VITE_FAUCET_CLAIMABLE_THRESHOLD;
   const { className } = props;
   const [isClaimable, setIsClaimable] = useState<boolean>(false);
@@ -81,15 +81,21 @@ export default function Faucet(props: faucetProps) {
       <div className="flex w-full pt-4">
         <div className="py-2 flex w-full justify-between items-center">
           <div className="px-1">
-            <div className="font-semibold mb-1">My Balance</div>
-            <ul>
-              {balances?.map((coin) => (
-                <li key={coin.denom} className="font-mono text-xl px-0.5">
-                  {new Intl.NumberFormat().format(coin.amount)}
-                  <span className="text-gray-600 ml-1 text-lg">{coin.denom}</span>
-                </li>
-              ))}
-            </ul>
+            {isConnected ? (
+              <>
+                <div className="font-semibold mb-1">My Balance</div>
+                <ul>
+                  {balances?.map((coin) => (
+                    <li key={coin.denom} className="font-mono text-xl px-0.5">
+                      {new Intl.NumberFormat().format(coin.amount)}
+                      <span className="text-gray-600 ml-1 text-lg">{coin.denom}</span>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : (
+              <div className="text-gray-500 text-lg font-semibold">Connect first</div>
+            )}
           </div>
           <div className="">
             <Button className="btn-primary w-32 py-2 h-10 rounded-md" disabled={!isClaimable} onClick={claimFaucet}>

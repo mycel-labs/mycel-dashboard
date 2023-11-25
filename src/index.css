@@ -36,6 +36,11 @@
     @apply text-black bg-transparent border-2 border-black bg-lemon shadow-solid-sm hover:shadow-solid focus:outline-none hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed;
   }
 
+  input,
+  input[type="number"] {
+    @apply focus:ring-0;
+  }
+
   input[type="search"]::-webkit-search-decoration,
   input[type="search"]::-webkit-search-cancel-button,
   input[type="search"]::-webkit-search-results-button,
@@ -59,5 +64,11 @@
 
   label > input {
     @apply mt-0.5;
+  }
+}
+
+.widget {
+  input[type="text"] {
+    box-shadow: none !important;
   }
 }
