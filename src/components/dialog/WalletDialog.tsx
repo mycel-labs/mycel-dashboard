@@ -33,7 +33,7 @@ export default function WalletDialog() {
           <span className="ml-3">MetaMask</span>
         </span>
       </Button>
-      <Button
+      {/* <Button
         className="btn-secondary w-full h-12 rounded"
         disabled={!connectorsWagmi.find((cn) => cn.id === "walletConnect")?.ready}
         onClick={async () => {
@@ -44,7 +44,7 @@ export default function WalletDialog() {
           <img src={WalletConnectIcon} width={24} height={24} alt="WalletConnect" />
           <span className="ml-3">WalletConnect</span>
         </span>
-      </Button>
+      </Button> */}
       <Button
         className="btn-secondary w-full h-12 rounded"
         disabled={!connectorsWagmi.find((cn) => cn.name === "OKXWallet")?.ready}
