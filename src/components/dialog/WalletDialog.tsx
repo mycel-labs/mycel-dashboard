@@ -11,7 +11,6 @@ import OKXIcon from "@/assets/icons/wallets/okx.svg";
 import MycelCharactor from "@/assets/mycel_charactor.svg";
 import { shortAddress } from "@/utils/wallets";
 import { copyClipboard } from "@/utils/lib";
-import { useBalances } from "graz";
 
 export default function WalletDialog() {
   const dialog = useStore((state) => state.dialog);
@@ -84,10 +83,6 @@ export default function WalletDialog() {
   );
 
   const DialogContentConnected = () => {
-    const balances = useBalances();
-
-    console.log(":::::", balances);
-
     return (
       <>
         {evmAddress && (

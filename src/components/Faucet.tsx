@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { DeliverTxResponse } from "@cosmjs/stargate";
-import { useClient } from "../hooks/useClient";
+import { useClient } from "@/hooks/useClient";
 import { useWallet } from "@/hooks/useWallet";
 import TxDialog from "@/components/dialog/TxDialog";
 import Button from "@/components/Button";
