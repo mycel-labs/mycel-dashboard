@@ -28,8 +28,15 @@ export default function Header(props: HeaderProps) {
   return (
     <header className="flex md:px-3 border-b-2 border-black fixed w-full h-20 justify-between z-40 bg-cream mb-20 flex-nowrap">
       <div className="w-full flex flex-nowrap items-center justify-between mx-auto p-4">
-        <img src={Logo} width="144" alt="mycel" className="mt-0.5 hidden xs:flex" />
-        <img src={LogoC} width="44" alt="mycel" className="mt-0.5 flex xs:hidden" />
+        <div className="relative">
+          <img src={Logo} width="144" alt="mycel" className="mt-0.5 hidden sm:flex" />
+          <img src={LogoC} width="44" alt="mycel" className="mt-0.5 flex sm:hidden" />
+          {import.meta.env.VITE_TESTNET && (
+            <span className="bg-orange rounded-full text-white text-xs font-semibold py-0.5 px-1.5 absolute -top-1 -right-14">
+              {import.meta.env.VITE_TESTNET}
+            </span>
+          )}
+        </div>
         <div className="flex md:order-2">
           <HeaderAccount />
           <button

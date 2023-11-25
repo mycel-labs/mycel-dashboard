@@ -16,7 +16,7 @@ export default function Account() {
         onClick={() => updateDialog("wallet")}
       >
         {isConnected ? (
-          <span className="text-sm font-normal">
+          <span className="text-sm font-semibold">
             {mycelAccount?.address ? shortAddress(mycelAccount.address) : "mycel...xxx"}
           </span>
         ) : (
