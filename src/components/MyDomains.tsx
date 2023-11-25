@@ -9,7 +9,7 @@ interface MyDomainsProps {
 }
 export default function MyDomains(props: MyDomainsProps) {
   const { className } = props;
-  const { mycelAccount } = useWallet();
+  const { mycelAccount, isConnected } = useWallet();
   const { isLoading, ownedDomains } = useMycelRegistry();
 
   return (
@@ -40,12 +40,20 @@ export default function MyDomains(props: MyDomainsProps) {
       {ownedDomains.length === 0 && (
         <div className="py-8 flex items-center flex-col justify-center">
           <div className="text-gray-500 text-lg font-semibold inline-flex">
-            <TextSelect className="mr-1.5" />
-            You have no domains
+            {isConnected ? (
+              <>
+                <TextSelect className="mr-1.5" />
+                You have no domains
+              </>
+            ) : (
+              "Connect first"
+            )}
           </div>
-          <Link className="text-chocolat ml-5 mt-1 hover:underline" to="/register">
-            &#9758; Register Domain
-          </Link>
+          {isConnected && (
+            <Link className="text-chocolat ml-5 mt-1 hover:underline" to="/register">
+              &#9758; Register Domain
+            </Link>
+          )}
         </div>
       )}
     </section>
