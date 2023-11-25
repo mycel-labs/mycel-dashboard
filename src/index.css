@@ -45,8 +45,9 @@
   }
 
   input[type="text"],
-  input[type="search"] {
-    @apply bg-white border-2 border-black px-4 h-12 hover:border-black font-normal text-base focus:outline-none focus:shadow-solid;
+  input[type="search"],
+  select {
+    @apply bg-white border-2 border-black px-4 h-12 hover:border-black font-normal text-base text-black read-only:bg-gray-50 read-only:text-gray-600 outline-none focus:border-black focus:outline-none focus:shadow-solid focus:ring-0;
   }
 
   label {

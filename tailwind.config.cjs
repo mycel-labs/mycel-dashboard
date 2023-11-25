@@ -110,5 +110,5 @@ module.exports = {
       xl: `${pxToRem(1380)}rem`,
     },
   },
-  plugins: [require("@headlessui/tailwindcss")],
+  plugins: [require("@headlessui/tailwindcss"), require("@tailwindcss/forms")],
 };

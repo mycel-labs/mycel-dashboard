@@ -11,6 +11,7 @@ import OKXIcon from "@/assets/icons/wallets/okx.svg";
 import MycelCharactor from "@/assets/mycel_charactor.svg";
 import { shortAddress } from "@/utils/wallets";
 import { copyClipboard } from "@/utils/lib";
+import { useBalances } from "graz";
 
 export default function WalletDialog() {
   const dialog = useStore((state) => state.dialog);
@@ -82,42 +83,48 @@ export default function WalletDialog() {
     </div>
   );
 
-  const DialogContentConnected = () => (
-    <>
-      {evmAddress && (
+  const DialogContentConnected = () => {
+    const balances = useBalances();
+
+    console.log(":::::", balances);
+
+    return (
+      <>
+        {evmAddress && (
+          <label className="relative">
+            EVM Address
+            <input type="text" readOnly value={shortAddress(evmAddress)} className="w-full" />
+            <div className="absolute right-0 bottom-0 h-12 w-12  flex items-center justify-center">
+              <button className="text-chocolat" onClick={() => copyClipboard(evmAddress)}>
+                <ClipboardCopy size={20} />
+              </button>
+            </div>
+          </label>
+        )}
         <label className="relative">
-          EVM Address
-          <input type="text" readOnly value={shortAddress(evmAddress)} className="w-full" />
-          <div className="absolute right-0 bottom-0 h-12 w-12  flex items-center justify-center">
-            <button className="text-chocolat" onClick={() => copyClipboard(evmAddress)}>
+          Mycel Address
+          <input type="text" readOnly value={shortAddress(mycelAccount?.address)} className="w-full" />
+          <div className="absolute right-0 bottom-0 h-12 w-12 flex items-center justify-center">
+            <button className="text-chocolat" onClick={() => copyClipboard(mycelAccount?.address ?? "")}>
               <ClipboardCopy size={20} />
             </button>
           </div>
         </label>
-      )}
-      <label className="relative">
-        Mycel Address
-        <input type="text" readOnly value={shortAddress(mycelAccount?.address)} className="w-full" />
-        <div className="absolute right-0 bottom-0 h-12 w-12 flex items-center justify-center">
-          <button className="text-chocolat" onClick={() => copyClipboard(mycelAccount?.address ?? "")}>
-            <ClipboardCopy size={20} />
-          </button>
-        </div>
-      </label>
-      <Button
-        className="btn-secondary w-full mt-8 h-12 rounded-md"
-        onClick={async () => {
-          await disconnectWallet();
-          updateDialog(undefined);
-        }}
-      >
-        <span className="flex items-center justify-center px-6 mr-2">
-          <Unplug />
-          <span className="ml-4">Disconnect</span>
-        </span>
-      </Button>
-    </>
-  );
+        <Button
+          className="btn-secondary w-full mt-8 h-12 rounded-md"
+          onClick={async () => {
+            await disconnectWallet();
+            updateDialog(undefined);
+          }}
+        >
+          <span className="flex items-center justify-center px-6 mr-2">
+            <Unplug />
+            <span className="ml-4">Disconnect</span>
+          </span>
+        </Button>
+      </>
+    );
+  };
 
   const DialogContentKeyGen = () => (
     <>

@@ -7,6 +7,7 @@ import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { publicProvider } from "wagmi/providers/public";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MYCEL_CHAIN_INFO } from "@/utils/wallets";
 
 const queryClient = new QueryClient();
 
@@ -52,7 +53,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <WagmiConfig config={wagmiConfig}>
-        <GrazProvider>
+        <GrazProvider grazOptions={{ defaultChain: MYCEL_CHAIN_INFO }}>
           <RouterProvider router={router} />
         </GrazProvider>
       </WagmiConfig>

@@ -11,7 +11,7 @@ export default function ResolveButton(props: ResolveButtonProps) {
     <>
       <button
         onClick={() => navigate(`/resolve?name=${props.name}&parent=${props.parent}`)}
-        className="btn-secondary w-40 py-1 rounded-md"
+        className="btn-secondary w-40 py-1 rounded-md h-10"
       >
         {props.text ?? "See More"}
       </button>

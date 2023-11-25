@@ -5,7 +5,6 @@ import { useWallet } from "@/hooks/useWallet";
 import TxDialog from "@/components/dialog/TxDialog";
 import Button from "@/components/Button";
 import { HandMetal } from "lucide-react";
-import { useStore } from "@/store/index";
 
 interface faucetProps {
   className?: string;
@@ -14,8 +13,6 @@ export default function Faucet(props: faucetProps) {
   const client = useClient();
   const { mycelAccount } = useWallet();
   const threshold = import.meta.env.VITE_FAUCET_CLAIMABLE_THRESHOLD;
-  const updateDialog = useStore((state) => state.updateDialog);
-
   const { className } = props;
   const [isClaimable, setIsClaimable] = useState<boolean>(false);
   const [balance, setBalance] = useState<string>("");
@@ -78,7 +75,7 @@ export default function Faucet(props: faucetProps) {
         Faucet
       </h3>
       <div>
-        <Button className="btn-primary w-full py-2 mt-6" disabled={!isClaimable} onClick={claimFaucet}>
+        <Button className="btn-primary w-full py-2 mt-6 rounded-md" disabled={!isClaimable} onClick={claimFaucet}>
           Claim
         </Button>
         <TxDialog txResponse={txResponse} isLoading={isLoading} />

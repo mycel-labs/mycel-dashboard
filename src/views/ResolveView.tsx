@@ -127,7 +127,7 @@ export default function ResolveView() {
                 onClick={() => {
                   updateDialog("editRecord");
                 }}
-                className="btn-primary mt-5 h-10 w-48"
+                className="btn-primary mt-5 h-10 w-48 rounded-md"
               >
                 Edit Record
               </Button>

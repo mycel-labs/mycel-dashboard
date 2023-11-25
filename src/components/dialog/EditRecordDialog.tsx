@@ -1,16 +1,17 @@
+import { useState, useEffect } from "react";
 import { DeliverTxResponse } from "@cosmjs/stargate";
 import { Dialog } from "@headlessui/react";
+import { FileSignature } from "lucide-react";
 import BaseDialog from "@/components/dialog/BaseDialog";
 import { useStore } from "@/store/index";
 import Button from "@/components/Button";
 import Radio, { Option } from "@/components/Radio";
 import { useClient } from "@/hooks/useClient";
-import { useState, useEffect } from "react";
 import { DnsRecordType } from "mycel-client-ts/mycel.registry/types/mycel/registry/dns_record";
 import { NetworkName } from "mycel-client-ts/mycel.registry/types/mycel/registry/network_name";
 import { RegistryRecord } from "mycel-client-ts/mycel.resolver/rest";
 import Dropdown from "@/components/Dropdown";
-import TxDialog from "@/components/dialog/TxDialog";
+import TxContent from "@/components/dialog/TxContent";
 import { Domain } from "@/types/domain";
 
 interface EditRecordDialogProps {
@@ -43,6 +44,7 @@ export default function EditRecordDialog({ domain, records, address }: EditRecor
   const [typeOptions, setTypeOptions] = useState<Option[]>([]);
   const [currentRecordValue, setCurrentRecordValue] = useState("");
   const [newRecordValue, setNewRecordValue] = useState("");
+  const [isShowTx, setIsShowTx] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [txResponse, setTxResponse] = useState<DeliverTxResponse>();
 
@@ -76,14 +78,14 @@ export default function EditRecordDialog({ domain, records, address }: EditRecor
     setRecordOption(event.target.value);
   };
 
-  const handleRecordTypeChange = (option: any) => {
-    setTypeOption(option.value);
+  const handleRecordTypeChange = (val: string) => {
+    setTypeOption(val);
   };
 
   // update record value
   const updateRecord = async () => {
     setIsLoading(true);
-    updateDialog("tx");
+    setIsShowTx(true);
     // update DNS record
     if (recordOption === "dns") {
       await client.MycelRegistry.tx
@@ -128,29 +130,50 @@ export default function EditRecordDialog({ domain, records, address }: EditRecor
 
   return (
     <BaseDialog open={dialog === "editRecord"}>
-      <Dialog.Title className="text-2xl font-semibold mb-8 text-center">Edit Record</Dialog.Title>
+      <Dialog.Title className="text-2xl font-semibold mb-8 flex items-center justify-center">
+        <FileSignature className="opacity-70 mr-2" />
+        Edit Record
+      </Dialog.Title>
       <div>
         <div className="relative flex-auto">
           <Radio options={recordOptions} selectedOption={recordOption} onChange={handleRecordOptionChange} />
-          <div className="text-xs text-gray-600 pt-2">Record Type</div>
-          <Dropdown options={typeOptions} selectedOption={typeOption} onSelect={handleRecordTypeChange} />
-          <div className="text-xs text-gray-600 pt-2">CurrentRecord Record</div>
-          <h2 className="text-l font-semibold py-2">{currentRecordValue ? currentRecordValue : "---"}</h2>
-          <div className="text-xs text-gray-600 pt-2">New Record</div>
-          <input
-            className="mt-1 py-2 px-4 h-12 bg-white border border-black text-base leading-tight w-full outline-0"
-            value={newRecordValue}
-            onChange={(e) => setNewRecordValue(e.target.value)}
-          />
-          <Button
-            disabled={!address || newRecordValue === ""}
-            onClick={updateRecord}
-            className="btn-primary mt-10 h-10 w-48"
-          >
-            Update
-          </Button>
+          <label className="mt-5" htmlFor="targetSelect">
+            Record Type
+            <Dropdown options={typeOptions} selectedOption={typeOption} onSelect={handleRecordTypeChange} />
+          </label>
+          <label>
+            CurrentRecord
+            <input type="text" className="w-full" readOnly value={currentRecordValue ? currentRecordValue : "---"} />
+          </label>
+          <label>
+            New Record
+            <input
+              type="text"
+              className="w-full"
+              value={newRecordValue}
+              onChange={(e) => setNewRecordValue(e.target.value)}
+            />
+          </label>
+          <TxContent txResponse={txResponse} isLoading={isLoading} className="mt-6" isShow={isShowTx} />
+          {!isShowTx ? (
+            <Button
+              disabled={!address || newRecordValue === ""}
+              onClick={() => updateRecord()}
+              className="btn-primary mt-10 h-12 w-full rounded-md"
+            >
+              Update
+            </Button>
+          ) : (
+            <Button
+              className="btn-primary mt-10 h-12 w-full rounded-md"
+              onClick={() => {
+                updateDialog(undefined);
+              }}
+            >
+              Close
+            </Button>
+          )}
         </div>
-        <TxDialog txResponse={txResponse} isLoading={isLoading} />
       </div>
     </BaseDialog>
   );

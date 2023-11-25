@@ -1,7 +1,8 @@
+import { Link } from "react-router-dom";
+import { Network, TextSelect } from "lucide-react";
 import { useWallet } from "@/hooks/useWallet";
 import ResolveButton from "@/components/ResolveButton";
 import { useMycelRegistry } from "@/hooks/useMycelRegistry";
-import { Network } from "lucide-react";
 
 interface MyDomainsProps {
   className?: string;
@@ -39,7 +40,15 @@ export default function MyDomains(props: MyDomainsProps) {
         </div>
       )}
       {ownedDomains.length === 0 && (
-        <div className="text-black/70 text-center font-normal py-8">You have no domains</div>
+        <div className="py-8 flex items-center flex-col justify-center">
+          <div className="text-gray-500 text-lg font-semibold inline-flex">
+            <TextSelect className="mr-1.5" />
+            You have no domains
+          </div>
+          <Link className="text-chocolat ml-5 mt-1 hover:underline" to="/register">
+            &#9758; Register Domain
+          </Link>
+        </div>
       )}
     </section>
   );

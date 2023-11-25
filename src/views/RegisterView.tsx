@@ -156,10 +156,12 @@ export default function RegisterView() {
           </div>
         ) : secondLevelDomain?.info ? (
           <div className="border-t border-b border-dashed border-black py-8 px-4">
-            <div className="w-full flex justify-between">
-              <h2 className=" text-2xl m-2 font-semibold">{query}</h2>
-              <h2 className=" text-2xl m-2">{fee?.errorMessage}</h2>
-              <ResolveButton name={domain?.name} parent={domain?.parent} text={"Registered"} />
+            <div className="w-full flex justify-between items-center">
+              <div className="m-2">
+                <h2 className="text-2xl font-semibold">{query}</h2>
+                <p className="mt-1 text-gray-500">{fee?.errorMessage}</p>
+              </div>
+              <ResolveButton name={domain?.name} parent={domain?.parent} text="Registered" />
             </div>
           </div>
         ) : query !== "" ? (
