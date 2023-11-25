@@ -1,143 +1,126 @@
-import React, { useEffect, useState } from "react";
-import { useNetwork, usePrepareSendTransaction, useSendTransaction, useWaitForTransaction } from "wagmi";
-import { parseEther } from "ethers/lib/utils.js";
-import { useDebounce } from "use-debounce";
-import { Web3Button, Web3NetworkSwitch } from "@web3modal/react";
-import { IgntButton } from "@ignt/react-library";
-import { RegistryDomain, RegistryWalletRecordType } from "mycel-client-ts/mycel.registry/rest";
-import { useRegistryDomain } from "../def-hooks/useRegistryDomain";
-import { getConnectedWalletRecordType } from "../utils/chains";
+import { Send } from "lucide-react";
+import { Widget } from "mycel-widget";
+import { env } from "@/env";
 
-const getWalletAddr = (domain: RegistryDomain, recordType: RegistryWalletRecordType) => {
-  if (!domain || !domain.walletRecords || !domain.walletRecords[recordType]) {
-    return "";
-  }
-  return domain.walletRecords[recordType].value;
+const config = {
+  from: {
+    blockchains: [
+      "ETHEREUM_MAINNET_MAINNET",
+      "ETHEREUM_TESTNET_GOERLI",
+      "SOLANA_MAINNET_MAINNET",
+      "SOLANA_TESTNET_TESTNET",
+      "ARBITRUM_MAINNET_MAINNET",
+      "BNB_MAINNET_MAINNET",
+      "POLYGON_MAINNET_MAINNET",
+      "OPTIMISM_MAINNET_MAINNET",
+      "AVALANCHE_MAINNET_CCHAIN",
+      "GNOSIS_MAINNET_MAINNET",
+      "APTOS_MAINNET_MAINNET",
+      "APTOS_TESTNET_TESTNET",
+      "SUI_MAINNET_MAINNET",
+      "SUI_TESTNET_TESTNET",
+    ],
+    tokens: [
+      {
+        blockchain: "ETHEREUM_MAINNET_MAINNET",
+        address: null,
+        symbol: "ETH",
+      },
+      {
+        blockchain: "ETHEREUM_TESTNET_GOERLI",
+        address: "0xdd69db25f6d620a7bad3023c5d32761d353d3de9",
+        symbol: "ETH",
+      },
+      {
+        blockchain: "BNB_MAINNET_MAINNET",
+        address: null,
+        symbol: "BNB",
+      },
+      {
+        blockchain: "ARBITRUM_MAINNET_MAINNET",
+        address: "0x912ce59144191c1204e64559fe8253a0e49e6548",
+        symbol: "ARB",
+      },
+      {
+        blockchain: "POLYGON_MAINNET_MAINNET",
+        address: null,
+        symbol: "MATIC",
+      },
+      {
+        blockchain: "OPTIMISM_MAINNET_MAINNET",
+        address: "0x4200000000000000000000000000000000000042",
+        symbol: "OP",
+      },
+      {
+        blockchain: "AVALANCHE_MAINNET_CCHAIN",
+        address: null,
+        symbol: "AVAX",
+      },
+      {
+        blockchain: "SOLANA_MAINNET_MAINNET",
+        address: null,
+        symbol: "SOL",
+      },
+      {
+        blockchain: "SOLANA_TESTNET_TESTNET",
+        address: null,
+        symbol: "SOL",
+      },
+      {
+        blockchain: "GNOSIS_MAINNET_MAINNET",
+        address: "0x9c58bacc331c9aa871afd802db6379a98e80cedb",
+        symbol: "GNO",
+      },
+      {
+        blockchain: "APTOS_MAINNET_MAINNET",
+        address: null,
+        symbol: "APT",
+      },
+      {
+        blockchain: "APTOS_TESTNET_TESTNET",
+        address: null,
+        symbol: "APT",
+      },
+      {
+        blockchain: "SUI_MAINNET_MAINNET",
+        address: null,
+        symbol: "SUI",
+      },
+      {
+        blockchain: "SUI_TESTNET_TESTNET",
+        address: null,
+        symbol: "SUI",
+      },
+    ],
+  },
+  wallets: ["metamask", "bitget", "okx", "phantom", "petra"],
+  theme: {
+    mode: "dark",
+    colors: {
+      dark: {
+        background: "#fffcdf",
+        primary: "#f1cab2",
+        foreground: "#000",
+        success: "#198754",
+        surface: "#fff",
+        neutral: "#fffcdf",
+        warning: "#ffc107",
+      },
+    },
+  },
+  multiWallets: false,
+  mycelEnv: env,
 };
 
 export default function SendView() {
-  const { chain } = useNetwork();
-  const { registryDomain, isLoading: isLoadingRegistryDomain, updateRegistryDomain } = useRegistryDomain();
-  const [domainName, setDomainName] = useState("");
-  const [targetWalletRecordType, setTargetWalletRecordType] = useState(RegistryWalletRecordType.ETHEREUM_MAINNET);
-  const [debouncedDomainName] = useDebounce(domainName, 500);
-  const [to, setTo] = useState("");
-  const [amount, setAmount] = useState("");
-  const [isValidAmount, setIsValidAmount] = useState(false);
-  const [debouncedAmount] = useDebounce(isValidAmount ? amount : "", 500);
-
-  const { config } = usePrepareSendTransaction({
-    request: {
-      to: to,
-      value: debouncedAmount ? parseEther(debouncedAmount) : undefined,
-    },
-  });
-  const { data, sendTransactionAsync } = useSendTransaction(config);
-
-  const { isLoading: isLoadingTx, isSuccess } = useWaitForTransaction({
-    hash: data?.hash,
-  });
-
-  useEffect(() => {
-    try {
-      const chainId = chain?.id;
-      if (!chainId) {
-        return;
-      }
-      const walletRecordType = getConnectedWalletRecordType(chainId);
-      setTargetWalletRecordType(walletRecordType);
-    } catch (e) {
-      // TODO If walletRecordType is invalid, show an error message
-      console.log(e);
-    }
-  }, [chain]);
-
-  useEffect(() => {
-    if (registryDomain) {
-      const walletAddr = registryDomain ? getWalletAddr(registryDomain, targetWalletRecordType) : "";
-      setTo(walletAddr || "");
-    } else {
-      setTo("");
-    }
-  }, [registryDomain]);
-
-  useEffect(() => {
-    const pattern = /^[0-9]+(\.[0-9]+)?$/;
-    if (pattern.test(amount) === false) {
-      setIsValidAmount(false);
-    } else {
-      setIsValidAmount(true);
-    }
-  }, [amount]);
-
-  useEffect(() => {
-    updateRegistryDomain(domainName)
-      .then()
-      .catch((e) => {
-        console.error(e);
-      });
-  }, [debouncedDomainName, chain]);
-
   return (
-    <div className="w-3/4 mx-auto">
-      <div className="relative flex flex-row">
-        <div className="px-3">
-          <Web3NetworkSwitch />
-        </div>
-        <Web3Button />
-      </div>
-      <div className="flex-row m-4">
-        <input
-          className="mr-6 mt-2 py-2 px-4 h-14 bg-gray-100 w-full border-xs text-base leading-tight rounded-xl outline-0"
-          aria-label="Recipient"
-          onChange={async (e) => {
-            setDomainName(e.target.value);
-          }}
-          placeholder="Recipient Domain Name (e.g. your-name.cel)"
-          value={domainName}
-        />
-        {to ? (
-          <p className="m-2 text-sm text-gray-700">
-            <span className="italic">{domainName}</span> on {targetWalletRecordType} is{" "}
-            <span className="italic">{to}</span>.
-          </p>
-        ) : (
-          <p className="m-2 text-sm text-red-500">
-            <span className="italic">{domainName}</span> doesn&apos;t exists in registry on {targetWalletRecordType}.
-          </p>
-        )}
-        <input
-          className="mr-6 my-2 py-2 px-4 h-14 bg-gray-100 w-full border-xs text-base leading-tight rounded-xl outline-0"
-          aria-label="Amount (ether)"
-          onChange={(e) => setAmount(e.target.value)}
-          placeholder="Token Amount (e.g. 0.05)"
-          value={amount}
-        />
-        {!isValidAmount && (
-          <p className="m-2 text-sm text-red-500">
-            <span className="italic">{domainName}</span> Invalid Amount.
-          </p>
-        )}
-
-        <IgntButton
-          className="mt-1 h-14 w-full"
-          onClick={async () => {
-            const res = await sendTransactionAsync?.();
-            console.log("%o", res);
-          }}
-          busy={isLoadingTx || isLoadingRegistryDomain}
-          disabled={isLoadingTx || isLoadingRegistryDomain || !sendTransactionAsync || !to || !amount}
-        >
-          {isLoadingTx ? "Sending..." : "Send"}
-        </IgntButton>
-        {isSuccess && (
-          <div className="m-4">
-            <p>
-              Successfully sent {amount} ether to {to}
-            </p>
-            <p>TxHash: {data?.hash}</p>
-          </div>
-        )}
+    <div>
+      <div className="container my-12 widget">
+        <h2 className="font-cursive text-3xl text-black font-semibold mb-6 flex items-center">
+          <Send className="opacity-70 mr-2" size={28} />
+          Send Token
+        </h2>
+        <Widget config={config} />
       </div>
     </div>
   );

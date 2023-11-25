@@ -1,20 +1,20 @@
-import { IgntButton } from "@ignt/react-library";
 import { useNavigate } from "react-router-dom";
 
 interface ResolveButtonProps {
   name: string | undefined;
   parent: string | undefined;
+  text?: string;
 }
 export default function ResolveButton(props: ResolveButtonProps) {
   const navigate = useNavigate();
   return (
     <>
-      <IgntButton
+      <button
         onClick={() => navigate(`/resolve?name=${props.name}&parent=${props.parent}`)}
-        className="mt-1 h-10 w-48"
+        className="btn-secondary w-32 py-1 rounded-md h-10"
       >
-        Resolve
-      </IgntButton>
+        {props.text ?? "See More"}
+      </button>
     </>
   );
 }

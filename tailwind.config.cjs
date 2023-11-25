@@ -4,28 +4,35 @@
 const pxToRem = (dest) => 1 / (16 / dest);
 
 module.exports = {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-    "./node_modules/@ignt/react-library/src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     boxShadow: {
       DEFAULT: "16px 32px 128px -8px rgba(0, 0, 0, 0.07)",
     },
     fontFamily: {
       sans: ["Inter", "sans-serif"],
+      cursive: ["Gabriela", "cursive"],
+    },
+    container: {
+      padding: "1.5rem",
+      center: true,
+      screens: {
+        sm: "100%",
+        md: "100%",
+        lg: "1024px",
+        xl: "1280px",
+      },
     },
     extend: {
       colors: {
         transparent: "transparent",
         current: "currentColor",
-        white: {
-          500: "rgba(255,255,255,0.5)",
-          800: "rgba(255,255,255,0.82)",
-          1000: "#fff",
-        },
-        black: "#111111",
+        // white: {
+        //   500: "rgba(255,255,255,0.5)",
+        //   800: "rgba(255,255,255,0.82)",
+        //   1000: "#fff",
+        // },
+        // black: "#111111",
         gray: {
           0: "#000",
           50: "#f0f0f0",
@@ -45,17 +52,25 @@ module.exports = {
         inactive: "rgba(0, 0, 0, 0.33)",
         link: "#000",
         linkHover: "rgba(0, 0, 0, 0.667)",
-        border: "rgba(0, 0, 0, 0.07)",
+        border: "rgba(0, 0, 0, 0.5)",
         checkbox: "#C4C4C4",
         radio: "#C4C4C4",
         warning: "#FC8C0B",
         error: "#D80228",
         negative: "#D80228",
         notification: "#FE475F",
+        // app
+        cream: "#FFFCDF",
+        lemon: "#F3E49D",
+        orange: "#E6A894",
+        chocolat: "#EA5506",
       },
       boxShadow: {
         border: "0px 0.5px 0px #CBCBCB",
         border_double: "0px -0.5px 0px #CBCBCB, 0px 0.5px 0px #CBCBCB",
+        solid: "2px 2px #111111",
+        "solid-sm": "1px 1px #111111",
+        transparent: "0px 0px transparent",
         max: "16px 32px 128px 8px rgba(0, 0, 0, 0.07)",
         dropdown: "-112px 73px 191px 59px rgba(0, 0, 0, 0.09)",
         select: "40px 64px 128px -8px rgba(0, 0, 0, 0.14)",
@@ -95,5 +110,5 @@ module.exports = {
       xl: `${pxToRem(1380)}rem`,
     },
   },
-  plugins: [require("@headlessui/tailwindcss")],
+  plugins: [require("@headlessui/tailwindcss"), require("@tailwindcss/forms")],
 };

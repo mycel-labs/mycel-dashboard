@@ -1,11 +1,74 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Gabriela&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-input[type="search"]::-webkit-search-decoration,
-input[type="search"]::-webkit-search-cancel-button,
-input[type="search"]::-webkit-search-results-button,
-input[type="search"]::-webkit-search-results-decoration {
-  display: none;
-  -webkit-appearance: none;
+
+:root {
+  --c-cream: #fffcdf;
+  --c-lemon: #f3e49d;
+  --c-orange: #e6a894;
+  --c-chocolat: #ea5506;
+}
+
+@layer base {
+  html,
+  body,
+  div#root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-cream;
+  }
+
+  *,
+  *:focus,
+  *:hover {
+    outline: none;
+  }
+
+  .btn-primary {
+    @apply text-black bg-transparent border-2 border-black bg-orange shadow-solid-sm hover:shadow-solid focus:outline-none hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply text-black bg-transparent border-2 border-black bg-lemon shadow-solid-sm hover:shadow-solid focus:outline-none hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  input,
+  input[type="number"] {
+    @apply focus:ring-0;
+  }
+
+  input[type="search"]::-webkit-search-decoration,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-results-button,
+  input[type="search"]::-webkit-search-results-decoration {
+    display: none;
+    -webkit-appearance: none;
+  }
+
+  input[type="text"],
+  input[type="search"],
+  select {
+    @apply bg-white border-2 border-black px-4 h-12 hover:border-black font-normal text-base text-black read-only:bg-amber-50 read-only:text-gray-600 outline-none focus:border-black focus:outline-none focus:shadow-solid focus:ring-0;
+  }
+
+  label {
+    @apply text-sm font-semibold mb-1 block;
+  }
+  label + label {
+    @apply mt-4;
+  }
+
+  label > input {
+    @apply mt-0.5;
+  }
+}
+
+.widget {
+  input[type="text"] {
+    box-shadow: none !important;
+  }
 }
