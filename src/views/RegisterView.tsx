@@ -7,7 +7,7 @@ import { useClient } from "@/hooks/useClient";
 import useWallet from "@/hooks/useWallet";
 import { useMycelRegistry } from "@/hooks/useMycelRegistry";
 import { DeliverTxResponse } from "@cosmjs/stargate";
-import { PencilRuler, PiggyBank, SearchSlash } from "lucide-react";
+import { PencilRuler, PiggyBank, Search } from "lucide-react";
 import TxDialog from "@/components/dialog/TxDialog";
 import ResolveButton from "@/components/ResolveButton";
 import { convertToDomain } from "@/utils/domainName";
@@ -115,11 +115,11 @@ export default function RegisterView() {
             <input
               type="search"
               className="w-full leading-tight h-12"
-              placeholder="Enter Top Level or Second Level Domain Name"
+              placeholder="Enter TLD(.xxx) or SLD(yourname.cel) Name"
               {...register("text", { onBlur: () => onSubmit(getValues()) })}
             />
             <button className="absolute right-0 h-12 px-4" type="submit">
-              <SearchSlash className="text-chocolat bg-white/90" />
+              <Search className="text-chocolat bg-white/90" />
             </button>
           </div>
         </form>

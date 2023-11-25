@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { DeliverTxResponse } from "@cosmjs/stargate";
 import { Dialog } from "@headlessui/react";
 import { FileSignature } from "lucide-react";
@@ -36,6 +37,7 @@ const RecordTypeToOptions = (recordType: any) => {
 };
 
 export default function EditRecordDialog({ domain, records, address }: EditRecordDialogProps) {
+  const navigate = useNavigate();
   const dialog = useStore((state) => state.dialog);
   const updateDialog = useStore((state) => state.updateDialog);
   const client = useClient();
@@ -168,6 +170,7 @@ export default function EditRecordDialog({ domain, records, address }: EditRecor
               className="btn-primary mt-10 h-12 w-full rounded-md"
               onClick={() => {
                 updateDialog(undefined);
+                navigate(0);
               }}
             >
               Close

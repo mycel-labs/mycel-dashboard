@@ -7,6 +7,7 @@ import Button from "@/components/Button";
 import { HandMetal } from "lucide-react";
 import { useStore } from "@/store/index";
 import useBalance from "@/hooks/useBalance";
+import { MYCEL_COIN_DECIMALS, MYCEL_HUMAN_COIN_UNIT, MYCEL_BASE_COIN_UNIT, convertToDecimalString } from "@/utils/coin";
 
 interface faucetProps {
   className?: string;
@@ -85,12 +86,15 @@ export default function Faucet(props: faucetProps) {
               <>
                 <div className="font-semibold mb-1">My Balance</div>
                 <ul>
-                  {balances?.map((coin) => (
-                    <li key={coin.denom} className="font-mono text-xl px-0.5">
-                      {new Intl.NumberFormat().format(coin.amount)}
-                      <span className="text-gray-600 ml-1 text-lg">{coin.denom}</span>
-                    </li>
-                  ))}
+                  {balances?.map(
+                    (coin) =>
+                      coin.denom === MYCEL_BASE_COIN_UNIT && (
+                        <li key={coin.denom} className="font-mono text-xl px-0.5">
+                          {convertToDecimalString(coin.amount, MYCEL_COIN_DECIMALS)}
+                          <span className="text-gray-600 ml-1 text-lg">{MYCEL_HUMAN_COIN_UNIT}</span>
+                        </li>
+                      ),
+                  )}
                 </ul>
               </>
             ) : (

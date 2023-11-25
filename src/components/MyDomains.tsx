@@ -18,7 +18,7 @@ export default function MyDomains(props: MyDomainsProps) {
         <Network className="opacity-70 mr-2" size={26} />
         My Domains
       </h3>
-      <div className="flex w-full px-1">
+      <div className="table-auto w-full px-1">
         {ownedDomains?.map((domain) => (
           <div className="py-2 flex w-full justify-between items-center" key={domain.name}>
             <div className="flex items-center py-5 font-semibold">
