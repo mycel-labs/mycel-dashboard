@@ -1,22 +1,27 @@
 # Mycel Frontend
 
 ## Getting Started
+
 Install Dependencies
+
 ```
-yarn Install
+pnpm install
 ```
 
 Set up enviroment
+
 ```
 cp .env.example .env
 ```
 
 Run Local Server
+
 ```
-yarn run dev
+pnpm run dev
 ```
 
 ## Build
+
 ```
-yarn build
+pnpm run build
 ```
