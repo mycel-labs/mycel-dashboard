@@ -85,6 +85,7 @@ export default function Faucet(props: faucetProps) {
             {isConnected ? (
               <>
                 <div className="font-semibold mb-1">My Balance</div>
+                {!balances && <div className="text-gray-500">---</div>}
                 <ul>
                   {balances?.map(
                     (coin) =>
