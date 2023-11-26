@@ -112,7 +112,7 @@ export default function WalletDialog() {
           {balances?.map((coin) => (
             <li key={coin.denom} className="font-mono text-xl px-0.5">
               {new Intl.NumberFormat().format(coin.amount)}
-              <span className="text-gray-600 ml-1 text-lg">{coin.denom}</span>
+              <span className="text-gray-600 ml-1 text-lg uppercase">{coin.denom}</span>
             </li>
           ))}
         </ul>
