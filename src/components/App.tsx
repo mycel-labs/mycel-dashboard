@@ -39,7 +39,8 @@ const wagmiConfig = createConfig({
       },
     }),
     new WalletConnectConnector({
-      chains,
+      // https://github.com/wagmi-dev/wagmi/issues/3012#issuecomment-1721744364
+      chains: [mainnet, mainnet],
       options: {
         projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID,
       },
