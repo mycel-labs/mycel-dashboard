@@ -12,6 +12,7 @@ import OKXIcon from "@/assets/icons/wallets/okx.svg";
 import MycelCharactor from "@/assets/mycel_charactor.svg";
 import { shortAddress } from "@/utils/wallets";
 import { copyClipboard } from "@/utils/lib";
+import { MYCEL_COIN_DECIMALS, MYCEL_HUMAN_COIN_UNIT, MYCEL_BASE_COIN_UNIT, convertToDecimalString } from "@/utils/coin";
 
 export default function WalletDialog() {
   const dialog = useStore((state) => state.dialog);
@@ -111,8 +112,8 @@ export default function WalletDialog() {
         <ul>
           {balances?.map((coin) => (
             <li key={coin.denom} className="font-mono text-xl px-0.5">
-              {new Intl.NumberFormat().format(coin.amount)}
-              <span className="text-gray-600 ml-1 text-lg uppercase">{coin.denom}</span>
+              {convertToDecimalString(coin.amount, MYCEL_COIN_DECIMALS)}
+              <span className="text-gray-600 ml-1 text-lg uppercase">{MYCEL_HUMAN_COIN_UNIT}</span>
             </li>
           ))}
         </ul>
