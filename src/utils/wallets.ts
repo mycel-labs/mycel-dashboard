@@ -1,6 +1,12 @@
 import { onboarding } from "@dydxprotocol/v4-client-js";
 import { ChainInfo } from "@keplr-wallet/types";
-import { MYCEL_BASE_COIN_UNIT, MYCEL_HUMAN_COIN_UNIT, MYCEL_COIN_DECIMALS } from "./coin";
+import { MYCEL_BASE_COIN_UNIT, MYCEL_HUMAN_COIN_UNIT, MYCEL_COIN_DECIMALS } from "@/utils/coin";
+import MetamaskIcon from "@/assets/icons/wallets/metamask.svg";
+import CoinbaseWalltIcon from "@/assets/icons/wallets/coinbase-wallet.svg";
+import GenericWalletWalltIcon from "@/assets/icons/wallets/generic-wallet.svg";
+import KeplrIcon from "@/assets/icons/wallets/keplr.svg";
+import WalletConnectIcon from "@/assets/icons/wallets/walletconnect.svg";
+import OKXIcon from "@/assets/icons/wallets/okx.svg";
 
 export type EvmAddress = `0x${string}`;
 export type MycelAddress = `mycel${string}`;
@@ -50,49 +56,34 @@ export const MYCEL_CHAIN_INFO: ChainInfo = {
 };
 
 export const WALLET_CONFIG = {
-  // BitKeep: {
-  //   chainType: 'cosmos',
-  //   name: 'BITKEEP'
-  // },
-  // BitPie: {
-  //   chainType: 'cosmos',
-  //   name:"BITPIE"
-  // },
-  // CloverWallet = "CLOVER_WALLET",
-  // CoinbaseWallet = "COINBASE_WALLET",
-  // Coin98 = "COIN98",
-  // HuobiWallet = "HUOBI_WALLET",
-  // ImToken = "IMTOKEN",
-  Keplr: {
-    id: "keplr",
-    name: "KEPLR",
-    chainType: "cosmos",
-  },
-  // Ledger = 'LEDGER',
-  // MathWallet = "MATH_WALLET",
   MetaMask: {
-    id: "metaMask",
-    name: "MetaMask",
+    id: "injected",
+    name: "Injected",
+    display: "EVM Wallet",
     chainType: "evm",
+    icon: [MetamaskIcon, CoinbaseWalltIcon, GenericWalletWalltIcon],
   },
   WalletConnect: {
     id: "walletConnect",
     name: "WalletConnect",
+    display: "Wallet Connect",
     chainType: "evm",
+    icon: WalletConnectIcon,
   },
   OKXWallet: {
     id: "injected",
     name: "OKXWallet",
+    display: "OKX Wallet",
     chainType: "evm",
+    icon: OKXIcon,
   },
-  // Rainbow = "RAINBOW_WALLET",
-  // TokenPocket = "TOKEN_POCKET",
-  // TrustWallet = "TRUST_WALLET",
-  // WalletConnect2 = "WALLETCONNECT_2",
-  Injected: {
-    id: "injected",
-    name: "Injected",
-    chainType: "evm",
+  Keplr: {
+    id: "keplr",
+    name: "KEPLR",
+    display: "KEPLR",
+    chainType: "cosmos",
+    icon: KeplrIcon,
+    disabled: !window.keplr,
   },
 };
 

@@ -24,6 +24,7 @@
     "graz": "^0.1.1",
     "long": "^5.2.3",
     "lucide-react": "^0.291.0",
+    "mobile-detect": "^1.4.5",
     "mycel-client-ts": "0.1.1",
     "mycel-widget": "0.1.0",
     "qrcode": "^1.5.1",
