@@ -4,7 +4,7 @@ import useBalance from "@/hooks/useBalance";
 import useWallet from "@/hooks/useWallet";
 import { useStore } from "@/store/index";
 import Button from "@/components/Button";
-import { Unplug, KeySquare, ClipboardCopy, Wallet } from "lucide-react";
+import { Unplug, KeySquare, ClipboardCopy } from "lucide-react";
 import MycelCharactor from "@/assets/mycel_charactor.svg";
 import { shortAddress, WALLET_CONFIG, type WalletType } from "@/utils/wallets";
 import { copyClipboard, isMobile, cn } from "@/utils/lib";
@@ -16,8 +16,6 @@ export default function WalletDialog() {
   const { connectWallet, disconnectWallet, isConnected, evmAddress, deriveKeys, mycelAccount, connectorsWagmi } =
     useWallet();
 
-  console.log("connectorsWagmi", connectorsWagmi);
-
   const DialogContent = () => (
     <div className="space-y-4 font-semibold">
       {Object.entries(WALLET_CONFIG).map(([key, val]) => (
@@ -28,8 +26,9 @@ export default function WalletDialog() {
           onClick={async () => {
             if (val.name === "OKXWallet" && isMobile()) {
               window.open(`okx://wallet/dapp/details?dappUrl=${window.location.href}`);
+            } else {
+              connectWallet({ walletType: key as WalletType });
             }
-            connectWallet({ walletType: key as WalletType });
           }}
         >
           <span className="flex items-center justify-center px-6 mr-2">
@@ -41,7 +40,8 @@ export default function WalletDialog() {
                   width={24}
                   height={24}
                   alt={val.name}
-                  className={cn(index > 0 ? "-ml-2" : "", `z-${(2 - index) * 10}`)}
+                  className={cn(index > 0 && "-ml-2")}
+                  style={{ zIndex: 2 - index }}
                 />
               ))
             ) : (
@@ -109,7 +109,7 @@ export default function WalletDialog() {
         <label className="relative">
           EVM Address
           <input type="text" readOnly value={shortAddress(evmAddress)} className="w-full" />
-          <div className="absolute right-0 bottom-0 h-12 w-12  flex items-center justify-center">
+          <div className="absolute right-0 bottom-0 h-12 w-12 flex items-center justify-center">
             <button className="text-chocolat" onClick={() => copyClipboard(evmAddress)}>
               <ClipboardCopy size={20} />
             </button>

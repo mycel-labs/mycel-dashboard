@@ -1,6 +1,7 @@
 import { onboarding } from "@dydxprotocol/v4-client-js";
 import { ChainInfo } from "@keplr-wallet/types";
 import { MYCEL_BASE_COIN_UNIT, MYCEL_HUMAN_COIN_UNIT, MYCEL_COIN_DECIMALS } from "@/utils/coin";
+import { isMobile } from "@/utils/lib";
 import MetamaskIcon from "@/assets/icons/wallets/metamask.svg";
 import CoinbaseWalltIcon from "@/assets/icons/wallets/coinbase-wallet.svg";
 import GenericWalletWalltIcon from "@/assets/icons/wallets/generic-wallet.svg";
@@ -76,6 +77,7 @@ export const WALLET_CONFIG = {
     display: "OKX Wallet",
     chainType: "evm",
     icon: OKXIcon,
+    disabled: !isMobile(),
   },
   Keplr: {
     id: "keplr",
