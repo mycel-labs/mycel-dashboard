@@ -74,7 +74,7 @@ export const useWallet = () => {
         } else if (WALLET_CONFIG[walletType].chainType === "evm") {
           if (!isConnectedWagmi) {
             await connectWagmi({
-              connector: connectorsWagmi.find((cn: any) => cn.id === WALLET_CONFIG[walletType].id),
+              connector: connectorsWagmi.find((cn: any) => cn.name === WALLET_CONFIG[walletType].name),
             });
           }
         }

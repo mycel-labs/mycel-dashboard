@@ -4,14 +4,10 @@ import useBalance from "@/hooks/useBalance";
 import useWallet from "@/hooks/useWallet";
 import { useStore } from "@/store/index";
 import Button from "@/components/Button";
-import { Unplug, Wallet, KeySquare, ClipboardCopy } from "lucide-react";
-import MetamaskIcon from "@/assets/icons/wallets/metamask.svg";
-import KeplrIcon from "@/assets/icons/wallets/keplr.svg";
-import WalletConnectIcon from "@/assets/icons/wallets/walletconnect.svg";
-import OKXIcon from "@/assets/icons/wallets/okx.svg";
+import { Unplug, KeySquare, ClipboardCopy } from "lucide-react";
 import MycelCharactor from "@/assets/mycel_charactor.svg";
-import { shortAddress } from "@/utils/wallets";
-import { copyClipboard } from "@/utils/lib";
+import { shortAddress, WALLET_CONFIG, type WalletType } from "@/utils/wallets";
+import { copyClipboard, isPC, isMobile, cn, isOKXApp } from "@/utils/lib";
 import { MYCEL_COIN_DECIMALS, MYCEL_HUMAN_COIN_UNIT, MYCEL_BASE_COIN_UNIT, convertToDecimalString } from "@/utils/coin";
 
 export default function WalletDialog() {
@@ -22,65 +18,41 @@ export default function WalletDialog() {
 
   const DialogContent = () => (
     <div className="space-y-4 font-semibold">
-      <Button
-        className="btn-secondary w-full h-12 rounded"
-        disabled={!connectorsWagmi.find((cn) => cn.id === "metaMask")?.ready}
-        onClick={async () => {
-          connectWallet({ walletType: "MetaMask" });
-        }}
-      >
-        <span className="flex items-center justify-center px-6 mr-2">
-          <img src={MetamaskIcon} width={24} height={24} alt="MetaMask" />
-          <span className="ml-3">MetaMask</span>
-        </span>
-      </Button>
-      <Button
-        className="btn-secondary w-full h-12 rounded"
-        disabled={!connectorsWagmi.find((cn) => cn.id === "walletConnect")?.ready}
-        onClick={async () => {
-          connectWallet({ walletType: "WalletConnect" });
-        }}
-      >
-        <span className="flex items-center justify-center px-6 mr-2">
-          <img src={WalletConnectIcon} width={24} height={24} alt="WalletConnect" />
-          <span className="ml-3">WalletConnect</span>
-        </span>
-      </Button>
-      <Button
-        className="btn-secondary w-full h-12 rounded"
-        disabled={!connectorsWagmi.find((cn) => cn.name === "OKXWallet")?.ready}
-        onClick={async () => {
-          connectWallet({ walletType: "OKXWallet" });
-        }}
-      >
-        <span className="flex items-center justify-center px-6 mr-2">
-          <img src={OKXIcon} width={24} height={24} alt="OKXWallet" />
-          <span className="ml-3"> OKX Wallet</span>
-        </span>
-      </Button>
-      <Button
-        className="btn-secondary w-full h-12 rounded"
-        onClick={async () => {
-          connectWallet({ walletType: "Injected" });
-        }}
-      >
-        <span className="flex items-center justify-center px-6 mr-2">
-          <Wallet className="text-chocolat" />
-          <span className="ml-3"> Browser Wallet</span>
-        </span>
-      </Button>
-      <Button
-        className="btn-secondary w-full h-12 rounded"
-        onClick={async () => {
-          await connectWallet({ walletType: "Keplr" });
-          updateDialog(undefined);
-        }}
-      >
-        <span className="flex items-center justify-center px-6 mr-2">
-          <img src={KeplrIcon} width={24} height={24} alt="Keplr" />
-          <span className="ml-3">Keplr</span>
-        </span>
-      </Button>
+      {Object.entries(WALLET_CONFIG).map(([key, val]) => (
+        <Button
+          key={val.id}
+          className="btn-secondary w-full h-12 rounded"
+          disabled={val?.disabled ?? !connectorsWagmi.find((cn) => cn.name === val.name)?.ready}
+          onClick={async () => {
+            if (val.name === "OKXWallet") {
+              if (isPC() || (isMobile() && isOKXApp())) {
+                connectWallet({ walletType: key as WalletType });
+              } else {
+                window.open(`okx://wallet/dapp/details?dappUrl=${window.location.href}`);
+              }
+            }
+          }}
+        >
+          <span className="flex items-center justify-center px-6 mr-2">
+            {Array.isArray(val.icon) ? (
+              val.icon.map((item, index) => (
+                <img
+                  key={`wallet-${index}`}
+                  src={item}
+                  width={24}
+                  height={24}
+                  alt={val.name}
+                  className={cn(index > 0 && "-ml-2")}
+                  style={{ zIndex: 2 - index }}
+                />
+              ))
+            ) : (
+              <img src={val.icon} width={24} height={24} alt={val.name} />
+            )}
+            <span className="ml-3">{val.display}</span>
+          </span>
+        </Button>
+      ))}
     </div>
   );
 
@@ -139,7 +111,7 @@ export default function WalletDialog() {
         <label className="relative">
           EVM Address
           <input type="text" readOnly value={shortAddress(evmAddress)} className="w-full" />
-          <div className="absolute right-0 bottom-0 h-12 w-12  flex items-center justify-center">
+          <div className="absolute right-0 bottom-0 h-12 w-12 flex items-center justify-center">
             <button className="text-chocolat" onClick={() => copyClipboard(evmAddress)}>
               <ClipboardCopy size={20} />
             </button>
