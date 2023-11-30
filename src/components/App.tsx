@@ -3,7 +3,6 @@ import { RouterProvider } from "react-router-dom";
 import router from "@/router";
 import { WagmiConfig, createConfig, configureChains, mainnet } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
-import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { publicProvider } from "wagmi/providers/public";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -31,13 +30,12 @@ const wagmiConfig = createConfig({
         getProvider: () => (typeof window !== "undefined" ? window.okxwallet : undefined),
       },
     }),
-
-    new MetaMaskConnector({
-      chains,
-      options: {
-        shimDisconnect: true,
-      },
-    }),
+    // new MetaMaskConnector({
+    //   chains,
+    //   options: {
+    //     shimDisconnect: true,
+    //   },
+    // }),
     new WalletConnectConnector({
       // https://github.com/wagmi-dev/wagmi/issues/3012#issuecomment-1721744364
       chains: [mainnet, mainnet],
