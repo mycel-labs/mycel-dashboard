@@ -63,6 +63,7 @@ export const WALLET_CONFIG = {
     display: "EVM Wallet",
     chainType: "evm",
     icon: [MetamaskIcon, CoinbaseWalltIcon, GenericWalletWalltIcon],
+    getUrl: "https://metamask.io/download.html",
   },
   WalletConnect: {
     id: "walletConnect",
@@ -77,6 +78,7 @@ export const WALLET_CONFIG = {
     display: "OKX Wallet",
     chainType: "evm",
     icon: OKXIcon,
+    getUrl: "https://www.okx.com/web3",
   },
   Keplr: {
     id: "keplr",
@@ -85,6 +87,7 @@ export const WALLET_CONFIG = {
     chainType: "cosmos",
     icon: KeplrIcon,
     disabled: !window.keplr,
+    getUrl: "https://www.keplr.app/download",
   },
 };
 

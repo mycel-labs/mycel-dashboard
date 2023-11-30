@@ -22,7 +22,7 @@ export default function WalletDialog() {
         <Button
           key={val.id}
           className="btn-secondary w-full h-12 rounded"
-          disabled={val?.disabled ?? !connectorsWagmi.find((cn) => cn.name === val.name)?.ready}
+          disabled={val?.disabled}
           onClick={async () => {
             if (val.name === "OKXWallet") {
               if (isOKXApp()) {
@@ -33,7 +33,11 @@ export default function WalletDialog() {
                 window.open(`https://www.okx.com/web3`);
               }
             } else {
-              connectWallet({ walletType: key as WalletType });
+              if (connectorsWagmi.find((cn) => cn.name === val.name)?.ready) {
+                connectWallet({ walletType: key as WalletType });
+              } else {
+                window.open(val.getUrl);
+              }
             }
           }}
         >
