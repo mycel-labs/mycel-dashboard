@@ -30,6 +30,8 @@ export default function WalletDialog() {
               } else {
                 window.open(`okx://wallet/dapp/details?dappUrl=${window.location.href}`);
               }
+            } else {
+              connectWallet({ walletType: key as WalletType });
             }
           }}
         >
