@@ -22,16 +22,22 @@ export default function WalletDialog() {
         <Button
           key={val.id}
           className="btn-secondary w-full h-12 rounded"
-          disabled={val?.disabled ?? !connectorsWagmi.find((cn) => cn.name === val.name)?.ready}
+          disabled={val?.disabled}
           onClick={async () => {
             if (val.name === "OKXWallet") {
-              if (isPC() || (isMobile() && isOKXApp())) {
+              if (isOKXApp()) {
                 connectWallet({ walletType: key as WalletType });
-              } else {
-                window.open(`okx://wallet/dapp/details?dappUrl=${window.location.href}`);
+              } else if (isMobile()) {
+                window.open(`https://okex.com/web3/connect-dapp?uri=${encodeURIComponent(window.location.href)}`);
+              } else if (isPC()) {
+                window.open(`https://www.okx.com/web3`);
               }
             } else {
-              connectWallet({ walletType: key as WalletType });
+              if (connectorsWagmi.find((cn) => cn.name === val.name)?.ready) {
+                connectWallet({ walletType: key as WalletType });
+              } else {
+                window.open(val.getUrl);
+              }
             }
           }}
         >
