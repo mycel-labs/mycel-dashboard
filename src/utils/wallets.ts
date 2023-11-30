@@ -77,7 +77,6 @@ export const WALLET_CONFIG = {
     display: "OKX Wallet",
     chainType: "evm",
     icon: OKXIcon,
-    disabled: !isMobile(),
   },
   Keplr: {
     id: "keplr",
