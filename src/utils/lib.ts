@@ -11,7 +11,14 @@ export const copyClipboard = async (str: string | undefined) => {
   navigator.clipboard.writeText(str);
 };
 
-export const isMobile = () => {
+export const isMobile = (): boolean => {
   const md = new MobileDetet(window.navigator.userAgent);
   return !!md.mobile();
+};
+
+export const isPC = (): boolean => !isMobile();
+
+export const isOKXApp = (): boolean => {
+  if (!window) return false;
+  return typeof window?.okxwallet !== "undefined";
 };

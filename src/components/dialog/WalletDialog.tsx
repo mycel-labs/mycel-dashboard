@@ -7,7 +7,7 @@ import Button from "@/components/Button";
 import { Unplug, KeySquare, ClipboardCopy } from "lucide-react";
 import MycelCharactor from "@/assets/mycel_charactor.svg";
 import { shortAddress, WALLET_CONFIG, type WalletType } from "@/utils/wallets";
-import { copyClipboard, isMobile, cn } from "@/utils/lib";
+import { copyClipboard, isPC, isMobile, cn, isOKXApp } from "@/utils/lib";
 import { MYCEL_COIN_DECIMALS, MYCEL_HUMAN_COIN_UNIT, MYCEL_BASE_COIN_UNIT, convertToDecimalString } from "@/utils/coin";
 
 export default function WalletDialog() {
@@ -24,10 +24,12 @@ export default function WalletDialog() {
           className="btn-secondary w-full h-12 rounded"
           disabled={val?.disabled ?? !connectorsWagmi.find((cn) => cn.name === val.name)?.ready}
           onClick={async () => {
-            if (val.name === "OKXWallet" && isMobile()) {
-              window.open(`okx://wallet/dapp/details?dappUrl=${window.location.href}`);
-            } else {
-              connectWallet({ walletType: key as WalletType });
+            if (val.name === "OKXWallet") {
+              if (isPC() || (isMobile() && isOKXApp())) {
+                connectWallet({ walletType: key as WalletType });
+              } else {
+                window.open(`okx://wallet/dapp/details?dappUrl=${window.location.href}`);
+              }
             }
           }}
         >
