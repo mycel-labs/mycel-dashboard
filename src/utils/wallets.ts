@@ -86,7 +86,6 @@ export const WALLET_CONFIG = {
     display: "KEPLR",
     chainType: "cosmos",
     icon: KeplrIcon,
-    disabled: !window.keplr,
     getUrl: "https://www.keplr.app/download",
   },
 };
