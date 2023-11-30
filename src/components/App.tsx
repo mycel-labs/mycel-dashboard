@@ -27,7 +27,6 @@ const wagmiConfig = createConfig({
       options: {
         name: "OKXWallet",
         shimDisconnect: true,
-        getProvider: () => (typeof window !== "undefined" ? window.okxwallet : undefined),
       },
     }),
     // new MetaMaskConnector({
