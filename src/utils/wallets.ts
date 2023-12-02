@@ -106,7 +106,7 @@ export const getSignTypedData = () =>
     },
   }) as const;
 
-export const shortAddress = (address: string | undefined) => {
+export const shortAddress = (address: string | undefined, prefix = 8, suffix = 4) => {
   if (!address) return "";
-  return `${address.slice(0, 8)}...${address.slice(-4)}`;
+  return `${address.slice(0, prefix)}...${address.slice(-suffix)}`;
 };
