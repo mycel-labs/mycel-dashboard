@@ -8218,10 +8218,10 @@ mycel-client-ts@^0.0.11:
     buffer "^6.0.3"
     events "^3.3.0"
 
-mycel-widget@0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/mycel-widget/-/mycel-widget-0.1.0.tgz#c298c99885a9b8ee24258fcb19fb8fe98528d524"
-  integrity sha512-wtDooKe53LBGsQgGAlEe16JRsQisyB57qRk/D+yvHQqXJdbifxYagu90jpopTI6Sxt7V0YQAw0ykM7r2Ebvtzg==
+mycel-widget@0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/mycel-widget/-/mycel-widget-0.1.2.tgz#e42dd33ea8b68d0f882c642b669f6b9911aa7eaa"
+  integrity sha512-JN/QXQGW54ziiaSFswtYt264ZX1Wi+AnVj9HWJaNqrCTCVDH4nlUs7afA3d0tqymc+HxqGcf6xBIIvVNprERDA==
   dependencies:
     "@cosmjs/crypto" "^0.31.1"
     "@cosmjs/encoding" "^0.31.1"
