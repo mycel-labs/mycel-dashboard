@@ -189,17 +189,16 @@ export const useWallet = () => {
       updateEvmAddress(evmAddressWagmi);
     }
     if (mycelAddressGraz) {
-      console.log("aaaa", mycelAccountGraz);
       updateMycelAddress(mycelAddressGraz);
     }
   }, [evmAddressWagmi, mycelAddressGraz]);
 
   // Change EVM network
   const { chain: chainWagmi } = useNetworkWagmi();
-  const { switchNetwork: switchNetworkWagmi } = useSwitchNetworkWagmi({ chainId: EVM_CHAINID });
-  useEffect(() => {
+  const { switchNetworkAsync: switchNetworkAsyncWagmi } = useSwitchNetworkWagmi({ chainId: EVM_CHAINID });
+  const switchEvmNetworkAsync = useCallback(() => {
     if (chainWagmi?.id !== EVM_CHAINID) {
-      switchNetworkWagmi && switchNetworkWagmi();
+      switchNetworkAsyncWagmi && switchNetworkAsyncWagmi();
     }
   }, [chainWagmi?.id]);
 
@@ -246,6 +245,8 @@ export const useWallet = () => {
     evmAddressWagmi,
     signerWagmi,
     connectorsWagmi,
+    evmChainId: chainWagmi?.id,
+    switchEvmNetworkAsync,
     // Cosmos
     mycelAddress,
     mycelAddressGraz,
