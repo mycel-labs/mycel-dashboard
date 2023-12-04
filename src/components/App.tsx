@@ -6,7 +6,7 @@ import { InjectedConnector } from "wagmi/connectors/injected";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { publicProvider } from "wagmi/providers/public";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { MYCEL_CHAIN_INFO } from "@/utils/wallets";
+import { MYCEL_CHAIN_INFO, getBitGetProvider } from "@/utils/wallets";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +28,14 @@ const wagmiConfig = createConfig({
         name: "OKXWallet",
         shimDisconnect: true,
         getProvider: () => (typeof window !== "undefined" ? window.okxwallet : undefined),
+      },
+    }),
+    new InjectedConnector({
+      chains,
+      options: {
+        name: "BitGetWallet",
+        shimDisconnect: true,
+        getProvider: () => getBitGetProvider(),
       },
     }),
     // new MetaMaskConnector({

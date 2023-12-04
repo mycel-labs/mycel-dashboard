@@ -7,7 +7,7 @@ import Button from "@/components/Button";
 import { Unplug, KeySquare, ClipboardCopy } from "lucide-react";
 import MycelCharactor from "@/assets/mycel_charactor.svg";
 import { shortAddress, WALLET_CONFIG, type WalletType } from "@/utils/wallets";
-import { copyClipboard, isPC, isMobile, cn, isOKXApp } from "@/utils/lib";
+import { copyClipboard, isPC, isMobile, cn, isOKXApp, isBitGetApp } from "@/utils/lib";
 import { MYCEL_COIN_DECIMALS, MYCEL_HUMAN_COIN_UNIT, MYCEL_BASE_COIN_UNIT, convertToDecimalString } from "@/utils/coin";
 
 export default function WalletDialog() {
@@ -21,7 +21,7 @@ export default function WalletDialog() {
       {Object.entries(WALLET_CONFIG).map(([key, val]) => (
         <Button
           key={val.id}
-          className="btn-secondary w-full h-12 rounded"
+          className={cn("btn-secondary w-full h-12 rounded", isMobile() && !val.showMobile && "hidden")}
           disabled={val?.disabled}
           onClick={async () => {
             if (val.name === "OKXWallet") {
@@ -32,8 +32,18 @@ export default function WalletDialog() {
               } else if (isPC()) {
                 window.open(`https://www.okx.com/web3`);
               }
+            } else if (val.name === "BitGetWallet") {
+              if (isBitGetApp()) {
+                connectWallet({ walletType: key as WalletType });
+              } else {
+                window.open(`https://web3.bitget.com`);
+              }
             } else {
-              if (connectorsWagmi.find((cn) => cn.name === val.name)?.ready) {
+              // TODO: refactor this
+              if (
+                (val.chainType === "evm" && connectorsWagmi.find((cn) => cn.name === val.name)?.ready) ||
+                (val.chainType === "cosmos" && window.keplr)
+              ) {
                 connectWallet({ walletType: key as WalletType });
               } else {
                 window.open(val.getUrl);
