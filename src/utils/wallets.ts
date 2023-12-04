@@ -91,7 +91,7 @@ export const WALLET_CONFIG = {
     chainType: "evm",
     icon: BitGetIcon,
     getUrl: "https://web3.bitget.com",
-    showMobile: false,
+    showMobile: true,
   },
   Keplr: {
     id: "keplr",
