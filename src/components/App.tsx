@@ -1,4 +1,4 @@
-import { GrazProvider } from "graz";
+import { GrazProvider, WalletType as WalletTypeCosmos } from "graz";
 import { RouterProvider } from "react-router-dom";
 import router from "@/router";
 import { WagmiConfig, createConfig, configureChains, mainnet } from "wagmi";
@@ -56,11 +56,21 @@ const wagmiConfig = createConfig({
   webSocketPublicClient,
 });
 
+const grazOptions = {
+  chains: [MYCEL_CHAIN_INFO],
+  defaultWallet: WalletTypeCosmos.KEPLR,
+  walletConnect: {
+    options: {
+      projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID,
+    },
+  },
+};
+
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <WagmiConfig config={wagmiConfig}>
-        <GrazProvider grazOptions={{ chains: [MYCEL_CHAIN_INFO] }}>
+        <GrazProvider grazOptions={grazOptions}>
           <RouterProvider router={router} />
         </GrazProvider>
       </WagmiConfig>

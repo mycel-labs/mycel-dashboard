@@ -1,5 +1,6 @@
 import { onboarding } from "@dydxprotocol/v4-client-js";
 import { ChainInfo } from "@keplr-wallet/types";
+import { WalletType as CosmosWalletType } from "graz";
 import { MYCEL_BASE_COIN_UNIT, MYCEL_HUMAN_COIN_UNIT, MYCEL_COIN_DECIMALS } from "@/utils/coin";
 import MetamaskIcon from "@/assets/icons/wallets/metamask.svg";
 import CoinbaseWalltIcon from "@/assets/icons/wallets/coinbase-wallet.svg";
@@ -94,9 +95,18 @@ export const WALLET_CONFIG = {
     showMobile: true,
   },
   Keplr: {
-    id: "keplr",
-    name: "KEPLR",
-    display: "KEPLR",
+    id: CosmosWalletType.KEPLR,
+    name: "Keplr",
+    display: "Keplr",
+    chainType: "cosmos",
+    icon: KeplrIcon,
+    getUrl: "https://www.keplr.app/download",
+    showMobile: false,
+  },
+  KeplrMobile: {
+    id: CosmosWalletType.WC_KEPLR_MOBILE,
+    name: "KeplrMobile",
+    display: "Keplr Mobile",
     chainType: "cosmos",
     icon: KeplrIcon,
     getUrl: "https://www.keplr.app/download",

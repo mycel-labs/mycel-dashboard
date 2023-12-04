@@ -68,7 +68,7 @@ export const useWallet = () => {
           if (!isConnectedGraz) {
             connectGraz({
               chainInfo: MYCEL_CHAIN_INFO,
-              walletType: CosmosWalletType.KEPLR,
+              walletType: WALLET_CONFIG[walletType].id,
             });
           }
         } else if (WALLET_CONFIG[walletType].chainType === "evm") {
