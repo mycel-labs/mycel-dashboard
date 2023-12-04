@@ -111,6 +111,7 @@ export const WALLET_CONFIG = {
     icon: KeplrIcon,
     getUrl: "https://www.keplr.app/download",
     showMobile: true,
+    hidePC: true,
   },
 };
 

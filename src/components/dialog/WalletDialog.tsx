@@ -21,7 +21,10 @@ export default function WalletDialog() {
       {Object.entries(WALLET_CONFIG).map(([key, val]) => (
         <Button
           key={val.id}
-          className={cn("btn-secondary w-full h-12 rounded", isMobile() && !val.showMobile && "hidden")}
+          className={cn(
+            "btn-secondary w-full h-12 rounded",
+            ((isMobile() && !val.showMobile) || (isPC() && val.hidePC)) && "hidden",
+          )}
           disabled={val?.disabled}
           onClick={async () => {
             if (val.name === "OKXWallet") {
