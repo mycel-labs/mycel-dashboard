@@ -103,16 +103,16 @@ export const WALLET_CONFIG = {
     getUrl: "https://www.keplr.app/download",
     showMobile: false,
   },
-  KeplrMobile: {
-    id: CosmosWalletType.WC_KEPLR_MOBILE,
-    name: "KeplrMobile",
-    display: "Keplr Mobile",
-    chainType: "cosmos",
-    icon: KeplrIcon,
-    getUrl: "https://www.keplr.app/download",
-    showMobile: true,
-    hidePC: true,
-  },
+  // KeplrMobile: {
+  //   id: CosmosWalletType.WC_KEPLR_MOBILE,
+  //   name: "KeplrMobile",
+  //   display: "Keplr Mobile",
+  //   chainType: "cosmos",
+  //   icon: KeplrIcon,
+  //   getUrl: "https://www.keplr.app/download",
+  //   showMobile: true,
+  //   hidePC: true,
+  // },
 };
 
 export type WalletType = keyof typeof WALLET_CONFIG;
@@ -134,12 +134,4 @@ export const getSignTypedData = () =>
 export const shortAddress = (address: string | undefined, prefix = 8, suffix = 4) => {
   if (!address) return "";
   return `${address.slice(0, prefix)}...${address.slice(-suffix)}`;
-};
-
-export const getBitGetProvider = () => {
-  const provider = window.bitkeep && window.bitkeep.ethereum;
-  if (!provider) {
-    return window.open("https://web3.bitget.com/en/wallet-download?type=2");
-  }
-  return provider;
 };
