@@ -35,7 +35,7 @@ const wagmiConfig = createConfig({
       options: {
         name: "BitGetWallet",
         shimDisconnect: true,
-        getProvider: () => (typeof window !== "undefined" ? window.bitkeep : undefined),
+        getProvider: () => (typeof window !== "undefined" ? window?.bitkeep?.ethereum : undefined),
       },
     }),
     // new MetaMaskConnector({
