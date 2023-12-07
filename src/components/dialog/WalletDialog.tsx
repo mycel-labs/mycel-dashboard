@@ -38,6 +38,8 @@ export default function WalletDialog() {
             } else if (val.name === "BitGetWallet") {
               if (isBitGetApp()) {
                 connectWallet({ walletType: key as WalletType });
+              } else if (isMobile()) {
+                window.open(`https://bkcode.vip/?action=dapp&url=${encodeURIComponent(window.location.href)}`);
               } else {
                 window.open(`https://web3.bitget.com`);
               }
