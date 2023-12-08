@@ -9,6 +9,7 @@ import MycelCharactor from "@/assets/mycel_charactor.svg";
 import { shortAddress, WALLET_CONFIG, type WalletType } from "@/utils/wallets";
 import { copyClipboard, isPC, isMobile, cn, isOKXApp, isBitGetApp } from "@/utils/lib";
 import { MYCEL_COIN_DECIMALS, MYCEL_HUMAN_COIN_UNIT, MYCEL_BASE_COIN_UNIT, convertToDecimalString } from "@/utils/coin";
+import { toast } from "@/components/Toaster";
 
 export default function WalletDialog() {
   const dialog = useStore((state) => state.dialog);
@@ -87,7 +88,13 @@ export default function WalletDialog() {
             EVM Address
             <input type="text" readOnly value={shortAddress(evmAddress)} className="w-full" />
             <div className="absolute right-0 bottom-0 h-12 w-12  flex items-center justify-center">
-              <button className="text-chocolat" onClick={() => copyClipboard(evmAddress)}>
+              <button
+                className="text-chocolat"
+                onClick={() => {
+                  copyClipboard(evmAddress);
+                  toast.success("Address copied to clipboard");
+                }}
+              >
                 <ClipboardCopy size={20} />
               </button>
             </div>
@@ -97,7 +104,13 @@ export default function WalletDialog() {
           Mycel Address
           <input type="text" readOnly value={shortAddress(mycelAccount?.address)} className="w-full" />
           <div className="absolute right-0 bottom-0 h-12 w-12 flex items-center justify-center">
-            <button className="text-chocolat" onClick={() => copyClipboard(mycelAccount?.address ?? "")}>
+            <button
+              className="text-chocolat"
+              onClick={() => {
+                copyClipboard(mycelAccount?.address ?? "");
+                toast.success("Address copied to clipboard");
+              }}
+            >
               <ClipboardCopy size={20} />
             </button>
           </div>
@@ -135,7 +148,13 @@ export default function WalletDialog() {
           EVM Address
           <input type="text" readOnly value={shortAddress(evmAddress)} className="w-full" />
           <div className="absolute right-0 bottom-0 h-12 w-12 flex items-center justify-center">
-            <button className="text-chocolat" onClick={() => copyClipboard(evmAddress)}>
+            <button
+              className="text-chocolat"
+              onClick={() => {
+                copyClipboard(evmAddress);
+                toast.success("Address copied to clipboard");
+              }}
+            >
               <ClipboardCopy size={20} />
             </button>
           </div>
