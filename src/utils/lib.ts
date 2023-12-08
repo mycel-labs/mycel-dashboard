@@ -22,3 +22,8 @@ export const isOKXApp = (): boolean => {
   if (!window) return false;
   return typeof window?.okxwallet !== "undefined";
 };
+
+export const isBitGetApp = (): boolean => {
+  if (!window) return false;
+  return typeof window?.bitkeep !== "undefined";
+};

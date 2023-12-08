@@ -1,4 +1,4 @@
-import { GrazProvider } from "graz";
+import { GrazProvider, WalletType as WalletTypeCosmos } from "graz";
 import { RouterProvider } from "react-router-dom";
 import router from "@/router";
 import { WagmiConfig, createConfig, configureChains, mainnet } from "wagmi";
@@ -6,7 +6,7 @@ import { InjectedConnector } from "wagmi/connectors/injected";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { publicProvider } from "wagmi/providers/public";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { MYCEL_CHAIN_INFO } from "@/utils/wallets";
+import { MYCEL_CHAIN_INFO, getBitGetProvider } from "@/utils/wallets";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +30,14 @@ const wagmiConfig = createConfig({
         getProvider: () => (typeof window !== "undefined" ? window.okxwallet : undefined),
       },
     }),
+    new InjectedConnector({
+      chains,
+      options: {
+        name: "BitGetWallet",
+        shimDisconnect: true,
+        getProvider: () => (typeof window !== "undefined" ? window?.bitkeep?.ethereum : undefined),
+      },
+    }),
     // new MetaMaskConnector({
     //   chains,
     //   options: {
@@ -48,11 +56,21 @@ const wagmiConfig = createConfig({
   webSocketPublicClient,
 });
 
+const grazOptions = {
+  chains: [MYCEL_CHAIN_INFO],
+  defaultWallet: WalletTypeCosmos.KEPLR,
+  walletConnect: {
+    options: {
+      projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID,
+    },
+  },
+};
+
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <WagmiConfig config={wagmiConfig}>
-        <GrazProvider grazOptions={{ chains: [MYCEL_CHAIN_INFO] }}>
+        <GrazProvider grazOptions={grazOptions}>
           <RouterProvider router={router} />
         </GrazProvider>
       </WagmiConfig>

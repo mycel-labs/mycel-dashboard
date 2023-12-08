@@ -1,28 +1,24 @@
 import { useSignTypedData } from "wagmi";
 import useWallet from "@/hooks/useWallet";
-import { getSignTypedData } from "@/utils/wallets";
+import { getSignTypedData, EVM_CHAINID } from "@/utils/wallets";
 import { AES } from "crypto-js";
 
 const staticEncryptionKey = import.meta.env.VITE_PK_ENCRYPTION_KEY;
 
 export default async function GenerateKeys() {
-  const { setWalletFromEvmSignature, saveEvmSignature } = useWallet();
-  console.log("1");
+  const { setWalletFromEvmSignature, saveEvmSignature, switchEvmNetworkAsync } = useWallet();
   const signTypedData = getSignTypedData();
-  console.log("2", signTypedData);
+  // Check evm chainId & switch if needed
+  await switchEvmNetworkAsync();
   const { signTypedDataAsync } = useSignTypedData({
     ...signTypedData,
     domain: {
       ...signTypedData.domain,
-      chainId: 1,
+      chainId: EVM_CHAINID,
     },
   });
-  console.log("3");
   const signature = await signTypedDataAsync();
-  console.log("4");
   await setWalletFromEvmSignature(signature);
-  console.log("5");
   const encryptedSignature = AES.encrypt(signature, staticEncryptionKey).toString();
-  console.log("6");
   saveEvmSignature(encryptedSignature);
 }
