@@ -1,6 +1,6 @@
 import { Dialog } from "@headlessui/react";
 import BaseDialog from "@/components/dialog/BaseDialog";
-import useBalance from "@/hooks/useBalance";
+import useBalances from "@/hooks/useBalances";
 import useWallet from "@/hooks/useWallet";
 import { useStore } from "@/store/index";
 import Button from "@/components/Button";
@@ -175,7 +175,7 @@ export default function WalletDialog() {
     </>
   );
 
-  const { balances } = useBalance();
+  const { balances } = useBalances();
 
   return (
     <BaseDialog open={dialog === "wallet" || dialog === "wallet2"}>
