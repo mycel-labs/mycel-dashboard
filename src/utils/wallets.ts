@@ -1,13 +1,14 @@
 import { onboarding } from "@dydxprotocol/v4-client-js";
 import { ChainInfo } from "@keplr-wallet/types";
+import { WalletType as CosmosWalletType } from "graz";
 import { MYCEL_BASE_COIN_UNIT, MYCEL_HUMAN_COIN_UNIT, MYCEL_COIN_DECIMALS } from "@/utils/coin";
-import { isMobile } from "@/utils/lib";
 import MetamaskIcon from "@/assets/icons/wallets/metamask.svg";
 import CoinbaseWalltIcon from "@/assets/icons/wallets/coinbase-wallet.svg";
 import GenericWalletWalltIcon from "@/assets/icons/wallets/generic-wallet.svg";
 import KeplrIcon from "@/assets/icons/wallets/keplr.svg";
 import WalletConnectIcon from "@/assets/icons/wallets/walletconnect.svg";
 import OKXIcon from "@/assets/icons/wallets/okx.svg";
+import BitGetIcon from "@/assets/icons/wallets/bitget.png";
 
 export type EvmAddress = `0x${string}`;
 export type MycelAddress = `mycel${string}`;
@@ -64,6 +65,7 @@ export const WALLET_CONFIG = {
     chainType: "evm",
     icon: [MetamaskIcon, CoinbaseWalltIcon, GenericWalletWalltIcon],
     getUrl: "https://metamask.io/download.html",
+    showMobile: true,
   },
   WalletConnect: {
     id: "walletConnect",
@@ -71,23 +73,46 @@ export const WALLET_CONFIG = {
     display: "Wallet Connect",
     chainType: "evm",
     icon: WalletConnectIcon,
+    getUrl: "",
+    showMobile: true,
   },
   OKXWallet: {
-    id: "injected",
+    id: "okx",
     name: "OKXWallet",
     display: "OKX Wallet",
     chainType: "evm",
     icon: OKXIcon,
     getUrl: "https://www.okx.com/web3",
+    showMobile: true,
+  },
+  BitGetWallet: {
+    id: "bitget",
+    name: "BitGetWallet",
+    display: "BitGet Wallet",
+    chainType: "evm",
+    icon: BitGetIcon,
+    getUrl: "https://web3.bitget.com",
+    showMobile: true,
   },
   Keplr: {
-    id: "keplr",
-    name: "KEPLR",
-    display: "KEPLR",
+    id: CosmosWalletType.KEPLR,
+    name: "Keplr",
+    display: "Keplr",
     chainType: "cosmos",
     icon: KeplrIcon,
     getUrl: "https://www.keplr.app/download",
+    showMobile: false,
   },
+  // KeplrMobile: {
+  //   id: CosmosWalletType.WC_KEPLR_MOBILE,
+  //   name: "KeplrMobile",
+  //   display: "Keplr Mobile",
+  //   chainType: "cosmos",
+  //   icon: KeplrIcon,
+  //   getUrl: "https://www.keplr.app/download",
+  //   showMobile: true,
+  //   hidePC: true,
+  // },
 };
 
 export type WalletType = keyof typeof WALLET_CONFIG;
@@ -106,7 +131,7 @@ export const getSignTypedData = () =>
     },
   }) as const;
 
-export const shortAddress = (address: string | undefined) => {
+export const shortAddress = (address: string | undefined, prefix = 8, suffix = 4) => {
   if (!address) return "";
-  return `${address.slice(0, 8)}...${address.slice(-4)}`;
+  return `${address.slice(0, prefix)}...${address.slice(-suffix)}`;
 };

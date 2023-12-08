@@ -10,15 +10,23 @@ const config = {
       "SOLANA_MAINNET_MAINNET",
       "SOLANA_TESTNET_TESTNET",
       "ARBITRUM_MAINNET_MAINNET",
+      "ARBITRUM_TESTNET_GOERLI",
       "BNB_MAINNET_MAINNET",
+      "BNB_TESTNET_TESTNET",
       "POLYGON_MAINNET_MAINNET",
+      "POLYGON_TESTNET_MUMBAI",
       "OPTIMISM_MAINNET_MAINNET",
+      "OPTIMISM_TESTNET_GOERLI",
       "AVALANCHE_MAINNET_CCHAIN",
+      "AVALANCHE_TESTNET_FUJI",
       "GNOSIS_MAINNET_MAINNET",
+      "GNOSIS_TESTNET_CHIADO",
       "APTOS_MAINNET_MAINNET",
       "APTOS_TESTNET_TESTNET",
       "SUI_MAINNET_MAINNET",
       "SUI_TESTNET_TESTNET",
+      "SHARDEUM_BETANET_SPHINX",
+      "ZETA_TESTNET_ATHENS",
     ],
     tokens: [
       {
@@ -37,12 +45,27 @@ const config = {
         symbol: "BNB",
       },
       {
+        blockchain: "BNB_TESTNET_TESTNET",
+        address: null,
+        symbol: "BNB",
+      },
+      {
         blockchain: "ARBITRUM_MAINNET_MAINNET",
         address: "0x912ce59144191c1204e64559fe8253a0e49e6548",
         symbol: "ARB",
       },
       {
+        blockchain: "ARBITRUM_TESTNET_GOERLI",
+        address: null,
+        symbol: "ARB",
+      },
+      {
         blockchain: "POLYGON_MAINNET_MAINNET",
+        address: null,
+        symbol: "MATIC",
+      },
+      {
+        blockchain: "POLYGON_TESTNET_MUMBAI",
         address: null,
         symbol: "MATIC",
       },
@@ -52,7 +75,17 @@ const config = {
         symbol: "OP",
       },
       {
+        blockchain: "OPTIMISM_TESTNET_GOERLI",
+        address: null,
+        symbol: "OP",
+      },
+      {
         blockchain: "AVALANCHE_MAINNET_CCHAIN",
+        address: null,
+        symbol: "AVAX",
+      },
+      {
+        blockchain: "AVALANCHE_TESTNET_FUJI",
         address: null,
         symbol: "AVAX",
       },
@@ -68,8 +101,13 @@ const config = {
       },
       {
         blockchain: "GNOSIS_MAINNET_MAINNET",
-        address: "0x9c58bacc331c9aa871afd802db6379a98e80cedb",
+        address: null,
         symbol: "GNO",
+      },
+      {
+        blockchain: "GNOSIS_TESTNET_CHIADO",
+        address: null,
+        symbol: "XDAI",
       },
       {
         blockchain: "APTOS_MAINNET_MAINNET",
@@ -90,6 +128,16 @@ const config = {
         blockchain: "SUI_TESTNET_TESTNET",
         address: null,
         symbol: "SUI",
+      },
+      {
+        blockchain: "SHARDEUM_BETANET_SPHINX",
+        address: null,
+        symbol: "SHM",
+      },
+      {
+        blockchain: "ZETA_TESTNET_ATHENS",
+        address: null,
+        symbol: "aZETA",
       },
     ],
   },
