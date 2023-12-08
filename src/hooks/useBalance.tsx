@@ -11,7 +11,7 @@ export default function useBalance(denom = "umycel") {
     const fetchBalance = async (address: string) => {
       if (!address) return;
       const res = await client.CosmosBankV1Beta1.query.queryBalance(address, { denom });
-      if (res.status === 200 && res.data.balance) setBalance(res.data.balance);
+      if (res.status === 200 && res.data.balance) setBalance(res.data.balance?.amount ?? 0);
     };
 
     if (mycelAccount?.address) {

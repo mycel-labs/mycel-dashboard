@@ -3,6 +3,7 @@ import useWallet from "@/hooks/useWallet";
 import useBalance from "@/hooks/useBalance";
 import { useStore } from "@/store/index";
 import { useMycelRegistry } from "@/hooks/useMycelRegistry";
+import { useMycelResolver } from "@/hooks/useMycelResolver";
 
 export const useOnboarding = () => {
   const { isConnected, evmAddress, mycelAccount } = useWallet();
@@ -11,6 +12,7 @@ export const useOnboarding = () => {
   const updateDialog = useStore((state) => state.updateDialog);
   const { balance } = useBalance();
   const { isLoading: isLoadingOwnDomain, ownedDomains } = useMycelRegistry();
+  const { isLoading: isLoadingMycelRecords, mycelRecordsLength } = useMycelResolver();
 
   const ONBOARDING_CONFIG = {
     "no-connection": {
@@ -26,7 +28,7 @@ export const useOnboarding = () => {
       message: "Faucet MYCEL token next",
       link: "/",
     },
-    "registor-domain": {
+    "register-domain": {
       index: 3,
       message: "Get your.cel name!",
       link: "/register",
@@ -46,19 +48,23 @@ export const useOnboarding = () => {
       updateOnboardingStatus("no-connection");
     } else if (evmAddress && !mycelAccount) {
       updateOnboardingStatus("no-mycel-address");
-    } else if (mycelAccount && BigInt(balance) <= 0) {
+    } else if (mycelAccount && BigInt(balance ?? 0) <= 0) {
       updateOnboardingStatus("faucet");
-    } else if (!isLoadingOwnDomain && ownedDomains.length === 0) {
-      updateOnboardingStatus("registor-domain");
-    } else if (false) {
+    } else if (!isLoadingOwnDomain && ownedDomains.length <= 0) {
+      updateOnboardingStatus("register-domain");
+    } else if (!isLoadingMycelRecords && mycelRecordsLength <= 0) {
       updateOnboardingStatus("add-record");
     } else {
       updateOnboardingStatus("finish");
     }
-  }, [onboardingStatus, isConnected, evmAddress, mycelAccount, balance]);
+  }, [onboardingStatus, isConnected, evmAddress, mycelAccount, balance, mycelRecordsLength, ownedDomains]);
 
   const onboardingStatusList = typeof ONBOARDING_CONFIG;
-  return { onboardingStatusList }
+
+  return {
+    ONBOARDING_CONFIG,
+    onboardingStatusList
+  }
 };
 
 

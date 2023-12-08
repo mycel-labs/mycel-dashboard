@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useClient } from "@/hooks/useClient";
 import { RegistryRecord, RegistryNetworkName } from "mycel-client-ts/mycel.resolver/rest";
 import { Domain } from "@/types/domain";
@@ -7,6 +7,7 @@ export const useMycelResolver = () => {
   const client = useClient();
   const [isLoading, setIsLoading] = useState(false);
   const [mycelRecords, setMycelRecord] = useState<Record<string, RegistryRecord> | undefined>(undefined);
+  const [mycelRecordsLength, setMycelRecordLength] = useState<number>(0);
 
   const updateMycelRecords = async (domain: Domain) => {
     setIsLoading(true);
@@ -28,5 +29,18 @@ export const useMycelResolver = () => {
       return mycelRecords[recordType].walletRecord?.value;
     }
   };
-  return { mycelRecords, isLoading, updateMycelRecords, getWalletAddr };
+
+  useEffect(() => {
+    if (!!mycelRecords) {
+      setMycelRecordLength(Object.keys(mycelRecords).length);
+    }
+  }, [mycelRecords]);
+
+  return {
+    isLoading,
+    mycelRecords,
+    mycelRecordsLength,
+    updateMycelRecords,
+    getWalletAddr,
+  };
 };
