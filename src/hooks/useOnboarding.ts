@@ -11,7 +11,7 @@ export const useOnboarding = () => {
   const updateDialog = useStore((state) => state.updateDialog);
   const { balance } = useBalance();
   const { isLoading: isLoadingOwnDomain, data: dataOwnDomain } = useQueryDomainOwnership(mycelAccount?.address);
-  const { isLoading: isLoadingRecords, data: dataRecords } = useQueryAllRecords({parent: "cel", name: "mytestcel"});
+  const { isLoading: isLoadingRecords, data: dataRecords } = useQueryAllRecords(dataOwnDomain?.domainOwnership?.domains?.[0]);
 
   const ONBOARDING_CONFIG = {
     "no-connection": {
