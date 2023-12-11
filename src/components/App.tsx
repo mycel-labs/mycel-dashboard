@@ -5,11 +5,8 @@ import { WagmiConfig, createConfig, configureChains, mainnet } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { publicProvider } from "wagmi/providers/public";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Toaster from "@/components/Toaster";
 import { MYCEL_CHAIN_INFO } from "@/utils/wallets";
-
-const queryClient = new QueryClient();
 
 const { chains, publicClient, webSocketPublicClient } = configureChains([mainnet], [publicProvider()]);
 
@@ -69,13 +66,11 @@ const grazOptions = {
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <WagmiConfig config={wagmiConfig}>
-        <GrazProvider grazOptions={grazOptions}>
-          <RouterProvider router={router} />
-        </GrazProvider>
-      </WagmiConfig>
-      <Toaster />
-    </QueryClientProvider>
+    <WagmiConfig config={wagmiConfig}>
+      <GrazProvider grazOptions={grazOptions}>
+        <RouterProvider router={router} />
+        <Toaster />
+      </GrazProvider>
+    </WagmiConfig>
   );
 }

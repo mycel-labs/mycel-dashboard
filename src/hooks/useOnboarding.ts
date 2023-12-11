@@ -2,8 +2,7 @@ import { useEffect } from "react";
 import useWallet from "@/hooks/useWallet";
 import useBalance from "@/hooks/useBalance";
 import { useStore } from "@/store/index";
-import { useMycelRegistry } from "@/hooks/useMycelRegistry";
-import { useMycelResolver } from "@/hooks/useMycelResolver";
+import { useQueryAllRecords, useQueryDomainOwnership } from "@/hooks/useMycel";
 
 export const useOnboarding = () => {
   const { isConnected, evmAddress, mycelAccount } = useWallet();
@@ -11,8 +10,8 @@ export const useOnboarding = () => {
   const updateOnboardingStatus = useStore((state) => state.updateOnboardingStatus);
   const updateDialog = useStore((state) => state.updateDialog);
   const { balance } = useBalance();
-  const { isLoading: isLoadingOwnDomain, ownedDomains } = useMycelRegistry();
-  const { isLoading: isLoadingMycelRecords, mycelRecordsLength } = useMycelResolver();
+  const { isLoading: isLoadingOwnDomain, data: dataOwnDomain } = useQueryDomainOwnership(mycelAccount?.address);
+  const { isLoading: isLoadingRecords, data: dataRecords } = useQueryAllRecords({parent: "cel", name: "mytestcel"});
 
   const ONBOARDING_CONFIG = {
     "no-connection": {
@@ -42,22 +41,23 @@ export const useOnboarding = () => {
     hide: {},
   };
 
+
   useEffect(() => {
-    if (onboardingStatus === "hide") return;
+    if (onboardingStatus === "hide" || onboardingStatus === "finish") return;
     if (!isConnected) {
       updateOnboardingStatus("no-connection");
     } else if (evmAddress && !mycelAccount) {
       updateOnboardingStatus("no-mycel-address");
     } else if (mycelAccount && BigInt(balance ?? 0) <= 0) {
       updateOnboardingStatus("faucet");
-    } else if (!isLoadingOwnDomain && ownedDomains.length <= 0) {
+    } else if (onboardingStatus === "fancet" && !isLoadingOwnDomain && (dataOwnDomain?.domainOwnership?.domains?.length ?? 0) <= 0) {
       updateOnboardingStatus("register-domain");
-    } else if (!isLoadingMycelRecords && mycelRecordsLength <= 0) {
+    } else if (onboardingStatus === "register-domain" &&!isLoadingRecords && (Object.keys(dataRecords?.values).length ?? 0) <= 0) {
       updateOnboardingStatus("add-record");
     } else {
       updateOnboardingStatus("finish");
     }
-  }, [onboardingStatus, isConnected, evmAddress, mycelAccount, balance, mycelRecordsLength, ownedDomains]);
+  }, [onboardingStatus, isConnected, evmAddress, mycelAccount, balance, dataOwnDomain, dataRecords]);
 
   const onboardingStatusList = typeof ONBOARDING_CONFIG;
 
@@ -66,6 +66,5 @@ export const useOnboarding = () => {
     onboardingStatusList
   }
 };
-
 
 export default useOnboarding;
