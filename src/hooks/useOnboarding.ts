@@ -50,11 +50,11 @@ export const useOnboarding = () => {
       updateOnboardingStatus("no-mycel-address");
     } else if (mycelAccount && BigInt(balance ?? 0) <= 0) {
       updateOnboardingStatus("faucet");
-    } else if (onboardingStatus === "fancet" && !isLoadingOwnDomain && (dataOwnDomain?.domainOwnership?.domains?.length ?? 0) <= 0) {
+    } else if (!isLoadingOwnDomain && (dataOwnDomain?.domainOwnership?.domains?.length ?? 0) <= 0) {
       updateOnboardingStatus("register-domain");
-    } else if (onboardingStatus === "register-domain" &&!isLoadingRecords && (Object.keys(dataRecords?.values).length ?? 0) <= 0) {
+    } else if (!isLoadingRecords && (Object.keys(dataRecords?.values).length ?? 0) <= 0) {
       updateOnboardingStatus("add-record");
-    } else {
+    } else if (dataRecords?.values?.length > 0) {
       updateOnboardingStatus("finish");
     }
   }, [onboardingStatus, isConnected, evmAddress, mycelAccount, balance, dataOwnDomain, dataRecords]);
