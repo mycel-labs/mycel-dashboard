@@ -18,7 +18,8 @@ export default function MessageBar() {
           <Lightbulb className="mr-2 text-chocolat" size={16} />
           {ONBOARDING_CONFIG[onboardingStatus]?.link ? (
             <Link className="hover:underline" to={ONBOARDING_CONFIG[onboardingStatus]?.link}>
-              {`${ONBOARDING_CONFIG[onboardingStatus]?.index}. ${ONBOARDING_CONFIG[onboardingStatus]?.message}` ?? ""}
+              {`${ONBOARDING_CONFIG[onboardingStatus]?.index ?? ""}. ${ONBOARDING_CONFIG[onboardingStatus]?.message}` ??
+                ""}
             </Link>
           ) : ONBOARDING_CONFIG[onboardingStatus]?.action ? (
             <button className="hover:underline" onClick={ONBOARDING_CONFIG[onboardingStatus]?.action}>

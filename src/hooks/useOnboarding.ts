@@ -1,22 +1,19 @@
 import { useEffect } from "react";
 import useWallet from "@/hooks/useWallet";
-import useBalance from "@/hooks/useBalance";
 import { useStore } from "@/store/index";
-import { useQueryAllRecords, useQueryDomainOwnership } from "@/hooks/useMycel";
+import { useAllRecords, useDomainOwnership, useBalance, useAllBalances } from "@/hooks/useMycel";
 
 export const useOnboarding = () => {
   const { isConnected, evmAddress, mycelAccount } = useWallet();
   const onboardingStatus = useStore((state) => state.onboardingStatus);
   const updateOnboardingStatus = useStore((state) => state.updateOnboardingStatus);
   const updateDialog = useStore((state) => state.updateDialog);
-  const { balance } = useBalance();
-  const { isLoading: isLoadingOwnDomain, data: dataOwnDomain } = useQueryDomainOwnership(mycelAccount?.address);
-  const { isLoading: isLoadingRecords, data: dataRecords } = useQueryAllRecords(dataOwnDomain?.domainOwnership?.domains?.[0]);
+  const { isLoading: isLoadingOwnDomain, data: dataOwnDomain } = useDomainOwnership(mycelAccount?.address);
+  const { isLoading: isLoadingRecords, data: dataRecords } = useAllRecords(dataOwnDomain?.domainOwnership?.domains?.[0]);
+  const { isLoading: isLoadingBalance, data: dataBalance } = useBalance(mycelAccount?.address);
 
   const ONBOARDING_CONFIG = {
-    "no-connection": {
-      message: undefined,
-    },
+    "no-connection": {},
     "no-mycel-address": {
       index: 1,
       message: "You've connected, create mycel address.",
@@ -44,20 +41,40 @@ export const useOnboarding = () => {
 
   useEffect(() => {
     if (onboardingStatus === "hide" || onboardingStatus === "finish") return;
+
+    const hasDomain = () => !isLoadingOwnDomain ? (dataOwnDomain?.domainOwnership?.domains?.length ?? 0) > 0 : false;
+    const hasRecords = () => !isLoadingRecords && dataRecords?.values ? Object.keys(dataRecords?.values).length > 0 : false;
+
+    if (isConnected) {
+      if (!hasDomain()) {
+        console.log('4');
+        updateOnboardingStatus("register-domain");
+      }
+      if (hasDomain() && !hasRecords()) {
+        console.log('5');
+        updateOnboardingStatus("add-record");
+      }
+      if (hasDomain() && hasRecords()) {
+        console.log('6');
+        updateOnboardingStatus("finish");
+      }
+    }
+  }, [isConnected, isLoadingOwnDomain, dataOwnDomain, isLoadingRecords, dataRecords]);
+
+
+  useEffect(() => {
+    if (onboardingStatus === "hide" || onboardingStatus === "finish") return;
+    const hasMycelAddress = () => !!mycelAccount?.address;
+    const hasNoMycelBalance = () => !isLoadingBalance ? BigInt(dataBalance?.balance?.amount ?? 0) <= 0 : false;
+
     if (!isConnected) {
       updateOnboardingStatus("no-connection");
-    } else if (evmAddress && !mycelAccount) {
+    } else if (evmAddress && !hasMycelAddress()) {
       updateOnboardingStatus("no-mycel-address");
-    } else if (mycelAccount && BigInt(balance ?? 0) <= 0) {
+    } else if (hasMycelAddress() && hasNoMycelBalance()) {
       updateOnboardingStatus("faucet");
-    } else if (!isLoadingOwnDomain && (dataOwnDomain?.domainOwnership?.domains?.length ?? 0) <= 0) {
-      updateOnboardingStatus("register-domain");
-    } else if (!isLoadingRecords && (Object.keys(dataRecords?.values).length ?? 0) <= 0) {
-      updateOnboardingStatus("add-record");
-    } else if (dataRecords?.values?.length > 0) {
-      updateOnboardingStatus("finish");
     }
-  }, [onboardingStatus, isConnected, evmAddress, mycelAccount, balance, dataOwnDomain, dataRecords]);
+  }, [isConnected, evmAddress, mycelAccount, isLoadingBalance, dataBalance]);
 
   const onboardingStatusList = typeof ONBOARDING_CONFIG;
 
