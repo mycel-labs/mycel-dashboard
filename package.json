@@ -26,7 +26,7 @@
     "lucide-react": "^0.291.0",
     "mobile-detect": "^1.4.5",
     "mycel-client-ts": "0.1.1",
-    "mycel-widget": "0.1.2",
+    "mycel-widget": "0.1.3",
     "qrcode": "^1.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
