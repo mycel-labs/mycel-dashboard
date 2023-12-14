@@ -3,7 +3,7 @@
 
 const pxToRem = (dest) => 1 / (16 / dest);
 
-module.exports = {
+export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     boxShadow: {
@@ -110,5 +110,5 @@ module.exports = {
       xl: `${pxToRem(1380)}rem`,
     },
   },
-  plugins: [require("@headlessui/tailwindcss"), require("@tailwindcss/forms")],
+  plugins: ["@headlessui/tailwindcss", "@tailwindcss/forms"],
 };

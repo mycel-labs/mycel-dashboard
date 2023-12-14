@@ -164,7 +164,7 @@ export default function SendView() {
   return (
     <div>
       <div className="container my-12 widget">
-        <h2 className="font-cursive text-3xl text-black font-semibold mb-6 flex items-center">
+        <h2 className="font-cursive text-3xl text-black font-semibold mb-6 flex items-center justify-center">
           <Send className="opacity-70 mr-2" size={28} />
           Send Token
         </h2>
