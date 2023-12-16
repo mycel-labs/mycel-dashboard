@@ -1,14 +1,14 @@
 import { Dialog } from "@headlessui/react";
 import BaseDialog from "@/components/dialog/BaseDialog";
-import useBalances from "@/hooks/useBalances";
 import useWallet from "@/hooks/useWallet";
 import { useStore } from "@/store/index";
+import { useBalance } from "@/hooks/useMycel";
 import Button from "@/components/Button";
 import { Unplug, KeySquare, ClipboardCopy } from "lucide-react";
 import MycelCharactor from "@/assets/mycel_charactor.svg";
 import { shortAddress, WALLET_CONFIG, type WalletType } from "@/utils/wallets";
 import { copyClipboard, isPC, isMobile, cn, isOKXApp, isBitGetApp } from "@/utils/lib";
-import { MYCEL_COIN_DECIMALS, MYCEL_HUMAN_COIN_UNIT, MYCEL_BASE_COIN_UNIT, convertToDecimalString } from "@/utils/coin";
+import { MYCEL_COIN_DECIMALS, MYCEL_HUMAN_COIN_UNIT, convertToDecimalString } from "@/utils/coin";
 import { toast } from "@/components/Toaster";
 
 export default function WalletDialog() {
@@ -115,16 +115,15 @@ export default function WalletDialog() {
             </button>
           </div>
         </label>
-        <label htmlFor="balances">My Balance</label>
-        {!balances && <div className="text-gray-500">---</div>}
-        <ul>
-          {balances?.map((coin) => (
-            <li key={coin.denom} className="font-mono text-xl px-0.5">
-              {convertToDecimalString(coin.amount, MYCEL_COIN_DECIMALS)}
-              <span className="text-gray-600 ml-1 text-lg uppercase">{MYCEL_HUMAN_COIN_UNIT}</span>
-            </li>
-          ))}
-        </ul>
+        <label htmlFor="balance">My Balance</label>
+        {!dataBalance?.balance?.amount ? (
+          <div className="text-gray-500">---</div>
+        ) : (
+          <p className="font-mono text-xl px-0.5">
+            {convertToDecimalString(dataBalance.balance.amount, MYCEL_COIN_DECIMALS)}
+            <span className="text-gray-600 ml-1 text-lg uppercase">{MYCEL_HUMAN_COIN_UNIT}</span>
+          </p>
+        )}
         <Button
           className="btn-secondary w-full mt-8 h-12 rounded-md"
           onClick={async () => {
@@ -175,7 +174,7 @@ export default function WalletDialog() {
     </>
   );
 
-  const { balances } = useBalances();
+  const { isLoading: isLoadingBalance, data: dataBalance } = useBalance();
 
   return (
     <BaseDialog open={dialog === "wallet" || dialog === "wallet2"}>

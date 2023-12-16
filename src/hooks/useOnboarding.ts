@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import useWallet from "@/hooks/useWallet";
 import { useStore } from "@/store/index";
-import { useAllRecords, useDomainOwnership, useBalance, useAllBalances } from "@/hooks/useMycel";
+import { useAllRecords, useDomainOwnership, useBalance } from "@/hooks/useMycel";
 
 export const useOnboarding = () => {
   const { isConnected, evmAddress, mycelAccount } = useWallet();
@@ -12,7 +12,7 @@ export const useOnboarding = () => {
   const { isLoading: isLoadingRecords, data: dataRecords } = useAllRecords(
     dataOwnDomain?.domainOwnership?.domains?.[0],
   );
-  const { isLoading: isLoadingBalance, data: dataBalance } = useBalance(mycelAccount?.address);
+  const { isLoading: isLoadingBalance, data: dataBalance } = useBalance();
 
   const ONBOARDING_CONFIG = {
     "no-connection": {},
