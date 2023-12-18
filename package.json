@@ -12,7 +12,6 @@
     "@hookform/resolvers": "^3.3.2",
     "@radix-ui/react-tooltip": "^1.0.7",
     "@vercel/node": "^3.0.9",
-    "classnames": "^2.3.2",
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.6",
     "dotenv": "^16.3.1",
@@ -41,6 +40,7 @@
     "zustand": "^4.4.7"
   },
   "devDependencies": {
+    "@evilmartians/lefthook": "^1.5.5",
     "@keplr-wallet/types": "^0.11.14",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@rushstack/eslint-patch": "^1.2.0",
@@ -65,9 +65,7 @@
     "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-react": "^7.33.2",
     "events": "^3.3.0",
-    "husky": "^8.0.3",
     "jsdom": "^20.0.2",
-    "lint-staged": "^15.0.2",
     "postcss": "^8.4.31",
     "prettier": "3.0.3",
     "tailwind-merge": "^2.0.0",
@@ -90,14 +88,10 @@
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts",
     "lint:fix": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
     "format": "prettier --write --ignore-path .gitignore './**/*.{js,jsx,ts,tsx,json}'",
-    "lint-format": "pnpm run lint:fix && yarn format",
-    "postinstall": "node postinstall.cjs",
-    "prepare": "node prepare.cjs && husky install"
+    "postinstall": "node postinstall.cjs && lefthook install",
+    "pre-commit": "pnpm lint:fix && pnpm format",
+    "prepare": "node prepare.cjs"
   },
   "type": "module",
-  "version": "0.4.3",
-  "lint-staged": {
-    "*.{js,jsx,cjs,mjs,ts,tsx,cts,mts}": "eslint --cache --fix",
-    "*.--write": "prettier --write"
-  }
+  "version": "0.4.3"
 }
