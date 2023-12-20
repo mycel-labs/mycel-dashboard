@@ -1,19 +1,19 @@
-import type { ChangeEvent } from "react";
+import type { ChangeEvent } from 'react'
 
 export interface Option {
-  value: string;
-  label: string;
+  value: string
+  label: string
 }
 
 interface RadioProps {
-  options: Option[];
-  selectedOption: string;
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  options: Option[]
+  selectedOption: string
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void
 }
 export default function Radio(props: RadioProps) {
   return (
     <div>
-      {props.options.map((option) => (
+      {props.options.map(option => (
         <label key={option.value} className="flex items-center cursor-pointer">
           <input
             type="radio"
@@ -26,5 +26,5 @@ export default function Radio(props: RadioProps) {
         </label>
       ))}
     </div>
-  );
+  )
 }

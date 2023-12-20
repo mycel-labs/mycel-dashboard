@@ -1,13 +1,7 @@
 pre-commit:
   parallel: true
   commands:
-    eslint-dashboard:
-      glob: "*.{js,jsx,cjs,mjs,ts,tsx,cts,mts}"
+    format-dashboard:
       run: |
-        pnpm -F mycel-dashboard eslint --cache --fix {staged_files}
-        git add {staged_files}
-    prettier:
-      glob: "*.--write"
-      run: |
-        pnpm prettier {staged_files} --write
+        pnpm run format
         git add {staged_files}

@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import nodePolyfills from "vite-plugin-node-stdlib-browser";
@@ -23,5 +24,9 @@ export default defineConfig({
   },
   build: {
     target: ["esnext"],
+  },
+  test: {
+    environment: "jsdom",
+    include: ["src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
   },
 });

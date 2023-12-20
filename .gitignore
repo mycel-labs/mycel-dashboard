@@ -33,3 +33,9 @@ dist-ssr
 # lefthook
 lefthook-local.yml
 /.lefthook-local/
+
+# test
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

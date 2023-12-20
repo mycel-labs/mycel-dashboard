@@ -1,14 +1,14 @@
-import { GrazProvider, WalletType as WalletTypeCosmos } from "graz";
-import { RouterProvider } from "react-router-dom";
-import router from "@/router";
-import { WagmiConfig, createConfig, configureChains, mainnet } from "wagmi";
-import { InjectedConnector } from "wagmi/connectors/injected";
-import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
-import { publicProvider } from "wagmi/providers/public";
-import Toaster from "@/components/Toaster";
-import { MYCEL_CHAIN_INFO } from "@/utils/wallets";
+import { GrazProvider, WalletType as WalletTypeCosmos } from 'graz'
+import { RouterProvider } from 'react-router-dom'
+import router from '@/router'
+import { WagmiConfig, createConfig, configureChains, mainnet } from 'wagmi'
+import { InjectedConnector } from 'wagmi/connectors/injected'
+import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
+import { publicProvider } from 'wagmi/providers/public'
+import Toaster from '@/components/Toaster'
+import { MYCEL_CHAIN_INFO } from '@/utils/wallets'
 
-const { chains, publicClient, webSocketPublicClient } = configureChains([mainnet], [publicProvider()]);
+const { chains, publicClient, webSocketPublicClient } = configureChains([mainnet], [publicProvider()])
 
 const wagmiConfig = createConfig({
   autoConnect: true,
@@ -16,24 +16,24 @@ const wagmiConfig = createConfig({
     new InjectedConnector({
       chains,
       options: {
-        name: "Injected",
+        name: 'Injected',
         shimDisconnect: true,
       },
     }),
     new InjectedConnector({
       chains,
       options: {
-        name: "OKXWallet",
+        name: 'OKXWallet',
         shimDisconnect: true,
-        getProvider: () => (typeof window !== "undefined" ? window.okxwallet : undefined),
+        getProvider: () => (typeof window !== 'undefined' ? window.okxwallet : undefined),
       },
     }),
     new InjectedConnector({
       chains,
       options: {
-        name: "BitGetWallet",
+        name: 'BitGetWallet',
         shimDisconnect: true,
-        getProvider: () => (typeof window !== "undefined" ? window?.bitkeep?.ethereum : undefined),
+        getProvider: () => (typeof window !== 'undefined' ? window?.bitkeep?.ethereum : undefined),
       },
     }),
     // new MetaMaskConnector({
@@ -52,7 +52,7 @@ const wagmiConfig = createConfig({
   ],
   publicClient,
   webSocketPublicClient,
-});
+})
 
 const grazOptions = {
   chains: [MYCEL_CHAIN_INFO],
@@ -62,7 +62,7 @@ const grazOptions = {
       projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID,
     },
   },
-};
+}
 
 export default function App() {
   return (
@@ -72,5 +72,5 @@ export default function App() {
         <Toaster />
       </GrazProvider>
     </WagmiConfig>
-  );
+  )
 }

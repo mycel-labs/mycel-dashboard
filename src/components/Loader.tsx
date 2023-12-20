@@ -1,16 +1,16 @@
-import { cn } from "@/utils/lib";
+import { cn } from '@/utils/lib'
 
 type LoaderProps = {
-  className?: string;
-  size?: number;
-};
+  className?: string
+  size?: number
+}
 
 export default function Loader({ className, size = 8 }: LoaderProps) {
   return (
     <div className="flex items-center justify-center" role="status">
       <svg
         aria-hidden="true"
-        className={cn("text-lemon animate-spin fill-orange", `w-${size} h-${size}`, className)}
+        className={cn('text-lemon animate-spin fill-orange', `w-${size} h-${size}`, className)}
         viewBox="0 0 100 100"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -26,5 +26,5 @@ export default function Loader({ className, size = 8 }: LoaderProps) {
       </svg>
       <span className="sr-only">Loading...</span>
     </div>
-  );
+  )
 }

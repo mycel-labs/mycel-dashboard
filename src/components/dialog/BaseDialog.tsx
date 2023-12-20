@@ -1,13 +1,13 @@
-import { Dialog } from "@headlessui/react";
-import { useStore } from "@/store/index";
+import { Dialog } from '@headlessui/react'
+import { useStore } from '@/store/index'
 
 type BaseDialogProps = {
-  open: boolean;
-  children: React.ReactNode;
-};
+  open: boolean
+  children: React.ReactNode
+}
 
 export default function BaseDialog({ children, open }: BaseDialogProps) {
-  const updateDialog = useStore((state) => state.updateDialog);
+  const updateDialog = useStore(state => state.updateDialog)
 
   return (
     <Dialog open={open} onClose={() => updateDialog(undefined)} className="relative z-50">
@@ -20,5 +20,5 @@ export default function BaseDialog({ children, open }: BaseDialogProps) {
         </div>
       </div>
     </Dialog>
-  );
+  )
 }
