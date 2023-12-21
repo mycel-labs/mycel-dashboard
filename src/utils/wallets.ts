@@ -9,6 +9,7 @@ import KeplrIcon from "@/assets/icons/wallets/keplr.svg";
 import WalletConnectIcon from "@/assets/icons/wallets/walletconnect.svg";
 import OKXIcon from "@/assets/icons/wallets/okx.svg";
 import BitGetIcon from "@/assets/icons/wallets/bitget.png";
+import PasskeyIcon from "@/assets/icons/wallets/passkey.svg";
 
 export type EvmAddress = `0x${string}`;
 export type MycelAddress = `mycel${string}`;
@@ -102,6 +103,15 @@ export const WALLET_CONFIG = {
     icon: KeplrIcon,
     getUrl: "https://www.keplr.app/download",
     showMobile: false,
+  },
+  Passkey: {
+    id: "passkey",
+    name: "Passkey",
+    display: "Passkey",
+    chainType: "",
+    icon: PasskeyIcon,
+    getUrl: "",
+    showMobile: true,
   },
   // KeplrMobile: {
   //   id: CosmosWalletType.WC_KEPLR_MOBILE,

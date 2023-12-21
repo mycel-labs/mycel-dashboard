@@ -2,6 +2,7 @@ import { Dialog } from "@headlessui/react";
 import BaseDialog from "@/components/dialog/BaseDialog";
 import useBalances from "@/hooks/useBalances";
 import useWallet from "@/hooks/useWallet";
+import useWebAuthn from "@/hooks/useWebAuthn";
 import { useStore } from "@/store/index";
 import Button from "@/components/Button";
 import { Unplug, KeySquare, ClipboardCopy } from "lucide-react";
@@ -16,6 +17,7 @@ export default function WalletDialog() {
   const updateDialog = useStore((state) => state.updateDialog);
   const { connectWallet, disconnectWallet, isConnected, evmAddress, deriveKeys, mycelAccount, connectorsWagmi } =
     useWallet();
+  const { createNewCredential } = useWebAuthn();
 
   const DialogContent = () => (
     <div className="space-y-4 font-semibold">
@@ -44,6 +46,8 @@ export default function WalletDialog() {
               } else {
                 window.open(`https://web3.bitget.com`);
               }
+            } else if (val.name === "Passkey") {
+              createNewCredential();
             } else {
               // TODO: refactor this
               if (
