@@ -27,15 +27,15 @@ runs:
     #         console.log('PLAYWRIGHT_VERSION=' + playwrightVersion);
     #       "
     #     )" >> $GITHUB_OUTPUT
-    - name: Print versions
-      shell: bash
-      run: echo "${{ toJson(steps.resolve-package-versions.outputs) }}"
-    - name: Check resolved package versions
-      shell: bash
-      if: |
-        contains(fromJSON('[null, "", "undefined"]'), steps.resolve-package-versions.outputs.CYPRESS_VERSION) ||
-        contains(fromJSON('[null, "", "undefined"]'), steps.resolve-package-versions.outputs.PLAYWRIGHT_VERSION)
-      run: echo "Failed to resolve package versions. See log above." && exit 1
+    # - name: Print versions
+    #   shell: bash
+    #   run: echo "${{ toJson(steps.resolve-package-versions.outputs) }}"
+    # - name: Check resolved package versions
+    #   shell: bash
+    #   if: |
+    #     contains(fromJSON('[null, "", "undefined"]'), steps.resolve-package-versions.outputs.CYPRESS_VERSION) ||
+    #     contains(fromJSON('[null, "", "undefined"]'), steps.resolve-package-versions.outputs.PLAYWRIGHT_VERSION)
+    #   run: echo "Failed to resolve package versions. See log above." && exit 1
     - name: Cache Playwright v${{ steps.resolve-package-versions.outputs.PLAYWRIGHT_VERSION }}
       uses: actions/cache@v3
       id: playwright-cache
