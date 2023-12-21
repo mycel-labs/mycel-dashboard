@@ -1,31 +1,16 @@
-import { useState } from "react";
+import { decodeFirst } from "@/utils/decode";
 import { startAuthentication, startRegistration } from "@simplewebauthn/browser";
 import { generateRegistrationOptions, verifyRegistrationResponse } from "@simplewebauthn/server";
-import { decodeFirst } from "../utils/decode";
-
-const TRANSACTION_STAGE = {
-  UNSENT: "Unsent",
-  SIGNING_CHALLENGE: "SigningChallenge",
-  CREATING_PROOF: "CreatingProof",
-  GENERATING_USER_OP: "GeneratingUserOp",
-  SENDING_USER_OP: "SendingUserOp",
-  QUERYNG_FOR_RECEIPTS: "QueryingForReceipts",
-  CONFIRMED: "Confirmed",
-};
+import { useState } from "react";
 
 const useWebAuthn = () => {
   const [username, setUsername] = useState("");
   const [response, setResponse] = useState();
   //TODO: VerifiedRegistrationResponse cannot be import
   // const [response, setResponse] = useState<VerifiedRegistrationResponse>({ verified: false });
-  const [txHash, setTxHash] = useState("");
-  const [stage, setStage] = useState(TRANSACTION_STAGE.UNSENT);
   const [error, setError] = useState("");
 
   async function createNewCredential() {
-    if (stage !== TRANSACTION_STAGE.UNSENT && stage !== TRANSACTION_STAGE.CONFIRMED) {
-      return;
-    }
     setError("");
     try {
       const generatedRegistrationOptions = await generateRegistrationOptions({
