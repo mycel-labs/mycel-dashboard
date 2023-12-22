@@ -16,6 +16,7 @@ runs:
         node-version: ${{ inputs.node-version }}
     - name: Get installed Playwright version
       id: playwright-version
+      shell: bash
       run: |
           PLAYWRIGHT_VERSION=$(cat pnpm-lock.yaml | grep /@playwright/test@ | sed 's/.*@\([^:]*\):.*/\1/')
           echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV
