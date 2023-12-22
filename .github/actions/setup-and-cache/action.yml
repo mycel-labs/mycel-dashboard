@@ -16,7 +16,9 @@ runs:
         node-version: ${{ inputs.node-version }}
     - name: Get installed Playwright version
       id: playwright-version
-      run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').dependencies['@playwright/test'].version)")" >> $GITHUB_ENV
+      run: |
+          PLAYWRIGHT_VERSION=$(cat pnpm-lock.yaml | grep /@playwright/test@ | sed 's/.*@\([^:]*\):.*/\1/')
+          echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV
     - name: Cache Playwright v${{ env.PLAYWRIGHT_VERSION }}
       uses: actions/cache@v3
       id: playwright-cache
