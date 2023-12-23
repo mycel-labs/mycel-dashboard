@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        browser: [chromium, firefox, webkit, 'Mobile Chrome', 'Mobile Safari']
+        browser: [['Desktop Chrome', chromium], ['Desktop Firefox', firefox], ['Desktop Safari', webkit], ['Pixel 5', 'Mobile Chrome'], 'iPhone 12', 'Mobile Safari']
     timeout-minutes: 30
     env:
       BROWSER: ${{ matrix.browser[0] }}
@@ -73,9 +73,3 @@ jobs:
         run: pnpm run test:e2e
         env:
           BROWSER: ${{ matrix.browser[1] }}
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 30

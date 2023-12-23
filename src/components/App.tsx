@@ -1,12 +1,12 @@
+import Toaster from '@/components/Toaster'
+import router from '@/router'
+import { MYCEL_CHAIN_INFO } from '@/utils/wallets'
 import { GrazProvider, WalletType as WalletTypeCosmos } from 'graz'
 import { RouterProvider } from 'react-router-dom'
-import router from '@/router'
-import { WagmiConfig, createConfig, configureChains, mainnet } from 'wagmi'
+import { WagmiConfig, configureChains, createConfig, mainnet } from 'wagmi'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import { publicProvider } from 'wagmi/providers/public'
-import Toaster from '@/components/Toaster'
-import { MYCEL_CHAIN_INFO } from '@/utils/wallets'
 
 const { chains, publicClient, webSocketPublicClient } = configureChains([mainnet], [publicProvider()])
 
