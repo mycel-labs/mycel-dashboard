@@ -1,4 +1,4 @@
 export type Domain = {
-  name: string;
-  parent: string;
-};
+  name: string
+  parent: string
+}

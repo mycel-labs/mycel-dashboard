@@ -1,17 +1,17 @@
-import LoadingIcon from "@/components/LoadingIcon";
+import LoadingIcon from '@/components/LoadingIcon'
 
 interface ButtonProps {
-  children: React.ReactNode;
-  className?: string;
-  busy?: boolean;
-  variant?: "primary" | "secondary";
-  disabled?: boolean;
-  onClick?: () => void;
+  children: React.ReactNode
+  className?: string
+  busy?: boolean
+  variant?: 'primary' | 'secondary'
+  disabled?: boolean
+  onClick?: () => void
 }
 
 export default function Button({ children, disabled, busy, ...props }: ButtonProps) {
   return (
-    <button disabled={disabled || busy} {...props}>
+    <button type="submit" disabled={disabled || busy} {...props}>
       {!busy ? (
         <span>{children}</span>
       ) : (
@@ -20,5 +20,5 @@ export default function Button({ children, disabled, busy, ...props }: ButtonPro
         </div>
       )}
     </button>
-  );
+  )
 }

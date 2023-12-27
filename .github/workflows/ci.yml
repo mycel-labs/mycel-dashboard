@@ -1,0 +1,76 @@
+name: CI
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+env:
+  VITEST_SEGFAULT_RETRY: 3
+  PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/ms-playwright
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-and-cache
+      - name: Install
+        run: pnpm i
+      - name: Lint
+        run: pnpm run lint
+      - name: Format
+        run: pnpm run format
+  # typecheck:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: ./.github/actions/setup-and-cache
+  #     - name: Install
+  #       run: pnpm i
+  #     - name: Build
+  #       run: pnpm run build
+  #     - name: Typecheck
+  #       run: pnpm run typecheck
+  test-unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-and-cache
+        with:
+          node-version: 20
+      - name: Install
+        run: pnpm i
+      - name: Vitest
+        run: pnpm run test:unit
+  test-e2e:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        browser: [['Desktop Chrome', chromium]]
+        # browser: [['Desktop Chrome', chromium], ['Desktop Firefox', firefox], ['Desktop Safari', webkit], ['Pixel 5', 'Mobile Chrome'], 'iPhone 12', 'Mobile Safari']
+    timeout-minutes: 30
+    env:
+      BROWSER: ${{ matrix.browser[0] }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-and-cache
+        with:
+          node-version: 20
+      - uses: browser-actions/setup-chrome@v1
+      - uses: browser-actions/setup-firefox@v1
+      - uses: browser-actions/setup-edge@v1
+        id: setup-edge
+        with:
+          edge-version: stable
+      - name: Install
+        run: pnpm i
+      - name: Install Playwright Dependencies
+        run: pnpm exec playwright install --with-deps
+      - name: Build
+        run: pnpm run build
+      - name: Test e2e (playwright)
+        run: pnpm run test:e2e
+        env:
+          BROWSER: ${{ matrix.browser[1] }}

@@ -1,5 +1,5 @@
-import MyDomains from "@/components/MyDomains";
-import Faucet from "@/components/Faucet";
+import Faucet from '@/components/Faucet'
+import MyDomains from '@/components/MyDomains'
 
 export default function PortfolioView() {
   return (
@@ -9,5 +9,5 @@ export default function PortfolioView() {
         <Faucet className="py-8 sm:px-2.5" />
       </div>
     </div>
-  );
+  )
 }

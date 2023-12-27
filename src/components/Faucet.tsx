@@ -1,80 +1,57 @@
-import { useState, useEffect } from "react";
-import { DeliverTxResponse } from "@cosmjs/stargate";
-import { useClient } from "@/hooks/useClient";
-import { useWallet } from "@/hooks/useWallet";
-import TxDialog from "@/components/dialog/TxDialog";
-import Button from "@/components/Button";
-import { HandMetal } from "lucide-react";
-import { useStore } from "@/store/index";
-import useBalances from "@/hooks/useBalances";
-import { MYCEL_COIN_DECIMALS, MYCEL_HUMAN_COIN_UNIT, MYCEL_BASE_COIN_UNIT, convertToDecimalString } from "@/utils/coin";
+import Button from '@/components/Button'
+import TxDialog from '@/components/dialog/TxDialog'
+import { useBalance } from '@/hooks/useMycel'
+import { useWallet } from '@/hooks/useWallet'
+import { useStore } from '@/store/index'
+import { MYCEL_COIN_DECIMALS, MYCEL_HUMAN_COIN_UNIT, convertToDecimalString } from '@/utils/coin'
+import { DeliverTxResponse } from '@cosmjs/stargate'
+import { HandMetal } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 interface faucetProps {
-  className?: string;
+  className?: string
 }
 export default function Faucet(props: faucetProps) {
-  const client = useClient();
-  const { mycelAccount, isConnected } = useWallet();
-  const threshold = import.meta.env.VITE_FAUCET_CLAIMABLE_THRESHOLD;
-  const { className } = props;
-  const [isClaimable, setIsClaimable] = useState<boolean>(false);
-  const [balance, setBalance] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [txResponse, setTxResponse] = useState<DeliverTxResponse>();
-  const updateDialog = useStore((state) => state.updateDialog);
-  const { balances } = useBalances();
-
-  const queryBalance = async () => {
-    if (!mycelAccount?.address) {
-      return;
-    }
-    const balance = await client.CosmosBankV1Beta1.query
-      .queryBalance(mycelAccount?.address, { denom: "umycel" })
-      .then((res) => {
-        if (res.data.balance?.amount) {
-          return res.data.balance.amount;
-        }
-      });
-    setBalance(balance ?? "0");
-    return balance;
-  };
+  const { mycelAccount, isConnected } = useWallet()
+  const threshold = import.meta.env.VITE_FAUCET_CLAIMABLE_THRESHOLD
+  const { className } = props
+  const [isClaimable, setIsClaimable] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [txResponse, setTxResponse] = useState<DeliverTxResponse>()
+  const updateDialog = useStore(state => state.updateDialog)
+  const { isLoading: isLoadingBalance, data: dataBalance } = useBalance()
 
   useEffect(() => {
-    queryBalance();
-  }, [mycelAccount]);
-
-  useEffect(() => {
-    if (parseInt(balance) < parseInt(threshold)) {
-      setIsClaimable(true);
+    if (BigInt(dataBalance?.balance?.amount ?? 0) < BigInt(threshold)) {
+      setIsClaimable(true)
     } else {
-      setIsClaimable(false);
+      setIsClaimable(false)
     }
-  }, [balance]);
+  }, [dataBalance])
 
   const claimFaucet = async () => {
-    setIsLoading(true);
-    updateDialog("tx");
+    setIsLoading(true)
+    updateDialog('tx')
 
     if (isClaimable && mycelAccount?.address) {
       await fetch(`api/faucet?address=${mycelAccount?.address}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setIsLoading(false);
-          setTxResponse(data.response as DeliverTxResponse);
-          queryBalance();
+        .then(res => res.json())
+        .then(data => {
+          setIsLoading(false)
+          setTxResponse(data.response as DeliverTxResponse)
         })
-        .catch((err) => {
-          updateDialog(undefined);
-          console.log(err);
-        });
+        .catch(err => {
+          updateDialog(undefined)
+          console.log(err)
+        })
     } else {
-      setTxResponse({ code: -1, rawLog: "You have enough balance" } as DeliverTxResponse);
-      setIsLoading(false);
+      setTxResponse({ code: -1, rawLog: 'You have enough balance' } as DeliverTxResponse)
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
-    <section className={className ?? ""}>
+    <section className={className ?? ''}>
       <h3 className="font-cursive text-2xl text-black font-semibold px-1 py-2 flex flex-1 items-center border-b-2 border-black">
         <HandMetal className="opacity-70 mr-2" size={26} />
         Faucet
@@ -85,18 +62,14 @@ export default function Faucet(props: faucetProps) {
             {isConnected ? (
               <>
                 <div className="font-semibold mb-1">My Balance</div>
-                {!balances && <div className="text-gray-500">---</div>}
-                <ul>
-                  {balances?.map(
-                    (coin) =>
-                      coin.denom === MYCEL_BASE_COIN_UNIT && (
-                        <li key={coin.denom} className="font-mono text-xl px-0.5">
-                          {convertToDecimalString(coin.amount, MYCEL_COIN_DECIMALS)}
-                          <span className="text-gray-600 ml-1 text-lg">{MYCEL_HUMAN_COIN_UNIT}</span>
-                        </li>
-                      ),
-                  )}
-                </ul>
+                {!dataBalance?.balance?.amount ? (
+                  <div className="text-gray-500">---</div>
+                ) : (
+                  <p className="font-mono text-xl px-0.5">
+                    {convertToDecimalString(dataBalance.balance.amount, MYCEL_COIN_DECIMALS)}
+                    <span className="text-gray-600 ml-1 text-lg">{MYCEL_HUMAN_COIN_UNIT}</span>
+                  </p>
+                )}
               </>
             ) : (
               <div className="text-gray-500 text-lg font-semibold">Connect first</div>
@@ -111,5 +84,5 @@ export default function Faucet(props: faucetProps) {
       </div>
       <TxDialog txResponse={txResponse} isLoading={isLoading} />
     </section>
-  );
+  )
 }

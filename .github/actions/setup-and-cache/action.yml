@@ -1,0 +1,31 @@
+name: Setup and cache
+description: Setup for node, pnpm and cache for browser testing binaries
+inputs:
+  node-version:
+    required: false
+    description: Node version for setup-node
+    default: 20.x
+runs:
+  using: composite
+  steps:
+    - name: Install pnpm
+      uses: pnpm/action-setup@v2
+    - name: Set node version to ${{ inputs.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+    - name: Get installed Playwright version
+      id: playwright-version
+      shell: bash
+      run: |
+          PLAYWRIGHT_VERSION=$(cat pnpm-lock.yaml | grep /@playwright/test@ | sed 's/.*@\([^:]*\):.*/\1/')
+          echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV
+    - name: Cache Playwright v${{ env.PLAYWRIGHT_VERSION }}
+      uses: actions/cache@v3
+      id: playwright-cache
+      with:
+        path: |
+          ~/.cache/ms-playwright
+        key: ${{ runner.os }}-playwright-cache-${{ env.PLAYWRIGHT_VERSION }}
+        restore-keys: |
+          ${{ runner.os }}-playwright-cache-
