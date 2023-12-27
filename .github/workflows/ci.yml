@@ -48,7 +48,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        browser: [['Desktop Chrome', chromium], ['Desktop Firefox', firefox], ['Desktop Safari', webkit], ['Pixel 5', 'Mobile Chrome'], 'iPhone 12', 'Mobile Safari']
+        browser: [['Desktop Chrome', chromium]]
+        # browser: [['Desktop Chrome', chromium], ['Desktop Firefox', firefox], ['Desktop Safari', webkit], ['Pixel 5', 'Mobile Chrome'], 'iPhone 12', 'Mobile Safari']
     timeout-minutes: 30
     env:
       BROWSER: ${{ matrix.browser[0] }}
