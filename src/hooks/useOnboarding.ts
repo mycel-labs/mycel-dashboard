@@ -9,7 +9,9 @@ export const useOnboarding = () => {
   const updateOnboardingStatus = useStore((state) => state.updateOnboardingStatus);
   const updateDialog = useStore((state) => state.updateDialog);
   const { isLoading: isLoadingOwnDomain, data: dataOwnDomain } = useDomainOwnership(mycelAccount?.address);
-  const { isLoading: isLoadingRecords, data: dataRecords } = useAllRecords(dataOwnDomain?.domainOwnership?.domains?.[0]);
+  const { isLoading: isLoadingRecords, data: dataRecords } = useAllRecords(
+    dataOwnDomain?.domainOwnership?.domains?.[0],
+  );
   const { isLoading: isLoadingBalance, data: dataBalance } = useBalance(mycelAccount?.address);
 
   const ONBOARDING_CONFIG = {
@@ -38,34 +40,33 @@ export const useOnboarding = () => {
     hide: {},
   };
 
-
   useEffect(() => {
     if (onboardingStatus === "hide" || onboardingStatus === "finish") return;
 
-    const hasDomain = () => !isLoadingOwnDomain ? (dataOwnDomain?.domainOwnership?.domains?.length ?? 0) > 0 : false;
-    const hasRecords = () => !isLoadingRecords && dataRecords?.values ? Object.keys(dataRecords?.values).length > 0 : false;
+    const hasDomain = () => (!isLoadingOwnDomain ? (dataOwnDomain?.domainOwnership?.domains?.length ?? 0) > 0 : false);
+    const hasRecords = () =>
+      !isLoadingRecords && dataRecords?.values ? Object.keys(dataRecords?.values).length > 0 : false;
 
     if (isConnected) {
       if (!hasDomain()) {
-        console.log('4');
+        console.log("4");
         updateOnboardingStatus("register-domain");
       }
       if (hasDomain() && !hasRecords()) {
-        console.log('5');
+        console.log("5");
         updateOnboardingStatus("add-record");
       }
       if (hasDomain() && hasRecords()) {
-        console.log('6');
+        console.log("6");
         updateOnboardingStatus("finish");
       }
     }
   }, [isConnected, isLoadingOwnDomain, dataOwnDomain, isLoadingRecords, dataRecords]);
 
-
   useEffect(() => {
     if (onboardingStatus === "hide" || onboardingStatus === "finish") return;
     const hasMycelAddress = () => !!mycelAccount?.address;
-    const hasNoMycelBalance = () => !isLoadingBalance ? BigInt(dataBalance?.balance?.amount ?? 0) <= 0 : false;
+    const hasNoMycelBalance = () => (!isLoadingBalance ? BigInt(dataBalance?.balance?.amount ?? 0) <= 0 : false);
 
     if (!isConnected) {
       updateOnboardingStatus("no-connection");
@@ -80,8 +81,8 @@ export const useOnboarding = () => {
 
   return {
     ONBOARDING_CONFIG,
-    onboardingStatusList
-  }
+    onboardingStatusList,
+  };
 };
 
 export default useOnboarding;

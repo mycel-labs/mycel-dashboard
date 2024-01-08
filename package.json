@@ -14,8 +14,6 @@
     "@simplewebauthn/browser": "^8.3.4",
     "@simplewebauthn/server": "^8.3.5",
     "@vercel/node": "^3.0.9",
-    "@web3modal/ethereum": "^2.3.0",
-    "@web3modal/react": "^2.3.0",
     "bignumber.js": "^9.1.0",
     "cbor-x": "^1.5.6",
     "classnames": "^2.3.2",
@@ -69,9 +67,8 @@
     "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-react": "^7.33.2",
     "events": "^3.3.0",
-    "husky": "^8.0.3",
     "jsdom": "^20.0.2",
-    "lint-staged": "^15.0.2",
+    "lefthook": "^1.5.5",
     "node-stdlib-browser": "^1.2.0",
     "postcss": "^8.4.31",
     "prettier": "3.0.3",
@@ -82,8 +79,8 @@
     "vite-plugin-node-stdlib-browser": "^0.2.1"
   },
   "engines": {
-    "node": ">=16.0.0",
-    "npm": ">=8.0.0"
+    "node": ">=20.0.0",
+    "pnpm": ">=8.0.0"
   },
   "name": "mycel-frontend",
   "private": true,
@@ -95,14 +92,10 @@
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts",
     "lint:fix": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
     "format": "prettier --write --ignore-path .gitignore './**/*.{js,jsx,ts,tsx,json}'",
-    "lint-format": "yarn lint:fix && yarn format",
+    "lint-format": "pnpm lint:fix && pnpm format",
     "postinstall": "node postinstall.cjs",
-    "prepare": "node prepare.cjs && husky install"
+    "prepare": "node prepare.cjs && lefthook install"
   },
   "type": "module",
-  "version": "0.4.3",
-  "lint-staged": {
-    "*.{js,jsx,cjs,mjs,ts,tsx,cts,mts}": "eslint --cache --fix",
-    "*.--write": "prettier --write"
-  }
+  "version": "0.4.3"
 }
