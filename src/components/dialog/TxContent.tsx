@@ -1,17 +1,17 @@
-import { Dialog } from "@headlessui/react";
-import { DeliverTxResponse } from "@cosmjs/stargate";
-import Loader from "@/components/Loader";
-import { AlertTriangle, PartyPopper } from "lucide-react";
+import { Dialog } from '@headlessui/react'
+import { DeliverTxResponse } from '@cosmjs/stargate'
+import Loader from '~/components/Loader'
+import { AlertTriangle, PartyPopper } from 'lucide-react'
 
 interface TxDialogProps {
-  isShow?: boolean;
-  isLoading: boolean;
-  txResponse: DeliverTxResponse | undefined;
-  className?: string;
+  isShow?: boolean
+  isLoading: boolean
+  txResponse: DeliverTxResponse | undefined
+  className?: string
 }
 
 export default function TxContent({ isShow = true, isLoading, txResponse, className }: TxDialogProps) {
-  if (!isShow) return null;
+  if (!isShow) return null
 
   return (
     <div className={className}>
@@ -21,7 +21,7 @@ export default function TxContent({ isShow = true, isLoading, txResponse, classN
         <>
           <Dialog.Title className="text-2xl font-semibold mb-8 text-center flex items-center justify-center">
             {isLoading ? (
-              "Loading..."
+              'Loading...'
             ) : txResponse?.code === 0 ? (
               <>
                 <PartyPopper className="mr-1.5" />
@@ -40,7 +40,7 @@ export default function TxContent({ isShow = true, isLoading, txResponse, classN
                 <div className="text-sm leading-relaxed">
                   <div>
                     Transaction Hash
-                    <p className="w-full text-gray-500 break-all">{txResponse?.transactionHash ?? ""}</p>
+                    <p className="w-full text-gray-500 break-all">{txResponse?.transactionHash ?? ''}</p>
                   </div>
                 </div>
               </div>
@@ -56,5 +56,5 @@ export default function TxContent({ isShow = true, isLoading, txResponse, classN
         </>
       )}
     </div>
-  );
+  )
 }

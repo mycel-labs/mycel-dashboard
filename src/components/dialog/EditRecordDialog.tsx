@@ -1,137 +1,137 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { DeliverTxResponse } from "@cosmjs/stargate";
-import { Dialog } from "@headlessui/react";
-import { FileSignature } from "lucide-react";
-import BaseDialog from "@/components/dialog/BaseDialog";
-import { useStore } from "@/store/index";
-import Button from "@/components/Button";
-import Radio, { Option } from "@/components/Radio";
-import { useClient } from "@/hooks/useClient";
-import { DnsRecordType } from "mycel-client-ts/mycel.registry/types/mycel/registry/dns_record";
-import { NetworkName } from "mycel-client-ts/mycel.registry/types/mycel/registry/network_name";
-import { RegistryRecord } from "mycel-client-ts/mycel.resolver/rest";
-import Dropdown from "@/components/Dropdown";
-import TxContent from "@/components/dialog/TxContent";
-import { Domain } from "@/types/domain";
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { DeliverTxResponse } from '@cosmjs/stargate'
+import { Dialog } from '@headlessui/react'
+import { FileSignature } from 'lucide-react'
+import BaseDialog from '~/components/dialog/BaseDialog'
+import { useStore } from '~/store/index'
+import Button from '~/components/Button'
+import Radio, { Option } from '~/components/Radio'
+import { useClient } from '~/hooks/useClient'
+import { DnsRecordType } from 'mycel-client-ts/mycel.registry/types/mycel/registry/dns_record'
+import { NetworkName } from 'mycel-client-ts/mycel.registry/types/mycel/registry/network_name'
+import { RegistryRecord } from 'mycel-client-ts/mycel.resolver/rest'
+import Dropdown from '~/components/Dropdown'
+import TxContent from '~/components/dialog/TxContent'
+import { Domain } from '~/types/domain'
 
 interface EditRecordDialogProps {
-  domain: Domain;
-  records: Record<string, RegistryRecord> | undefined;
-  address: string;
+  domain: Domain
+  records: Record<string, RegistryRecord> | undefined
+  address: string
 }
 
 const recordOptions: Option[] = [
-  { value: "wallet", label: "Wallet Record" },
-  { value: "dns", label: "DNS Record" },
-];
+  { value: 'wallet', label: 'Wallet Record' },
+  { value: 'dns', label: 'DNS Record' },
+]
 
 const RecordTypeToOptions = (recordType: any) => {
-  const options: Option[] = [];
+  const options: Option[] = []
   Object.values(recordType).forEach((value) => {
-    if (typeof value === "string" && value !== "UNRECOGNIZED") {
-      options.push({ value: value, label: value });
+    if (typeof value === 'string' && value !== 'UNRECOGNIZED') {
+      options.push({ value: value, label: value })
     }
-  });
-  return options;
-};
+  })
+  return options
+}
 
 export default function EditRecordDialog({ domain, records, address }: EditRecordDialogProps) {
-  const navigate = useNavigate();
-  const dialog = useStore((state) => state.dialog);
-  const updateDialog = useStore((state) => state.updateDialog);
-  const client = useClient();
-  const [recordOption, setRecordOption] = useState("wallet");
-  const [typeOption, setTypeOption] = useState("");
-  const [typeOptions, setTypeOptions] = useState<Option[]>([]);
-  const [currentRecordValue, setCurrentRecordValue] = useState("");
-  const [newRecordValue, setNewRecordValue] = useState("");
-  const [isShowTx, setIsShowTx] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [txResponse, setTxResponse] = useState<DeliverTxResponse>();
+  const navigate = useNavigate()
+  const dialog = useStore((state) => state.dialog)
+  const updateDialog = useStore((state) => state.updateDialog)
+  const client = useClient()
+  const [recordOption, setRecordOption] = useState('wallet')
+  const [typeOption, setTypeOption] = useState('')
+  const [typeOptions, setTypeOptions] = useState<Option[]>([])
+  const [currentRecordValue, setCurrentRecordValue] = useState('')
+  const [newRecordValue, setNewRecordValue] = useState('')
+  const [isShowTx, setIsShowTx] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [txResponse, setTxResponse] = useState<DeliverTxResponse>()
 
   useEffect(() => {
-    if (recordOption === "dns") {
-      setTypeOptions(RecordTypeToOptions(DnsRecordType));
-      setTypeOption("A");
-    } else if (recordOption === "wallet") {
-      setTypeOptions(RecordTypeToOptions(NetworkName));
-      setTypeOption("ETHEREUM_TESTNET_GOERLI");
+    if (recordOption === 'dns') {
+      setTypeOptions(RecordTypeToOptions(DnsRecordType))
+      setTypeOption('A')
+    } else if (recordOption === 'wallet') {
+      setTypeOptions(RecordTypeToOptions(NetworkName))
+      setTypeOption('ETHEREUM_TESTNET_GOERLI')
     }
-  }, [recordOption]);
+  }, [recordOption])
 
   useEffect(() => {
     if (records && records[typeOption] !== undefined) {
       switch (recordOption) {
-        case "dns":
-          setCurrentRecordValue(records[typeOption].dnsRecord?.value || "");
-          break;
-        case "wallet":
-          setCurrentRecordValue(records[typeOption].walletRecord?.value || "");
-          break;
+        case 'dns':
+          setCurrentRecordValue(records[typeOption].dnsRecord?.value || '')
+          break
+        case 'wallet':
+          setCurrentRecordValue(records[typeOption].walletRecord?.value || '')
+          break
       }
     } else {
-      setCurrentRecordValue("");
+      setCurrentRecordValue('')
     }
-    setNewRecordValue("");
-  }, [typeOption]);
+    setNewRecordValue('')
+  }, [typeOption])
 
   const handleRecordOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRecordOption(event.target.value);
-  };
+    setRecordOption(event.target.value)
+  }
 
   const handleRecordTypeChange = (val: string) => {
-    setTypeOption(val);
-  };
+    setTypeOption(val)
+  }
 
   // update record value
   const updateRecord = async () => {
-    setIsLoading(true);
-    setIsShowTx(true);
+    setIsLoading(true)
+    setIsShowTx(true)
     // update DNS record
-    if (recordOption === "dns") {
+    if (recordOption === 'dns') {
       await client.MycelRegistry.tx
         .sendMsgUpdateDnsRecord({
           value: {
             creator: address,
-            name: domain?.name || "",
-            parent: domain?.parent || "",
+            name: domain?.name || '',
+            parent: domain?.parent || '',
             dnsRecordType: typeOption,
             value: newRecordValue,
           },
         })
         .then((res) => {
-          setIsLoading(false);
-          setTxResponse(res as DeliverTxResponse);
+          setIsLoading(false)
+          setTxResponse(res as DeliverTxResponse)
         })
         .catch(() => {
-          updateDialog(undefined);
-        });
+          updateDialog(undefined)
+        })
 
       // update wallet record
-    } else if (recordOption === "wallet") {
+    } else if (recordOption === 'wallet') {
       await client.MycelRegistry.tx
         .sendMsgUpdateWalletRecord({
           value: {
             creator: address,
-            name: domain?.name || "",
-            parent: domain?.parent || "",
+            name: domain?.name || '',
+            parent: domain?.parent || '',
             walletRecordType: typeOption,
             value: newRecordValue,
           },
         })
         .then((res) => {
-          setIsLoading(false);
-          setTxResponse(res as DeliverTxResponse);
+          setIsLoading(false)
+          setTxResponse(res as DeliverTxResponse)
         })
         .catch(() => {
-          updateDialog(undefined);
-        });
+          updateDialog(undefined)
+        })
     }
-  };
+  }
 
   return (
-    <BaseDialog open={dialog === "editRecord"}>
+    <BaseDialog open={dialog === 'editRecord'}>
       <Dialog.Title className="text-2xl font-semibold mb-8 flex items-center justify-center">
         <FileSignature className="opacity-70 mr-2" />
         Edit Record
@@ -145,7 +145,7 @@ export default function EditRecordDialog({ domain, records, address }: EditRecor
           </label>
           <label>
             CurrentRecord
-            <input type="text" className="w-full" readOnly value={currentRecordValue ? currentRecordValue : "---"} />
+            <input type="text" className="w-full" readOnly value={currentRecordValue ? currentRecordValue : '---'} />
           </label>
           <label>
             New Record
@@ -159,7 +159,7 @@ export default function EditRecordDialog({ domain, records, address }: EditRecor
           <TxContent txResponse={txResponse} isLoading={isLoading} className="mt-6" isShow={isShowTx} />
           {!isShowTx ? (
             <Button
-              disabled={!address || newRecordValue === ""}
+              disabled={!address || newRecordValue === ''}
               onClick={() => updateRecord()}
               className="btn-primary mt-10 h-12 w-full rounded-md"
             >
@@ -169,8 +169,8 @@ export default function EditRecordDialog({ domain, records, address }: EditRecor
             <Button
               className="btn-primary mt-10 h-12 w-full rounded-md"
               onClick={() => {
-                updateDialog(undefined);
-                navigate(0);
+                updateDialog(undefined)
+                navigate(0)
               }}
             >
               Close
@@ -179,5 +179,5 @@ export default function EditRecordDialog({ domain, records, address }: EditRecor
         </div>
       </div>
     </BaseDialog>
-  );
+  )
 }

@@ -1,19 +1,19 @@
-import { cn } from "@/utils/lib";
+import { cn } from '~/utils/lib'
 
 interface LoadingIconProps {
-  className?: string;
+  className?: string
 }
 
 export default function LoadingIcon(props: LoadingIconProps) {
   return (
     <svg
-      className={cn("animate-spin", props.className)}
+      className={cn('animate-spin', props.className)}
       width="32"
       height="32"
       viewBox="0 0 32 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      style={{ width: "1em", height: "1em" }}
+      style={{ width: '1em', height: '1em' }}
     >
       <path
         d="M30 16C30 8.26801 23.732 2 16 2C8.26801 2 2 8.26801 2 16C2 23.732 8.26801 30 16 30"
@@ -22,5 +22,5 @@ export default function LoadingIcon(props: LoadingIconProps) {
         strokeLinecap="round"
       />
     </svg>
-  );
+  )
 }
