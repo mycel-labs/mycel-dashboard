@@ -20,6 +20,7 @@ export type Authenticator = {
   credentialID: Uint8Array
   credentialPublicKey: Uint8Array
   counter: number
+  credentialDeviceType: string
   transports?: AuthenticatorTransport[]
 }
 

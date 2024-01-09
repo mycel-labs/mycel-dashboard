@@ -1,4 +1,4 @@
-import { startAuthentication, startRegistration } from '@simplewebauthn/browser'
+import { startAuthentication, startRegistration, browserSupportsWebAuthn } from '@simplewebauthn/browser'
 import {
   generateRegistrationOptions,
   verifyRegistrationResponse,
@@ -6,34 +6,39 @@ import {
   verifyAuthenticationResponse,
   type GenerateRegistrationOptionsOpts,
 } from '@simplewebauthn/server'
-import { getSignature, decodeFirst, parseAuthenticatorData } from '~/utils/decode'
+import { getSignature, decodeFirst } from '~/utils/decode'
 
 const REGISTRATION_OPTIONS: GenerateRegistrationOptionsOpts = {
   rpName: 'Mycel',
   rpID: typeof window !== 'undefined' ? window.location.hostname : import.meta.env.VITE_HOSTNAME ?? '',
-  userID: 'Mycel',
-  userName: 'Mycel',
+  userID: 'Mycel user',
+  userName: 'A Mycel user',
   attestationType: 'direct',
-  challenge: 'asdf',
   supportedAlgorithmIDs: [-7],
+  authenticatorSelection: {
+    residentKey: 'preferred',
+    userVerification: 'preferred',
+    // authenticatorAttachment: 'platform',
+  },
 }
 
 export const createNewCredential = async () => {
   try {
-    const registrationOptions = await generateRegistrationOptions(REGISTRATION_OPTIONS)
+    const registrationOptions = await generateRegistrationOptions({ excludeCredentials: [], ...REGISTRATION_OPTIONS })
     const startRegistrationResponse = await startRegistration(registrationOptions)
-    const verificationResponse = await verifyRegistrationResponse({
+    const { verified, registrationInfo } = await verifyRegistrationResponse({
       response: startRegistrationResponse,
       expectedOrigin:
         typeof window !== 'undefined' ? window.location.origin : `https://${import.meta.env.VITE_HOSTNAME}` ?? '',
       expectedChallenge: registrationOptions.challenge,
       supportedAlgorithmIDs: [-7],
     })
-    if (!verificationResponse.registrationInfo) {
+    console.log('4:', verified, registrationInfo)
+    if (!registrationInfo) {
       return
     }
     const { id } = startRegistrationResponse
-    const { credentialID, credentialPublicKey, counter } = verificationResponse.registrationInfo
+    const { credentialID, credentialPublicKey, counter, credentialDeviceType } = registrationInfo
 
     const publicKey = decodeFirst<any>(credentialPublicKey)
     const kty = publicKey.get(1)
@@ -47,18 +52,9 @@ export const createNewCredential = async () => {
       id,
       credentialID,
       credentialPublicKey,
+      credentialDeviceType,
       counter,
     }
-
-    // localStorage.setItem(
-    //   id,
-    //   JSON.stringify({
-    //     credentialID: Array.from(credentialID),
-    //     credentialPublicKey: Array.from(credentialPublicKey),
-    //     counter,
-    //   })
-    // )
-    // localStorage.setItem('user-registered', 'true')
   } catch (e) {
     console.log(e?.message || 'An unknown error occured')
   }
@@ -78,7 +74,7 @@ export const loginCredential = async (authenticator) => {
     })
     const authenticationResponse = await startAuthentication(authenticationOptions)
     const { result, updatedSignature } = await getSignature(authenticationResponse, authenticator)
-    console.log('3', result, updatedSignature)
+    console.log('3', authenticationResponse, result, updatedSignature)
 
     const response = await verifyAuthenticationResponse({
       response: authenticationResponse,
@@ -102,3 +98,5 @@ export const loginCredential = async (authenticator) => {
     console.log(e?.message || 'An unknown error occured')
   }
 }
+
+export const isWebAuthnSupported = browserSupportsWebAuthn()

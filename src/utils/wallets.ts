@@ -10,6 +10,7 @@ import WalletConnectIcon from '~/assets/icons/wallets/walletconnect.svg'
 import OKXIcon from '~/assets/icons/wallets/okx.svg'
 import BitGetIcon from '~/assets/icons/wallets/bitget.png'
 import PasskeyIcon from '~/assets/icons/wallets/passkey.svg'
+import { isWebAuthnSupported } from '~/utils/webauthn'
 
 export type EvmAddress = `0x${string}`
 export type MycelAddress = `mycel${string}`
@@ -111,6 +112,7 @@ export const WALLET_CONFIG = {
     chainType: '',
     icon: PasskeyIcon,
     getUrl: '',
+    disabled: isWebAuthnSupported,
     showMobile: true,
   },
   // KeplrMobile: {
