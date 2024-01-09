@@ -10,12 +10,14 @@ import { cn, copyClipboard, isBitGetApp, isMobile, isOKXApp, isPC } from '~/util
 import { WALLET_CONFIG, type WalletType, shortAddress } from '~/utils/wallets'
 import { Dialog } from '@headlessui/react'
 import { ClipboardCopy, KeySquare, Unplug } from 'lucide-react'
+import useWebAuthn from '~/hooks/useWebAuthn'
 
 export default function WalletDialog() {
   const dialog = useStore((state) => state.dialog)
   const updateDialog = useStore((state) => state.updateDialog)
   const { connectWallet, disconnectWallet, isConnected, evmAddress, deriveKeys, mycelAccount, connectorsWagmi } =
     useWallet()
+  const { auth } = useWebAuthn()
 
   const DialogContent = () => (
     <div className="space-y-4 font-semibold">
@@ -44,6 +46,9 @@ export default function WalletDialog() {
               } else {
                 window.open('https://web3.bitget.com')
               }
+            } else if (val.name === 'Passkey') {
+              const sig = await auth()
+              console.log('sig::', sig)
             } else {
               // TODO: refactor this
               if (

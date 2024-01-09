@@ -15,12 +15,21 @@ export type EvmDerivedAddresses = {
   }
 }
 
+export type Authenticator = {
+  id: string
+  credentialID: Uint8Array
+  credentialPublicKey: Uint8Array
+  counter: number
+  transports?: AuthenticatorTransport[]
+}
+
 type StoreState = {
   evmAddress: EvmAddress | undefined
   mycelAddress: MycelAddress | undefined
   // eslint-disable-next-line @typescript-eslint/ban-types
   evmDerivedAddresses: EvmDerivedAddresses | {}
   currentWalletType: string | undefined
+  authenticator: Authenticator | undefined
   dialog: Dialog
   onboardingStatus: typeof ONBOARDING_CONFIG | undefined | false
 }
@@ -38,6 +47,7 @@ type StoreSAction = {
     mycelAddress?: MycelAddress
     encryptedSignature?: string
   }) => void
+  updateAuthenticator: (dialog: StoreState['authenticator']) => void
   updateDialog: (dialog: StoreState['dialog']) => void
   updateOnboardingStatus: (payload: StoreState['onboardingStatus']) => void
 }
@@ -52,6 +62,7 @@ export const useStore = create<StoreState & StoreSAction>()(
         evmDerivedAddresses: {},
         dialog: undefined,
         onboardingStatus: undefined,
+        authenticator: undefined,
         updateEvmAddress: (payload: EvmAddress | undefined) => set((state) => ({ ...state, evmAddress: payload })),
         updateMycelAddress: (payload: MycelAddress | undefined) =>
           set((state) => ({ ...state, mycelAddress: payload })),
@@ -72,12 +83,15 @@ export const useStore = create<StoreState & StoreSAction>()(
         updateDialog: (payload: Dialog) => set((state) => ({ ...state, dialog: payload })),
         updateOnboardingStatus: (payload: typeof ONBOARDING_CONFIG | undefined | false) =>
           set((state) => ({ ...state, onboardingStatus: payload })),
+        updateAuthenticator: (payload: Authenticator | undefined) =>
+          set((state) => ({ ...state, authenticator: payload })),
       }),
       {
         name: 'mycel',
         partialize: (state) => ({
           evmAddress: state.evmAddress,
           mycelAddress: state.mycelAddress,
+          authenticator: state.authenticator,
           evmDerivedAddresses: state.evmDerivedAddresses,
           onboardingStatus: state.onboardingStatus,
         }),
