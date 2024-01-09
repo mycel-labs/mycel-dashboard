@@ -12,8 +12,6 @@ import BitGetIcon from '~/assets/icons/wallets/bitget.png'
 import PasskeyIcon from '~/assets/icons/wallets/passkey.svg'
 import { isWebAuthnSupported } from '~/utils/webauthn'
 
-console.log('isWebAuthnSupported::', isWebAuthnSupported)
-
 export type EvmAddress = `0x${string}`
 export type MycelAddress = `mycel${string}`
 
