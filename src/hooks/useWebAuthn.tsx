@@ -2,18 +2,17 @@ import { useStore } from '~/store/index'
 import { loginCredential, createNewCredential } from '~/utils/webauthn'
 
 const useWebAuthn = () => {
-  const authenticator = useStore((state) => state.authenticator)
-  const updateAuthenticator = useStore((state) => state.updateAuthenticator)
+  const { updateAuthenticator } = useStore()
 
   const auth = async () => {
-    console.log('0', authenticator)
-    if (!authenticator?.id) {
+    console.log('0', useStore.getState().authenticator)
+    if (!useStore.getState().authenticator?.id) {
       const res = await createNewCredential()
       updateAuthenticator(res)
-      console.log('1', authenticator)
+      console.log('1', useStore.getState().authenticator, res)
     }
-    console.log('2', authenticator)
-    const res = await loginCredential(authenticator)
+    console.log('2', useStore.getState().authenticator)
+    const res = await loginCredential(useStore.getState().authenticator)
     return res?.updatedSignature ?? false
   }
 

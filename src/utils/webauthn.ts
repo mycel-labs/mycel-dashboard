@@ -13,12 +13,12 @@ const REGISTRATION_OPTIONS: GenerateRegistrationOptionsOpts = {
   rpID: typeof window !== 'undefined' ? window.location.hostname : import.meta.env.VITE_HOSTNAME ?? '',
   userID: 'Mycel user',
   userName: 'A Mycel user',
-  attestationType: 'direct',
+  attestationType: 'none',
   supportedAlgorithmIDs: [-7],
+  challenge: 'asdf',
   authenticatorSelection: {
-    residentKey: 'preferred',
+    residentKey: 'required',
     userVerification: 'preferred',
-    // authenticatorAttachment: 'platform',
   },
 }
 
@@ -26,18 +26,20 @@ export const createNewCredential = async () => {
   try {
     const registrationOptions = await generateRegistrationOptions({ excludeCredentials: [], ...REGISTRATION_OPTIONS })
     const startRegistrationResponse = await startRegistration(registrationOptions)
+    console.log('startRegistrationResponse:', startRegistrationResponse)
     const { verified, registrationInfo } = await verifyRegistrationResponse({
       response: startRegistrationResponse,
       expectedOrigin:
         typeof window !== 'undefined' ? window.location.origin : `https://${import.meta.env.VITE_HOSTNAME}` ?? '',
       expectedChallenge: registrationOptions.challenge,
       supportedAlgorithmIDs: [-7],
+      requireUserVerification: true,
     })
     console.log('4:', verified, registrationInfo)
     if (!registrationInfo) {
       return
     }
-    const { id } = startRegistrationResponse
+    const { id, response } = startRegistrationResponse
     const { credentialID, credentialPublicKey, counter, credentialDeviceType } = registrationInfo
 
     const publicKey = decodeFirst<any>(credentialPublicKey)
@@ -47,6 +49,7 @@ export const createNewCredential = async () => {
     const x = publicKey.get(-2)
     const y = publicKey.get(-3)
     const n = publicKey.get(-1)
+    console.log('5:', id, credentialID, credentialPublicKey, credentialDeviceType, counter)
 
     return {
       id,
@@ -54,6 +57,7 @@ export const createNewCredential = async () => {
       credentialPublicKey,
       credentialDeviceType,
       counter,
+      transports: response.transports,
     }
   } catch (e) {
     console.log(e?.message || 'An unknown error occured')
@@ -68,8 +72,10 @@ export const loginCredential = async (authenticator) => {
         {
           id: authenticator.credentialID,
           type: 'public-key',
+          transports: authenticator.transports,
         },
       ],
+      challenge: 'asdf',
       userVerification: 'preferred',
     })
     const authenticationResponse = await startAuthentication(authenticationOptions)
@@ -87,6 +93,7 @@ export const loginCredential = async (authenticator) => {
         credentialPublicKey: Uint8Array.from(authenticator.credentialPublicKey),
         counter: authenticator.counter,
       },
+      requireUserVerification: true,
     })
 
     return {
