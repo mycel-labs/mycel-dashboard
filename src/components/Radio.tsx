@@ -1,14 +1,14 @@
-import type { ChangeEvent } from "react";
+import type { ChangeEvent } from 'react'
 
 export interface Option {
-  value: string;
-  label: string;
+  value: string
+  label: string
 }
 
 interface RadioProps {
-  options: Option[];
-  selectedOption: string;
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  options: Option[]
+  selectedOption: string
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void
 }
 export default function Radio(props: RadioProps) {
   return (
@@ -26,5 +26,5 @@ export default function Radio(props: RadioProps) {
         </label>
       ))}
     </div>
-  );
+  )
 }

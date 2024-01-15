@@ -1,60 +1,60 @@
-import { useEffect, useState } from "react";
-import Button from "@/components/Button";
-import { convertToDomainString } from "@/utils/domainName";
-import { useSearchParams } from "react-router-dom";
-import { useWallet } from "@/hooks/useWallet";
-import EditRecordDialog from "@/components/dialog/EditRecordDialog";
-import { BadgeInfo, FileStack, Network } from "lucide-react";
-import { Domain } from "@/types/domain";
-import { useMycelResolver } from "@/hooks/useMycelResolver";
-import { useMycelRegistry } from "@/hooks/useMycelRegistry";
-import { useStore } from "@/store/index";
+import { useEffect, useState } from 'react'
+import Button from '~/components/Button'
+import { convertToDomainString } from '~/utils/domainName'
+import { useSearchParams } from 'react-router-dom'
+import { useWallet } from '~/hooks/useWallet'
+import EditRecordDialog from '~/components/dialog/EditRecordDialog'
+import { BadgeInfo, FileStack, Network } from 'lucide-react'
+import { Domain } from '~/types/domain'
+import { useMycelResolver } from '~/hooks/useMycelResolver'
+import { useMycelRegistry } from '~/hooks/useMycelRegistry'
+import { useStore } from '~/store/index'
 
 export default function ResolveView() {
-  const { mycelAccount } = useWallet();
-  const { mycelRecords, updateMycelRecords } = useMycelResolver();
-  const { topLevelDomain, registryQueryDomain, registryQueryRole } = useMycelRegistry();
-  const [domain, setDomain] = useState<Domain>();
-  const [query, setQuery] = useSearchParams({});
-  const [isEditable, setIsEditable] = useState<boolean>(false);
-  const updateDialog = useStore((state) => state.updateDialog);
+  const { mycelAccount } = useWallet()
+  const { mycelRecords, updateMycelRecords } = useMycelResolver()
+  const { topLevelDomain, registryQueryDomain, registryQueryRole } = useMycelRegistry()
+  const [domain, setDomain] = useState<Domain>()
+  const [query, setQuery] = useSearchParams({})
+  const [isEditable, setIsEditable] = useState<boolean>(false)
+  const updateDialog = useStore((state) => state.updateDialog)
 
   const updateRegistryHandler = async (name: string, parent: string) => {
     try {
-      await updateMycelRecords({ name, parent });
-      await registryQueryDomain({ name, parent });
+      await updateMycelRecords({ name, parent })
+      await registryQueryDomain({ name, parent })
 
       if (mycelAccount) {
-        const role = await registryQueryRole({ name, parent }, mycelAccount.address);
-        if (role === "OWNER" || role === "EDITOR") {
-          setIsEditable(true);
+        const role = await registryQueryRole({ name, parent }, mycelAccount.address)
+        if (role === 'OWNER' || role === 'EDITOR') {
+          setIsEditable(true)
         } else {
-          setIsEditable(false);
+          setIsEditable(false)
         }
       }
       // Update query
-      query.set("name", name);
-      query.set("parent", parent);
-      setQuery(query);
+      query.set('name', name)
+      query.set('parent', parent)
+      setQuery(query)
     } catch (e) {
-      console.log(e);
+      console.log(e)
       // Clear query
-      query.delete("name");
-      query.delete("parent");
-      setQuery(query);
+      query.delete('name')
+      query.delete('parent')
+      setQuery(query)
     }
-  };
+  }
 
   useEffect(() => {
-    const name = query.get("name") || "";
-    const parent = query.get("parent") || "";
-    setDomain({ name, parent });
+    const name = query.get('name') || ''
+    const parent = query.get('parent') || ''
+    setDomain({ name, parent })
     updateRegistryHandler(name, parent)
       .then()
       .catch((e) => {
-        console.log(e);
-      });
-  }, [mycelAccount]);
+        console.log(e)
+      })
+  }, [mycelAccount])
 
   return (
     <>
@@ -82,7 +82,7 @@ export default function ResolveView() {
           </div>
         </div>
         {/* Second Level Domain */}
-        {domain?.parent !== "" && (
+        {domain?.parent !== '' && (
           <div className="my-8">
             <h3 className="text-xl text-black font-semibold py-2 px-1 flex items-center border-b-2 border-black mb-4">
               <FileStack className="opacity-70 mr-2" size={24} />
@@ -117,7 +117,7 @@ export default function ResolveView() {
                           </div>
                         )}
                       </>
-                    );
+                    )
                   })}
               </div>
             </div>
@@ -125,7 +125,7 @@ export default function ResolveView() {
               <Button
                 disabled={!mycelAccount?.address}
                 onClick={() => {
-                  updateDialog("editRecord");
+                  updateDialog('editRecord')
                 }}
                 className="btn-primary mt-5 h-10 w-48 rounded-md"
               >
@@ -139,5 +139,5 @@ export default function ResolveView() {
         <EditRecordDialog domain={domain} records={mycelRecords} address={mycelAccount?.address} />
       )}
     </>
-  );
+  )
 }

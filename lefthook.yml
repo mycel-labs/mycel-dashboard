@@ -1,0 +1,12 @@
+pre-commit:
+  parallel: true
+  commands:
+    # packages-audit:
+    #   run: pnpm audit
+    eslint:
+      glob: "*.{js,jsx,cjs,mjs,ts,tsx,cts,mts}"
+      exclude: '^\.|/\.'
+      run: pnpm exec eslint --fix {staged_files}
+    prettier:
+      glob: "*.{js,jsx,cjs,mjs,ts,tsx,cts,mts}"
+      run: pnpm exec prettier --write --ignore-unknown {staged_files}

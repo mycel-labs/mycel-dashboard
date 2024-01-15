@@ -1,10 +1,10 @@
-import { ChangeEvent } from "react";
-import type { Option } from "@/components/Radio";
+import { ChangeEvent } from 'react'
+import type { Option } from '~/components/Radio'
 
 interface DropdownProps {
-  options: Option[];
-  selectedOption: string;
-  onSelect: (event: ChangeEvent<HTMLInputElement>) => void;
+  options: Option[]
+  selectedOption: string
+  onSelect: (event: ChangeEvent<HTMLInputElement>) => void
 }
 
 export default function Dropdown({ options, onSelect }: DropdownProps) {
@@ -16,5 +16,5 @@ export default function Dropdown({ options, onSelect }: DropdownProps) {
         </option>
       ))}
     </select>
-  );
+  )
 }

@@ -1,19 +1,19 @@
-import { Link } from "react-router-dom";
-import { Network, TextSelect } from "lucide-react";
-import { useWallet } from "@/hooks/useWallet";
-import ResolveButton from "@/components/ResolveButton";
-import { useMycelRegistry } from "@/hooks/useMycelRegistry";
+import { Link } from 'react-router-dom'
+import { Network, TextSelect } from 'lucide-react'
+import { useWallet } from '~/hooks/useWallet'
+import ResolveButton from '~/components/ResolveButton'
+import { useMycelRegistry } from '~/hooks/useMycelRegistry'
 
 interface MyDomainsProps {
-  className?: string;
+  className?: string
 }
 export default function MyDomains(props: MyDomainsProps) {
-  const { className } = props;
-  const { mycelAccount, isConnected } = useWallet();
-  const { isLoading, ownedDomains } = useMycelRegistry();
+  const { className } = props
+  const { mycelAccount, isConnected } = useWallet()
+  const { isLoading, ownedDomains } = useMycelRegistry()
 
   return (
-    <section className={className ?? ""}>
+    <section className={className ?? ''}>
       <h3 className="font-cursive text-2xl text-black font-semibold px-1 py-2 flex flex-1 items-center border-b-2 border-black">
         <Network className="opacity-70 mr-2" size={26} />
         My Domains
@@ -46,7 +46,7 @@ export default function MyDomains(props: MyDomainsProps) {
                 You have no domains
               </>
             ) : (
-              "Connect first"
+              'Connect first'
             )}
           </div>
           {isConnected && (
@@ -57,5 +57,5 @@ export default function MyDomains(props: MyDomainsProps) {
         </div>
       )}
     </section>
-  );
+  )
 }
