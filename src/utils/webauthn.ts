@@ -6,6 +6,7 @@ import {
   verifyAuthenticationResponse,
   type GenerateRegistrationOptionsOpts,
 } from '@simplewebauthn/server'
+import { Authenticator } from '~/store'
 import { getSignature, decodeFirst } from '~/utils/decode'
 
 const REGISTRATION_OPTIONS: GenerateRegistrationOptionsOpts = {
@@ -50,6 +51,7 @@ export const createNewCredential = async () => {
     const y = publicKey.get(-3)
     const n = publicKey.get(-1)
     console.log('5:', id, credentialID, credentialPublicKey, credentialDeviceType, counter)
+    console.log(typeof credentialID)
 
     return {
       id,
@@ -63,22 +65,33 @@ export const createNewCredential = async () => {
     console.log(e?.message || 'An unknown error occured')
   }
 }
+function objectToUint8Array(inputObject: Record<string, any>) {
+  const sortedKeys = Object.keys(inputObject).sort((a, b) => parseInt(a) - parseInt(b))
+  const uint8Array = new Uint8Array(sortedKeys.map((key) => inputObject[key]))
+  return uint8Array
+}
+export const loginCredential = async (authenticator: Authenticator | undefined) => {
+  if (typeof authenticator?.credentialID == 'object' && typeof authenticator?.credentialPublicKey == 'object') {
+    authenticator.credentialID = objectToUint8Array(authenticator?.credentialID)
+    authenticator.credentialPublicKey = objectToUint8Array(authenticator?.credentialPublicKey)
+  }
 
-export const loginCredential = async (authenticator) => {
   try {
     const authenticationOptions = await generateAuthenticationOptions({
       rpID: REGISTRATION_OPTIONS.rpID,
       allowCredentials: [
         {
-          id: authenticator.credentialID,
+          id: authenticator?.credentialID,
           type: 'public-key',
-          transports: authenticator.transports,
+          transports: authenticator?.transports,
         },
       ],
       challenge: 'asdf',
       userVerification: 'preferred',
     })
+    console.log('authenticationOptions', authenticationOptions)
     const authenticationResponse = await startAuthentication(authenticationOptions)
+    console.log('authenticationResponse', authenticationResponse)
     const { result, updatedSignature } = await getSignature(authenticationResponse, authenticator)
     console.log('3', authenticationResponse, result, updatedSignature)
 
@@ -89,9 +102,9 @@ export const loginCredential = async (authenticator) => {
       expectedChallenge: authenticationOptions.challenge,
       expectedRPID: window.location.hostname,
       authenticator: {
-        credentialID: Uint8Array.from(authenticator.credentialID),
-        credentialPublicKey: Uint8Array.from(authenticator.credentialPublicKey),
-        counter: authenticator.counter,
+        credentialID: authenticator?.credentialID as Uint8Array,
+        credentialPublicKey: authenticator?.credentialPublicKey as Uint8Array,
+        counter: authenticator?.counter as number,
       },
       requireUserVerification: true,
     })
