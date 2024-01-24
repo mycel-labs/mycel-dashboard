@@ -33,7 +33,7 @@ export default function RegisterView() {
 
   useEffect(() => {
     if (domain) {
-      registryQueryRegistrationFee(domain);
+      registryQueryRegistrationFee(domain, mycelAccount?.address ?? "");
       registryQueryDomain(domain);
     }
     setError("");
