@@ -1,8 +1,11 @@
 import { create } from "zustand";
 import { persist, devtools } from "zustand/middleware";
 import type { EvmAddress, MycelAddress } from "@/utils/wallets";
+import { ONBOARDING_CONFIG } from "@/hooks/useOnboarding";
 
 export type Dialog = "wallet" | "wallet2" | "tx" | "editRecord" | undefined;
+
+export type OnboardingStatus = typeof ONBOARDING_CONFIG;
 
 export type EvmDerivedAddresses = {
   version?: string;
@@ -19,6 +22,7 @@ type StoreState = {
   evmDerivedAddresses: EvmDerivedAddresses | {};
   currentWalletType: string | undefined;
   dialog: Dialog;
+  onboardingStatus: typeof ONBOARDING_CONFIG | undefined | false;
 };
 
 type StoreSAction = {
@@ -35,6 +39,7 @@ type StoreSAction = {
     encryptedSignature?: string;
   }) => void;
   updateDialog: (dialog: StoreState["dialog"]) => void;
+  updateOnboardingStatus: (payload: StoreState["onboardingStatus"]) => void;
 };
 
 export const useStore = create<StoreState & StoreSAction>()(
@@ -46,6 +51,7 @@ export const useStore = create<StoreState & StoreSAction>()(
         currentWalletType: undefined,
         evmDerivedAddresses: {},
         dialog: undefined,
+        onboardingStatus: undefined,
         updateEvmAddress: (payload: EvmAddress | undefined) => set((state) => ({ ...state, evmAddress: payload })),
         updateMycelAddress: (payload: MycelAddress | undefined) =>
           set((state) => ({ ...state, mycelAddress: payload })),
@@ -64,6 +70,8 @@ export const useStore = create<StoreState & StoreSAction>()(
         updateCurrentWalletType: (payload: string | undefined) =>
           set((state) => ({ ...state, currentWalletType: payload })),
         updateDialog: (payload: Dialog) => set((state) => ({ ...state, dialog: payload })),
+        updateOnboardingStatus: (payload: typeof ONBOARDING_CONFIG | undefined | false) =>
+          set((state) => ({ ...state, onboardingStatus: payload })),
       }),
       {
         name: "mycel",
@@ -71,6 +79,7 @@ export const useStore = create<StoreState & StoreSAction>()(
           evmAddress: state.evmAddress,
           mycelAddress: state.mycelAddress,
           evmDerivedAddresses: state.evmDerivedAddresses,
+          onboardingStatus: state.onboardingStatus,
         }),
       },
     ),

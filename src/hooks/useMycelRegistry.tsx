@@ -80,10 +80,10 @@ export const useMycelRegistry = () => {
   };
 
   // Query registration fee
-  const registryQueryRegistrationFee = async (domain: Domain) => {
+  const registryQueryRegistrationFee = async (domain: Domain, address: string) => {
     setIsLoading(true);
     try {
-      const res = await client.MycelRegistry.query.queryDomainRegistrationFee(domain.name, domain.parent, {
+      const res = await client.MycelRegistry.query.queryDomainRegistrationFee(domain.name, domain.parent, address, {
         registrationPeriodInYear: "1",
       });
       if (res.data) {

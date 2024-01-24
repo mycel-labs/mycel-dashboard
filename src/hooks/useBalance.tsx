@@ -2,16 +2,16 @@ import { useEffect, useState } from "react";
 import { useWallet } from "@/hooks/useWallet";
 import { useClient } from "@/hooks/useClient";
 
-export default function useBalance() {
+export default function useBalance(denom = "umycel") {
   const { mycelAccount } = useWallet();
   const client = useClient();
-  const [balances, setBalances] = useState<any | undefined>(undefined);
+  const [balance, setBalance] = useState<any | undefined>(undefined);
 
   useEffect(() => {
     const fetchBalance = async (address: string) => {
       if (!address) return;
-      const res = await client.CosmosBankV1Beta1.query.queryAllBalances(address);
-      if (res.status === 200 && res.data.balances) setBalances(res.data.balances);
+      const res = await client.CosmosBankV1Beta1.query.queryBalance(address, { denom });
+      if (res.status === 200 && res.data.balance) setBalance(res.data.balance?.amount ?? 0);
     };
 
     if (mycelAccount?.address) {
@@ -19,5 +19,5 @@ export default function useBalance() {
     }
   }, [mycelAccount?.address]);
 
-  return { balances };
+  return { balance };
 }

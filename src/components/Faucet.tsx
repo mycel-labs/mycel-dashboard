@@ -6,7 +6,7 @@ import TxDialog from "@/components/dialog/TxDialog";
 import Button from "@/components/Button";
 import { HandMetal } from "lucide-react";
 import { useStore } from "@/store/index";
-import useBalance from "@/hooks/useBalance";
+import useBalances from "@/hooks/useBalances";
 import { MYCEL_COIN_DECIMALS, MYCEL_HUMAN_COIN_UNIT, MYCEL_BASE_COIN_UNIT, convertToDecimalString } from "@/utils/coin";
 
 interface faucetProps {
@@ -22,7 +22,7 @@ export default function Faucet(props: faucetProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [txResponse, setTxResponse] = useState<DeliverTxResponse>();
   const updateDialog = useStore((state) => state.updateDialog);
-  const { balances } = useBalance();
+  const { balances } = useBalances();
 
   const queryBalance = async () => {
     if (!mycelAccount?.address) {
